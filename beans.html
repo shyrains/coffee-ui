@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>咖啡豆图鉴 | 玻璃咖啡工坊</title>
+  <style>
+    :root {
+      --ink: #fbf8f2;
+      --muted: rgba(251,248,242,.72);
+      --dark: #100c09;
+      --glass: rgba(255,255,255,.16);
+      --border: rgba(255,255,255,.28);
+      --blue: #69adff;
+      --gold: #eac27d;
+      --glass-edge: rgba(255,255,255,.54);
+      --mode-glow: rgba(234,194,125,.28);
+      --shadow: 0 34px 100px rgba(0,0,0,.38);
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "HarmonyOS Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(118deg, rgba(8,7,7,.84), rgba(59,34,21,.62) 42%, rgba(5,10,16,.86)),
+        url("https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg") center / cover,
+        #120d0a;
+      color: var(--ink);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.12), transparent 18%, transparent 72%, rgba(105,173,255,.08)),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 100% 100%, 44px 44px, 44px 44px;
+      mask-image: linear-gradient(to bottom, #000, transparent 78%);
+      opacity: .42;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    .nav {
+      position: sticky;
+      top: 14px;
+      z-index: 10;
+      width: min(1180px, calc(100% - 28px));
+      margin: 14px auto 0;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 10px 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.08) 44%, rgba(255,255,255,.18)),
+        rgba(16,12,9,.54);
+      -webkit-backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      box-shadow:
+        0 30px 76px rgba(0,0,0,.34),
+        0 0 0 1px rgba(255,255,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.46),
+        inset 0 -18px 34px rgba(255,255,255,.06);
+    }
+    .nav::after {
+      content: "咖啡豆图鉴";
+      position: absolute;
+      left: 188px;
+      top: 50%;
+      transform: translateY(-50%);
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.13);
+      color: rgba(251,248,242,.82);
+      font-size: 13px;
+      font-weight: 850;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .nav::before,
+    .bean::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        linear-gradient(130deg, rgba(255,255,255,.42), transparent 22%),
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,.22), transparent 32%),
+        radial-gradient(circle at 86% 100%, var(--mode-glow), transparent 34%);
+      opacity: .72;
+      mix-blend-mode: screen;
+    }
+    .brand {
+      position: relative;
+      z-index: 1;
+      font-weight: 900;
+      text-shadow: 0 1px 18px rgba(255,255,255,.24);
+    }
+    .nav nav { position: relative; z-index: 1; }
+    .nav a {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--muted);
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+    }
+    .nav a:hover {
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 24px rgba(0,0,0,.16);
+    }
+    .hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(26px, 5vw, 54px) 0 24px;
+      text-align: left;
+    }
+    .eyebrow {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(18px);
+      font-weight: 850;
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 7vw, 92px);
+      line-height: .92;
+      letter-spacing: 0;
+      font-weight: 950;
+      text-wrap: balance;
+      text-shadow: 0 18px 54px rgba(0,0,0,.38), 0 0 38px rgba(255,255,255,.10);
+    }
+    .hero p {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(19px, 2vw, 25px);
+      line-height: 1.45;
+    }
+    .gallery-dock {
+      width: min(1180px, calc(100% - 32px));
+      margin: 28px auto 0;
+      display: grid;
+      grid-template-columns: minmax(280px, .9fr) minmax(360px, 1.1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+    .dock-panel,
+    .bean-summary {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.30);
+      background:
+        linear-gradient(140deg, rgba(255,255,255,.24), rgba(255,255,255,.09)),
+        rgba(18,14,12,.52);
+      -webkit-backdrop-filter: blur(34px) saturate(175%) contrast(108%);
+      backdrop-filter: blur(34px) saturate(175%) contrast(108%);
+      box-shadow:
+        0 24px 62px rgba(0,0,0,.32),
+        inset 0 1px 0 rgba(255,255,255,.34);
+    }
+    .dock-panel {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+    }
+    .dock-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .dock-title strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 920;
+    }
+    .dock-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .view-switch,
+    .filter-bar {
+      display: grid;
+      gap: 8px;
+    }
+    .view-switch {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.26);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .filter-bar {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .view-switch button,
+    .filter-bar button {
+      min-height: 40px;
+      border: 0;
+      border-radius: 999px;
+      color: rgba(251,248,242,.78);
+      background: rgba(255,255,255,.08);
+      cursor: pointer;
+      font-weight: 820;
+      transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease, color 180ms ease;
+    }
+    .view-switch button:hover,
+    .filter-bar button:hover { transform: translateY(-1px); }
+    .view-switch button[aria-pressed="true"],
+    .filter-bar button[aria-pressed="true"] {
+      background: linear-gradient(180deg, #fff, #f0e6d4);
+      color: #15110e;
+      box-shadow: 0 10px 26px rgba(255,255,255,.16), inset 0 1px 0 rgba(255,255,255,.88);
+    }
+    .bean-summary {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .summary-card {
+      min-height: 104px;
+      padding: 14px;
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.16), rgba(0,0,0,.16)),
+        rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .summary-card strong {
+      display: block;
+      font-size: 30px;
+      font-weight: 930;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 6px;
+    }
+    .summary-card span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .gallery {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 90px;
+      display: grid;
+      gap: 26px;
+    }
+    .bean {
+      min-height: 520px;
+      display: grid;
+      grid-template-columns: minmax(300px, .94fr) minmax(320px, 1.06fr);
+      gap: 0;
+      overflow: hidden;
+      border-radius: 38px;
+      border: 1px solid rgba(255,255,255,.36);
+      background:
+        linear-gradient(138deg, rgba(255,255,255,.30), rgba(255,255,255,.10) 45%, rgba(255,255,255,.18)),
+        rgba(16,13,12,.44);
+      -webkit-backdrop-filter: blur(36px) saturate(185%) contrast(110%);
+      backdrop-filter: blur(36px) saturate(185%) contrast(110%);
+      box-shadow:
+        0 38px 110px rgba(0,0,0,.46),
+        0 14px 36px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,.46),
+        inset 0 -22px 44px rgba(255,255,255,.06);
+      position: relative;
+      transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, border-color 220ms ease;
+    }
+    .bean:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,255,255,.54);
+      box-shadow:
+        0 46px 128px rgba(0,0,0,.52),
+        0 18px 52px rgba(105,173,255,.14),
+        inset 0 1px 0 rgba(255,255,255,.54);
+    }
+    .bean.is-hidden { display: none; }
+    body[data-view="compare"] .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+    }
+    body[data-view="compare"] .bean {
+      min-height: auto;
+      grid-template-columns: 1fr;
+    }
+    body[data-view="compare"] .bean:nth-child(even) .media { order: 0; }
+    body[data-view="compare"] .media,
+    body[data-view="compare"] .media img {
+      min-height: 260px;
+    }
+    body[data-view="compare"] .content {
+      padding: 24px;
+    }
+    body[data-view="compare"] h2 {
+      font-size: clamp(28px, 3vw, 42px);
+    }
+    .bean > * { position: relative; z-index: 1; }
+    .bean:nth-child(even) .media { order: 2; }
+    .media {
+      position: relative;
+      min-height: 520px;
+      background: linear-gradient(145deg, #4a2413, #c18a4a);
+      box-shadow: inset -24px 0 52px rgba(0,0,0,.18);
+    }
+    .media img {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.04) contrast(1.04);
+    }
+    .media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 22% 10%, rgba(255,255,255,.18), transparent 34%),
+        linear-gradient(180deg, transparent, rgba(0,0,0,.48));
+    }
+    .content {
+      padding: clamp(26px, 5vw, 54px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .content-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .tag {
+      display: inline-flex;
+      align-self: flex-start;
+      min-height: 34px;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.16);
+      color: var(--gold);
+      font-weight: 800;
+      margin-bottom: 0;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      color: rgba(251,248,242,.82);
+      background: rgba(0,0,0,.24);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: 13px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    h2 {
+      font-size: clamp(34px, 5vw, 68px);
+      line-height: .95;
+      letter-spacing: 0;
+      margin: 0 0 16px;
+      font-weight: 930;
+      text-shadow: 0 14px 38px rgba(0,0,0,.30);
+    }
+    .desc { color: var(--muted); font-size: 18px; line-height: 1.58; margin: 0 0 22px; }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .meta span, .trait {
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 17px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.16), rgba(0,0,0,.20)),
+        rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--muted);
+      box-shadow: 0 14px 28px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.14);
+    }
+    .traits { display: grid; gap: 10px; margin-bottom: 26px; }
+    .trait {
+      display: grid;
+      grid-template-columns: 72px 1fr 28px;
+      gap: 12px;
+      align-items: center;
+    }
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      overflow: hidden;
+    }
+    .bar i {
+      display: block;
+      height: 100%;
+      width: calc(var(--v) * 20%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 850;
+      border: 1px solid rgba(255,255,255,.18);
+      background: #fff;
+      color: #15110e;
+      box-shadow: 0 16px 34px rgba(255,255,255,.14), inset 0 1px 0 rgba(255,255,255,.86);
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+    .btn.secondary {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.08)),
+        rgba(255,255,255,.12);
+      color: #fff;
+      -webkit-backdrop-filter: blur(42px) saturate(180%);
+      backdrop-filter: blur(42px) saturate(180%);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 20px 42px rgba(0,0,0,.22); }
+    .recipe-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: -8px 0 18px;
+    }
+    .recipe-chip {
+      min-height: 58px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.13);
+      color: var(--muted);
+    }
+    .recipe-chip strong {
+      display: block;
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+    .source {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 56px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,.14);
+      padding-top: 24px;
+    }
+    @media (max-width: 860px) {
+      .gallery-dock { grid-template-columns: 1fr; }
+      .bean-summary { grid-template-columns: repeat(3, 1fr); }
+      body[data-view="compare"] .gallery { grid-template-columns: 1fr; }
+      .bean, .bean:nth-child(even) .media { grid-template-columns: 1fr; }
+      .bean:nth-child(even) .media { order: 0; }
+      .media, .media img { min-height: 360px; }
+    }
+    @media (max-width: 560px) {
+      .nav {
+        width: calc(100% - 20px);
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 24px;
+        top: 10px;
+      }
+      .brand { padding: 0 6px; }
+      .nav::after {
+        position: static;
+        transform: none;
+        justify-self: start;
+        margin-left: 6px;
+      }
+      .nav nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .nav a { justify-content: center; padding: 0 8px; background: rgba(255,255,255,.08); text-align: center; }
+      .bean-summary, .recipe-strip, .filter-bar { grid-template-columns: 1fr; }
+      .content-head { flex-direction: column; }
+      .meta, .trait { grid-template-columns: 1fr; }
+      .trait { gap: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body data-view="editorial">
+  <header class="nav">
+    <div class="brand">玻璃咖啡工坊</div>
+    <nav aria-label="页面链接">
+      <a href="coffee.html">制作工作台</a>
+      <a href="#gallery">咖啡豆</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <span class="eyebrow">豆种图鉴</span>
+      <h1>先认识豆子，再决定冲煮。</h1>
+      <p>真实图片帮助辨认豆子；产区、处理法和风味特征帮助选择适合手冲或机器制作的路线。</p>
+    </section>
+    <section class="gallery-dock" aria-label="咖啡豆图鉴工具台">
+      <div class="dock-panel">
+        <div class="dock-title">
+          <div>
+            <strong>图鉴工作台</strong>
+            <span>筛选豆子、比较风味，并直接回到制作工作台。</span>
+          </div>
+          <span class="status-pill" id="beanReadyCount">22 种咖啡豆</span>
+        </div>
+        <div class="view-switch" role="group" aria-label="图鉴视图">
+          <button type="button" data-view="editorial" aria-pressed="true">图文模式</button>
+          <button type="button" data-view="compare" aria-pressed="false">对比模式</button>
+        </div>
+        <div class="filter-bar" role="group" aria-label="咖啡豆筛选">
+          <button type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button type="button" data-filter="hand" aria-pressed="false">手冲优先</button>
+          <button type="button" data-filter="machine" aria-pressed="false">机器优先</button>
+        </div>
+      </div>
+      <div class="bean-summary" aria-label="图鉴摘要">
+        <div class="summary-card"><strong>15</strong><span>高酸明亮或均衡甜感豆，适合手冲展开层次。</span></div>
+        <div class="summary-card"><strong>07</strong><span>厚实低酸豆，适合浓缩、摩卡壶和奶咖基底。</span></div>
+        <div class="summary-card"><strong>22</strong><span>真实豆图与处理法说明，可快速辨认。</span></div>
+      </div>
+    </section>
+    <section id="gallery" class="gallery">
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="埃塞俄比亚耶加雪菲咖啡豆真实照片" width="900" height="620"></div>
+        <div class="content">
+          <div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Bright / Floral</span></div>
+          <h2>埃塞俄比亚 耶加雪菲</h2>
+          <p class="desc">高海拔水洗豆，花香清晰，柑橘酸质干净，尾段像红茶。适合想要明亮、轻盈、层次清楚的一杯。</p>
+          <div class="meta"><span>产区：埃塞俄比亚 · 耶加雪菲</span><span>处理法：水洗处理</span></div>
+          <div class="traits">
+            <div class="trait"><span>酸度</span><span class="bar"><i style="--v:5"></i></span><strong>5</strong></div>
+            <div class="trait"><span>甜感</span><span class="bar"><i style="--v:3"></i></span><strong>3</strong></div>
+            <div class="trait"><span>醇厚</span><span class="bar"><i style="--v:2"></i></span><strong>2</strong></div>
+          </div>
+          <div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>92C</strong>水温</span><span class="recipe-chip"><strong>2:45</strong>建议时间</span></div>
+          <div class="actions"><a class="btn" href="coffee.html?bean=yirgacheffe&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=yirgacheffe&mode=machine">机器试做</a></div>
+        </div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="哥伦比亚蕙兰咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content">
+          <div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Balanced / Sweet</span></div>
+          <h2>哥伦比亚 蕙兰</h2>
+          <p class="desc">红苹果酸质、焦糖甜感和坚果尾韵，是很稳的日常手冲豆，也能做出温和的美式基底。</p>
+          <div class="meta"><span>产区：哥伦比亚 · 蕙兰</span><span>处理法：水洗处理</span></div>
+          <div class="traits">
+            <div class="trait"><span>酸度</span><span class="bar"><i style="--v:4"></i></span><strong>4</strong></div>
+            <div class="trait"><span>甜感</span><span class="bar"><i style="--v:4"></i></span><strong>4</strong></div>
+            <div class="trait"><span>醇厚</span><span class="bar"><i style="--v:3"></i></span><strong>3</strong></div>
+          </div>
+          <div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>91C</strong>水温</span><span class="recipe-chip"><strong>2:40</strong>建议时间</span></div>
+          <div class="actions"><a class="btn" href="coffee.html?bean=huila&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=huila&mode=machine">机器试做</a></div>
+        </div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="巴西喜拉多咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content">
+          <div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Nutty / Creamy</span></div>
+          <h2>巴西 喜拉多</h2>
+          <p class="desc">低酸、榛果、可可和奶油质地，适合浓缩、奶咖和顺滑甜感的机器制作配方。</p>
+          <div class="meta"><span>产区：巴西 · 喜拉多</span><span>处理法：日晒处理</span></div>
+          <div class="traits">
+            <div class="trait"><span>酸度</span><span class="bar"><i style="--v:2"></i></span><strong>2</strong></div>
+            <div class="trait"><span>甜感</span><span class="bar"><i style="--v:4"></i></span><strong>4</strong></div>
+            <div class="trait"><span>醇厚</span><span class="bar"><i style="--v:4"></i></span><strong>4</strong></div>
+          </div>
+          <div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>36g</strong>液重</span><span class="recipe-chip"><strong>27s</strong>萃取</span></div>
+          <div class="actions"><a class="btn" href="coffee.html?bean=cerrado&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=cerrado&mode=hand">手冲试做</a></div>
+        </div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="印度尼西亚曼特宁咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content">
+          <div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Heavy / Spiced</span></div>
+          <h2>印度尼西亚 曼特宁</h2>
+          <p class="desc">草本、黑巧克力和厚重口感明显。低温慢浸泡或机器制作都能突出它的厚度和尾韵。</p>
+          <div class="meta"><span>产区：印度尼西亚 · 苏门答腊</span><span>处理法：湿刨处理</span></div>
+          <div class="traits">
+            <div class="trait"><span>酸度</span><span class="bar"><i style="--v:2"></i></span><strong>2</strong></div>
+            <div class="trait"><span>甜感</span><span class="bar"><i style="--v:4"></i></span><strong>4</strong></div>
+            <div class="trait"><span>醇厚</span><span class="bar"><i style="--v:5"></i></span><strong>5</strong></div>
+          </div>
+          <div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>36g</strong>液重</span><span class="recipe-chip"><strong>88C</strong>温度</span></div>
+          <div class="actions"><a class="btn" href="coffee.html?bean=mandheling&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=mandheling&mode=hand">手冲试做</a></div>
+        </div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="埃塞俄比亚西达摩咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Berry / Natural</span></div><h2>埃塞俄比亚 西达摩</h2><p class="desc">日晒处理带来莓果、热带水果和花香，适合想要更有香气张力的手冲。</p><div class="meta"><span>产区：埃塞俄比亚 · 西达摩</span><span>处理法：日晒处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>92C</strong>水温</span><span class="recipe-chip"><strong>2:40</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=sidamo&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=sidamo&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="肯尼亚AA咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Cassis / Bright</span></div><h2>肯尼亚 AA</h2><p class="desc">黑醋栗、葡萄柚和高酸结构明显，适合清晰、明亮、层次感强的杯型。</p><div class="meta"><span>产区：肯尼亚 · 高海拔</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>93C</strong>水温</span><span class="recipe-chip"><strong>2:45</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=kenya-aa&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=kenya-aa&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="危地马拉安提瓜咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">均衡日常</span><span class="status-pill">Cocoa / Spice</span></div><h2>危地马拉 安提瓜</h2><p class="desc">可可、香料和橙皮感平衡，是手冲、美式和日常口粮都稳的选择。</p><div class="meta"><span>产区：危地马拉 · 安提瓜</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>91C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=guatemala-antigua&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=guatemala-antigua&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="哥斯达黎加塔拉珠咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Honey / Citrus</span></div><h2>哥斯达黎加 塔拉珠</h2><p class="desc">蜜处理常见的蜂蜜甜感和柑橘调性，甜感清楚，容错度高。</p><div class="meta"><span>产区：哥斯达黎加 · 塔拉珠</span><span>处理法：蜜处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>91C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=costa-rica-tarrazu&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=costa-rica-tarrazu&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="巴西Bourbon Santos咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Nut / Chocolate</span></div><h2>巴西 Bourbon Santos</h2><p class="desc">经典坚果、牛奶巧克力和低酸甜感，适合作为商业浓缩基底。</p><div class="meta"><span>产区：巴西 · Santos</span><span>处理法：日晒处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>36g</strong>液重</span><span class="recipe-chip"><strong>27s</strong>萃取</span></div><div class="actions"><a class="btn" href="coffee.html?bean=bourbon-santos&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=bourbon-santos&mode=hand">手冲试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="苏门答腊Gayo咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Woody / Heavy</span></div><h2>苏门答腊 Gayo</h2><p class="desc">木质香、黑糖和厚重口感明显，适合低温浓缩、奶咖或法压。</p><div class="meta"><span>产区：印度尼西亚 · 亚齐 Gayo</span><span>处理法：湿刨处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>36g</strong>液重</span><span class="recipe-chip"><strong>89C</strong>温度</span></div><div class="actions"><a class="btn" href="coffee.html?bean=sumatra-gayo&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=sumatra-gayo&mode=hand">手冲试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="经典意式拼配咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Blend / Crema</span></div><h2>经典意式拼配</h2><p class="desc">坚果、焦糖、可可和稳定油脂，是调试家用咖啡机最常见的类型。</p><div class="meta"><span>产区：巴西 / 哥伦比亚 / 印尼</span><span>处理法：拼配烘焙</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>36g</strong>液重</span><span class="recipe-chip"><strong>9bar</strong>压力</span></div><div class="actions"><a class="btn" href="coffee.html?bean=espresso-blend&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=espresso-blend&mode=hand">手冲试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="哥伦比亚低因咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">低因选择</span><span class="status-pill">Decaf / Mild</span></div><h2>哥伦比亚 低因</h2><p class="desc">焦糖、坚果和温和果酸，适合晚间手冲、美式或低咖啡因需求。</p><div class="meta"><span>产区：哥伦比亚 · 低因处理</span><span>处理法：低因处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>90C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=decaf-colombia&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=decaf-colombia&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="埃塞俄比亚古吉咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Floral / Citrus</span></div><h2>埃塞俄比亚 古吉</h2><p class="desc">柑橘、白花、莓果和轻盈茶感突出，是精品手冲里很常见的明亮型选择。</p><div class="meta"><span>产区：埃塞俄比亚 · 古吉</span><span>处理法：日晒 / 水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>92C</strong>水温</span><span class="recipe-chip"><strong>2:40</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=ethiopia-guji&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=ethiopia-guji&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="巴拿马瑰夏咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">精品代表</span><span class="status-pill">Jasmine / Tea</span></div><h2>巴拿马 瑰夏</h2><p class="desc">茉莉、佛手柑、蜂蜜和茶感细腻，适合用手冲保留香气层次。</p><div class="meta"><span>产区：巴拿马 · Boquete / Volcan</span><span>处理法：水洗 / 日晒处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>91C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=panama-geisha&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=panama-geisha&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="卢旺达Bourbon咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Tea / Red Berry</span></div><h2>卢旺达 Bourbon</h2><p class="desc">红茶、红莓、红糖和干净酸质明显，适合清晰甜感的手冲。</p><div class="meta"><span>产区：卢旺达 · 西部高地</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>92C</strong>水温</span><span class="recipe-chip"><strong>2:40</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=rwanda-bourbon&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=rwanda-bourbon&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="坦桑尼亚Peaberry咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合手冲</span><span class="status-pill">Grapefruit / Berry</span></div><h2>坦桑尼亚 Peaberry</h2><p class="desc">葡萄柚、黑莓和明亮酸质集中，圆豆常见风味更集中。</p><div class="meta"><span>产区：坦桑尼亚 · Kilimanjaro</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>92C</strong>水温</span><span class="recipe-chip"><strong>2:45</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=tanzania-peaberry&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=tanzania-peaberry&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="夏威夷Kona咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">均衡日常</span><span class="status-pill">Honey / Nut</span></div><h2>夏威夷 Kona</h2><p class="desc">坚果、蜂蜜、柔和果酸和顺滑口感，是温和均衡型代表。</p><div class="meta"><span>产区：美国夏威夷 · Kona</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>90C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=kona&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=kona&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="牙买加蓝山咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">经典产区</span><span class="status-pill">Soft / Nutty</span></div><h2>牙买加 蓝山</h2><p class="desc">低苦、坚果、花香和柔和甜感，适合做清楚但不尖锐的手冲。</p><div class="meta"><span>产区：牙买加 · Blue Mountain</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>90C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=jamaica-blue-mountain&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=jamaica-blue-mountain&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="秘鲁有机小农咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">均衡日常</span><span class="status-pill">Cocoa / Brown Sugar</span></div><h2>秘鲁 有机小农</h2><p class="desc">可可、坚果、黄糖和柔和酸度，是日常手冲和美式的稳妥选择。</p><div class="meta"><span>产区：秘鲁 · Cajamarca / Cusco</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>90C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=peru-organic&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=peru-organic&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="墨西哥Chiapas咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">均衡日常</span><span class="status-pill">Hazelnut / Citrus</span></div><h2>墨西哥 Chiapas</h2><p class="desc">榛果、红糖、轻微柑橘和柔和口感，适合日常黑咖啡。</p><div class="meta"><span>产区：墨西哥 · Chiapas</span><span>处理法：水洗处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>90C</strong>水温</span><span class="recipe-chip"><strong>2:35</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=mexico-chiapas&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=mexico-chiapas&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="hand">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="尼加拉瓜Jinotega咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">均衡日常</span><span class="status-pill">Caramel / Almond</span></div><h2>尼加拉瓜 Jinotega</h2><p class="desc">焦糖、杏仁、可可和柔和果酸，手冲与美式都很稳定。</p><div class="meta"><span>产区：尼加拉瓜 · Jinotega</span><span>处理法：水洗 / 蜜处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>1:15</strong>手冲比例</span><span class="recipe-chip"><strong>91C</strong>水温</span><span class="recipe-chip"><strong>2:40</strong>建议时间</span></div><div class="actions"><a class="btn" href="coffee.html?bean=nicaragua-jinotega&mode=hand">用它手冲</a><a class="btn secondary" href="coffee.html?bean=nicaragua-jinotega&mode=machine">机器试做</a></div></div>
+      </article>
+      <article class="bean" data-mode="machine">
+        <div class="media"><img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="印度Monsooned Malabar咖啡豆真实照片" width="900" height="620" loading="lazy"></div>
+        <div class="content"><div class="content-head"><span class="tag">适合机器</span><span class="status-pill">Low Acid / Heavy</span></div><h2>印度 Monsooned Malabar</h2><p class="desc">低酸、木质香、香料和厚重口感，常用于意式拼配增加主体感。</p><div class="meta"><span>产区：印度 · Malabar Coast</span><span>处理法：季风处理</span></div><div class="recipe-strip" aria-label="推荐参数"><span class="recipe-chip"><strong>18g</strong>粉量</span><span class="recipe-chip"><strong>38g</strong>液重</span><span class="recipe-chip"><strong>88C</strong>温度</span></div><div class="actions"><a class="btn" href="coffee.html?bean=monsooned-malabar&mode=machine">用它做浓缩</a><a class="btn secondary" href="coffee.html?bean=monsooned-malabar&mode=hand">手冲试做</a></div></div>
+      </article>
+    </section>
+  </main>
+  <footer class="source">Image URLs use Wikimedia Commons direct upload endpoints. Brewing recommendations are illustrative and intended for interactive exploration.</footer>
+  <script>
+    const filterButtons = document.querySelectorAll("[data-filter]");
+    const viewButtons = document.querySelectorAll("button[data-view]");
+    const beanCards = document.querySelectorAll(".bean");
+    const readyCount = document.getElementById("beanReadyCount");
+
+    function setPressed(buttons, key, value) {
+      buttons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset[key] === value)));
+    }
+
+    function applyFilter(filter) {
+      let visible = 0;
+      beanCards.forEach((card) => {
+        const shouldShow = filter === "all" || card.dataset.mode === filter;
+        card.classList.toggle("is-hidden", !shouldShow);
+        if (shouldShow) visible += 1;
+      });
+      readyCount.textContent = visible + " 种咖啡豆";
+      setPressed(filterButtons, "filter", filter);
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => applyFilter(button.dataset.filter));
+    });
+
+    viewButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        document.body.dataset.view = button.dataset.view;
+        setPressed(viewButtons, "view", button.dataset.view);
+      });
+    });
+
+    applyFilter("all");
+  </script>
+</body>
+</html>
