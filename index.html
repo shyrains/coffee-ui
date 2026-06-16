@@ -1,0 +1,2592 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>玻璃咖啡工坊 | 手冲与机器制作</title>
+  <style>
+    :root {
+      --ink: #f8f7f4;
+      --ink-deep: #14110f;
+      --muted: rgba(248, 247, 244, 0.72);
+      --muted-dark: #71665e;
+      --glass: rgba(255, 255, 255, 0.16);
+      --glass-strong: rgba(255, 255, 255, 0.24);
+      --glass-border: rgba(255, 255, 255, 0.34);
+      --glass-surface: rgba(255, 255, 255, 0.22);
+      --glass-surface-deep: rgba(255, 255, 255, 0.08);
+      --glass-edge: rgba(255, 255, 255, 0.56);
+      --glass-shadow: rgba(0, 0, 0, 0.44);
+      --accent: #eac27d;
+      --accent-2: #69adff;
+      --mode-glow: rgba(234, 194, 125, 0.28);
+      --blue: #69adff;
+      --blue-solid: #0071e3;
+      --gold: #eac27d;
+      --coffee: #7a421f;
+      --espresso: #1e1510;
+      --machine: #d8dde6;
+      --shadow-lg: 0 34px 110px rgba(0, 0, 0, 0.38);
+      --shadow-md: 0 20px 54px rgba(0, 0, 0, 0.24);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      color-scheme: dark;
+    }
+
+    body[data-mode="hand"] {
+      --accent: #eac27d;
+      --accent-2: #69adff;
+      --mode-glow: rgba(234, 194, 125, 0.28);
+    }
+
+    body[data-mode="machine"] {
+      --accent: #69adff;
+      --accent-2: #f3f7ff;
+      --mode-glow: rgba(105, 173, 255, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "HarmonyOS Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(118deg, rgba(8, 7, 7, 0.84), rgba(59, 34, 21, 0.62) 42%, rgba(5, 10, 16, 0.86)),
+        url("https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg") center / cover,
+        #120d0a;
+      letter-spacing: 0;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,0.12), transparent 18%, transparent 70%, rgba(255,255,255,0.08)),
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 44px 44px, 44px 44px;
+      mask-image: linear-gradient(to bottom, #000, transparent 76%);
+      opacity: 0.42;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+
+    .shell { position: relative; isolation: isolate; }
+
+    .nav {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      width: min(1180px, calc(100% - 28px));
+      min-height: 58px;
+      margin: 14px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 10px 8px 18px;
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.30), rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.18)),
+        rgba(20, 17, 15, 0.54);
+      -webkit-backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      box-shadow:
+        0 30px 76px rgba(0,0,0,0.34),
+        0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.46),
+        inset 0 -18px 34px rgba(255,255,255,0.06);
+    }
+
+    .nav::before,
+    .glass::before,
+    .floating-card::before,
+    .show-card::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        linear-gradient(130deg, rgba(255,255,255,0.42), transparent 22%),
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,0.22), transparent 32%),
+        radial-gradient(circle at 86% 100%, var(--mode-glow), transparent 34%);
+      opacity: 0.72;
+      mix-blend-mode: screen;
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-shadow: 0 1px 18px rgba(255,255,255,0.24);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-links a {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 24px rgba(0,0,0,0.16);
+    }
+
+    .hero {
+      width: min(1240px, calc(100% - 32px));
+      min-height: calc(100dvh - 86px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 76px);
+      padding: clamp(48px, 8vw, 92px) 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--gold);
+      font-weight: 800;
+      backdrop-filter: blur(18px);
+      margin: 0 0 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(58px, 10vw, 128px);
+      line-height: 0.9;
+      letter-spacing: 0;
+      max-width: 760px;
+      font-weight: 950;
+      text-wrap: balance;
+      text-shadow: 0 18px 54px rgba(0,0,0,0.38), 0 0 38px rgba(255,255,255,0.10);
+    }
+
+    .hero-copy {
+      max-width: 620px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(19px, 2.2vw, 27px);
+      line-height: 1.42;
+      font-weight: 560;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .btn.primary {
+      background: #fff;
+      color: var(--ink-deep);
+      box-shadow: 0 14px 38px rgba(255,255,255,0.16);
+      font-weight: 800;
+    }
+
+    .btn.ghost {
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+      backdrop-filter: blur(20px);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(105,173,255,0.62);
+      outline-offset: 3px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 610px;
+      border-radius: 46px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.24), rgba(255,255,255,0.08)),
+        rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.34);
+      box-shadow:
+        0 42px 120px rgba(0,0,0,0.48),
+        0 18px 46px rgba(105,173,255,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.34),
+        inset 0 -22px 42px rgba(0,0,0,0.16);
+    }
+
+    .stage img {
+      width: 100%;
+      height: 100%;
+      min-height: 610px;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.05);
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.62)),
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.24), transparent 32%);
+    }
+
+    .floating-card {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 28px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.12)),
+        rgba(19, 15, 13, 0.34);
+      border: 1px solid rgba(255,255,255,0.46);
+      -webkit-backdrop-filter: blur(38px) saturate(185%) contrast(108%);
+      backdrop-filter: blur(38px) saturate(185%) contrast(108%);
+      box-shadow:
+        0 28px 70px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.42),
+        inset 0 -16px 32px rgba(255,255,255,0.06);
+    }
+
+    .floating-card > *,
+    .show-card > *,
+    .glass > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .floating-card h2 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900;
+      text-shadow: 0 12px 34px rgba(0,0,0,0.34);
+    }
+
+    .floating-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.28);
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(58px, 8vw, 104px) 0;
+    }
+
+    .section-head {
+      max-width: 980px;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+      padding: 13px clamp(16px, 2vw, 24px) 15px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.16)),
+        rgba(18, 14, 12, 0.46);
+      -webkit-backdrop-filter: blur(34px) saturate(180%) contrast(108%);
+      backdrop-filter: blur(34px) saturate(180%) contrast(108%);
+      box-shadow:
+        0 24px 60px rgba(0,0,0,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.40),
+        inset 0 -18px 32px rgba(0,0,0,0.16);
+      font-size: clamp(20px, 3.8vw, 46px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 950;
+      white-space: nowrap;
+      text-shadow: 0 12px 28px rgba(0,0,0,0.34);
+    }
+
+    .section-head h2::after {
+      content: "";
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: -8px;
+      height: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(234,194,125,0.92), rgba(105,173,255,0.78)),
+        rgba(255,255,255,0.18);
+      box-shadow:
+        0 14px 30px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.48);
+      pointer-events: none;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.5;
+      margin: 18px 0 0;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .glass {
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(138deg, rgba(255,255,255,0.32), rgba(255,255,255,0.10) 45%, rgba(255,255,255,0.20)),
+        rgba(16, 13, 12, 0.42);
+      -webkit-backdrop-filter: blur(38px) saturate(185%) contrast(110%);
+      backdrop-filter: blur(38px) saturate(185%) contrast(110%);
+      box-shadow:
+        0 34px 92px rgba(0,0,0,0.42),
+        0 14px 36px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.46),
+        inset 0 -22px 44px rgba(255,255,255,0.06),
+        inset 18px 0 38px rgba(255,255,255,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .controls { padding: clamp(18px, 3vw, 28px); }
+    .group + .group { margin-top: 24px; }
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 11px;
+      font-weight: 800;
+    }
+
+    .live { color: var(--gold); font-variant-numeric: tabular-nums; }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 7px;
+      border-radius: 999px;
+      background:
+        linear-gradient(145deg, rgba(0,0,0,0.30), rgba(255,255,255,0.08)),
+        rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -12px 26px rgba(0,0,0,0.18);
+    }
+
+    .mode-toggle button,
+    .segment button {
+      min-height: 46px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .mode-toggle button[aria-pressed="true"],
+    .segment button[aria-pressed="true"] {
+      color: var(--ink-deep);
+      background: linear-gradient(180deg, #fff, #eaf2ff);
+      box-shadow:
+        0 12px 32px rgba(255,255,255,0.18),
+        0 4px 14px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.86);
+      font-weight: 850;
+      transform: translateY(-1px);
+    }
+
+    .bean-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-height: 418px;
+      overflow: auto;
+      padding: 2px 4px 4px 2px;
+      scrollbar-color: rgba(255,255,255,0.34) transparent;
+    }
+
+    .bean-card {
+      position: relative;
+      min-height: 156px;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,255,255,0.07)),
+        rgba(255,255,255,0.08);
+      color: #fff;
+      text-align: left;
+      padding: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform 220ms cubic-bezier(.2,.8,.2,1), border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .bean-card[aria-pressed="true"] {
+      border-color: rgba(255,255,255,0.72);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(105,173,255,0.18)),
+        rgba(105,173,255,0.20);
+      box-shadow:
+        0 22px 52px rgba(0,0,0,0.30),
+        0 0 0 1px rgba(105,173,255,0.28),
+        0 0 34px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.54);
+      transform: translateY(-4px) scale(1.015);
+    }
+
+    .bean-card[aria-pressed="true"]::after {
+      content: "Selected";
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.90);
+      color: #12100d;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.24);
+    }
+
+    .bean-card[aria-pressed="true"]::before {
+      content: "";
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(115deg, transparent 36%, rgba(255,255,255,0.24), transparent 62%);
+      transform: translateX(-46%) rotate(8deg);
+      animation: beanShine 1800ms cubic-bezier(.2,.8,.2,1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes beanShine {
+      0%, 42% { transform: translateX(-48%) rotate(8deg); opacity: 0; }
+      58% { opacity: 1; }
+      100% { transform: translateX(48%) rotate(8deg); opacity: 0; }
+    }
+
+    .bean-card:hover { transform: translateY(-3px); }
+    .bean-card[aria-pressed="true"]:hover { transform: translateY(-5px) scale(1.018); }
+
+    .bean-card img {
+      width: 100%;
+      height: 74px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 11px;
+      background: linear-gradient(145deg, #4a2413, #c18a4a);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+
+    .bean-card strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .bean-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .segment {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      padding: 7px;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      min-height: 46px;
+    }
+
+    select {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      color: #fff;
+      background: rgba(0,0,0,0.30);
+      padding: 0 14px;
+    }
+
+    input[type="range"] { accent-color: var(--blue); cursor: pointer; }
+    .hint-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -4px;
+    }
+
+    .machine-console {
+      display: none;
+      margin: 18px 0 22px;
+    }
+
+    body[data-mode="machine"] .machine-console {
+      display: block;
+    }
+
+    .machine-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .machine-status-row span:last-child {
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .machine-preview {
+      position: relative;
+      min-height: 314px;
+      border-radius: 30px;
+      overflow: hidden;
+      contain: paint;
+      border: 1px solid rgba(255,255,255,0.25);
+      background:
+        radial-gradient(circle at 21% 12%, rgba(255,255,255,0.34), transparent 24%),
+        radial-gradient(circle at 80% 16%, rgba(105,173,255,0.15), transparent 28%),
+        linear-gradient(150deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08) 42%, rgba(0,0,0,0.34)),
+        rgba(24,22,22,0.42);
+      box-shadow:
+        0 30px 72px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.40),
+        inset 0 -34px 60px rgba(0,0,0,0.28);
+    }
+
+    .machine-preview::before,
+    .machine-preview::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .machine-preview::before {
+      inset: 14px 18px 18px;
+      z-index: 0;
+      border-radius: 26px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.12), transparent 12%, transparent 88%, rgba(255,255,255,0.10)),
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 42%, rgba(0,0,0,0.22));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        inset 0 -28px 48px rgba(0,0,0,0.24);
+    }
+
+    .machine-preview::after {
+      inset: 0;
+      z-index: 10;
+      border-radius: inherit;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.30), transparent 17%, transparent 74%, rgba(255,255,255,0.08)),
+        linear-gradient(180deg, transparent 72%, rgba(0,0,0,0.16));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .indicator-lights,
+    .indicator-light,
+    .brew-stage,
+    .water-outlet,
+    .water-stream,
+    .drip-shadow,
+    .espresso-cup,
+    .lever-track,
+    .lever-knob {
+      pointer-events: none;
+    }
+
+    .indicator-lights {
+      position: absolute;
+      z-index: 7;
+      top: 28px;
+      left: 30px;
+      display: inline-flex;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)),
+        rgba(13,17,20,0.24);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 16px 30px rgba(0,0,0,0.18);
+    }
+
+    .indicator-light {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.30);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.30);
+      transition: background 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    }
+
+    body[data-shot-state="dirty"] .indicator-light:first-child {
+      background: #f2c46f;
+      box-shadow: 0 0 20px rgba(242,196,111,0.58), inset 0 1px 0 rgba(255,255,255,0.42);
+    }
+
+    body[data-shot-state="brewing"] .indicator-light:nth-child(2) {
+      background: #8fe6b2;
+      transform: scale(1.12);
+      box-shadow: 0 0 22px rgba(143,230,178,0.66), inset 0 1px 0 rgba(255,255,255,0.50);
+    }
+
+    body[data-shot-state="ready"] .indicator-light:nth-child(3) {
+      background: #69adff;
+      box-shadow: 0 0 22px rgba(105,173,255,0.62), inset 0 1px 0 rgba(255,255,255,0.48);
+    }
+
+    .brew-lever {
+      position: absolute;
+      z-index: 8;
+      top: 60px;
+      right: clamp(18px, 6vw, 44px);
+      width: 72px;
+      height: clamp(174px, 64%, 220px);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .brew-lever:focus-visible {
+      outline: 3px solid rgba(105,173,255,0.74);
+      outline-offset: 5px;
+      border-radius: 28px;
+    }
+
+    .lever-track {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.22), transparent 46%, rgba(0,0,0,0.26)),
+        linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.22));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.26),
+        inset 0 -18px 28px rgba(0,0,0,0.24),
+        0 16px 30px rgba(0,0,0,0.20);
+    }
+
+    .lever-track::before,
+    .lever-track::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.46);
+      box-shadow: 0 0 12px rgba(255,255,255,0.18);
+    }
+
+    .lever-track::before { top: 18px; }
+    .lever-track::after { bottom: 18px; }
+
+    .lever-knob {
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      width: 66px;
+      height: 52px;
+      transform: translateX(-50%) translateY(0);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255,255,255,0.94), rgba(255,255,255,0.28) 24%, transparent 28%),
+        linear-gradient(145deg, #f7f9fd, #a9b2be 48%, #4f5964);
+      border: 1px solid rgba(255,255,255,0.34);
+      box-shadow:
+        0 24px 42px rgba(0,0,0,0.34),
+        inset 0 2px 0 rgba(255,255,255,0.82),
+        inset 0 -12px 20px rgba(0,0,0,0.20);
+      transition:
+        transform 340ms cubic-bezier(.2,.86,.24,1),
+        box-shadow 220ms ease,
+        filter 220ms ease;
+      will-change: transform;
+    }
+
+    .lever-knob::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 10px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(38,43,49,0.44);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .lever-knob::before {
+      content: "";
+      position: absolute;
+      inset: 10px 18px auto;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    body[data-shot-state="dirty"] .lever-knob {
+      box-shadow:
+        0 0 0 5px rgba(105,173,255,0.13),
+        0 24px 42px rgba(0,0,0,0.34),
+        inset 0 2px 0 rgba(255,255,255,0.82),
+        inset 0 -12px 20px rgba(0,0,0,0.20);
+    }
+
+    body.is-brewing .lever-knob,
+    body[data-shot-state="brewing"] .lever-knob { transform: translateX(-50%) translateY(122px); filter: saturate(1.08); }
+
+    .brew-stage {
+      position: absolute;
+      z-index: 4;
+      left: 48%;
+      top: 68px;
+      width: clamp(178px, 48%, 246px);
+      height: 210px;
+      transform: translateX(-50%);
+    }
+
+    .water-outlet {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 0;
+      width: 118px;
+      height: 48px;
+      transform: translateX(-50%);
+      border-radius: 22px 22px 24px 24px;
+      background:
+        radial-gradient(ellipse at 50% 7px, rgba(255,255,255,0.88), rgba(255,255,255,0.26) 32%, transparent 36%),
+        linear-gradient(180deg, #f5f7fb, #b4bec9 52%, #59636f);
+      box-shadow:
+        0 20px 34px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.72),
+        inset 0 -9px 16px rgba(0,0,0,0.24);
+    }
+
+    .water-outlet::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -11px;
+      width: 28px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 0 0 999px 999px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.22), transparent 38%),
+        linear-gradient(180deg, #77818d, #252b32);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 10px 18px rgba(0,0,0,0.24);
+    }
+
+    .water-stream {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      top: 58px;
+      width: 8px;
+      height: 0;
+      transform: translateX(-50%);
+      transform-origin: 50% 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(248,218,157,0.12), rgba(215,143,70,0.90), rgba(84,35,16,0.96));
+      opacity: 0;
+      transition: height 190ms ease, opacity 160ms ease;
+      filter: drop-shadow(0 0 12px rgba(234,194,125,0.35));
+      will-change: transform, opacity;
+    }
+
+    .drip-shadow {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 142px;
+      width: 56px;
+      height: 14px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(92,43,20,0.40);
+      opacity: 0;
+      filter: blur(9px);
+      transition: opacity 180ms ease;
+    }
+
+    .espresso-cup {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 116px;
+      width: 132px;
+      height: 68px;
+      transform: translateX(-50%);
+      border-radius: 0 0 42px 42px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(216,225,236,0.88));
+      box-shadow:
+        0 24px 40px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.78),
+        inset 0 -9px 18px rgba(154,164,176,0.22);
+    }
+
+    .cup-body {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .espresso-cup::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      right: -8px;
+      top: -10px;
+      height: 22px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.98), rgba(238,243,250,0.78) 52%, rgba(180,190,204,0.82) 54%),
+        linear-gradient(180deg, #fff, #d9dee6);
+      box-shadow:
+        inset 0 -4px 10px rgba(0,0,0,0.16),
+        0 10px 18px rgba(0,0,0,0.16);
+    }
+
+    .espresso-cup::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: 13px;
+      width: 36px;
+      height: 30px;
+      border: 8px solid rgba(229,235,244,0.86);
+      border-left: 0;
+      border-radius: 0 999px 999px 0;
+    }
+
+    .cup-fill {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      height: 0;
+      border-radius: 0 0 32px 32px;
+      background: linear-gradient(180deg, rgba(194,121,61,0.92), rgba(74,31,15,0.96));
+      transition: height 220ms ease;
+    }
+
+    .cup-fill::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -5px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(244,201,131,0.78);
+      opacity: .82;
+    }
+
+    body.is-brewing .water-stream,
+    body[data-shot-state="brewing"] .water-stream { height: 78px; opacity: 1; animation: streamPulse 620ms ease-in-out infinite alternate; }
+    body.is-brewing .drip-shadow,
+    body[data-shot-state="brewing"] .drip-shadow { opacity: 1; animation: streamPulse 620ms ease-in-out infinite alternate; }
+    body.is-brewing .cup-fill,
+    body[data-shot-state="brewing"] .cup-fill { animation: cupFill 1200ms ease forwards; }
+    body[data-shot-state="ready"] .cup-fill { height: 30px; }
+    .machine-action-hint {
+      position: absolute;
+      z-index: 8;
+      left: 50%;
+      bottom: clamp(18px, 7%, 28px);
+      transform: translateX(-50%);
+      margin: 0;
+      min-height: 34px;
+      min-width: 168px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border-radius: 999px;
+      color: rgba(251,248,242,0.84);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04)),
+        rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.14),
+        0 12px 22px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+
+    body.is-brewing .machine-action-hint,
+    body[data-shot-state="brewing"] .machine-action-hint { color: #fff; background: rgba(143,230,178,0.16); }
+
+    @keyframes streamPulse {
+      from { transform: translateX(-50%) scaleY(0.84); opacity: 0.68; }
+      to { transform: translateX(-50%) scaleY(1.06); opacity: 1; }
+    }
+
+    @keyframes cupFill {
+      from { height: 0; }
+      to { height: 28px; }
+    }
+
+    .mode-only { display: none; }
+    body[data-mode="hand"] .mode-hand { display: block; }
+    body[data-mode="machine"] .mode-machine { display: block; }
+
+    .output {
+      padding: clamp(22px, 4vw, 34px);
+      min-height: 100%;
+      position: sticky;
+      top: 92px;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .output.is-pulsing {
+      animation: glassPulse 520ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes glassPulse {
+      0% {
+        transform: translateY(0) scale(1);
+        box-shadow:
+          0 34px 92px rgba(0,0,0,0.42),
+          0 14px 36px var(--mode-glow),
+          inset 0 1px 0 rgba(255,255,255,0.46);
+      }
+      45% {
+        transform: translateY(-5px) scale(1.012);
+        box-shadow:
+          0 44px 120px rgba(0,0,0,0.50),
+          0 0 0 1px rgba(255,255,255,0.18),
+          0 20px 58px var(--mode-glow),
+          inset 0 1px 0 rgba(255,255,255,0.62);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .output h3 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.94;
+      letter-spacing: 0;
+      font-weight: 930;
+      text-shadow: 0 12px 30px rgba(0,0,0,0.28);
+    }
+
+    .kicker { margin: 0 0 10px; color: var(--gold); font-weight: 900; }
+    .summary {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+      margin: 18px 0 24px;
+      min-height: 140px;
+    }
+
+    .bean-profile {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 24px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      margin-bottom: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 36px rgba(0,0,0,0.16);
+    }
+
+    .bean-profile img {
+      width: 116px;
+      height: 116px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.28);
+    }
+
+    .bean-profile h4 { margin: 0 0 7px; font-size: 22px; }
+    .bean-profile p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 22px 0;
+      min-height: 218px;
+      align-content: start;
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 16px;
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.16), rgba(0,0,0,0.20)),
+        rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 16px 32px rgba(0,0,0,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      transition: transform 220ms cubic-bezier(.2,.8,.2,1), border-color 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+    }
+
+    .metric.shot-not-ready {
+      border-color: rgba(105,173,255,0.26);
+      opacity: 0.82;
+    }
+
+    .recipe-body {
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output[data-shot-state="brewing"] .recipe-body {
+      animation: shotBodyLift 900ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .output[data-shot-state="ready"] .metric {
+      animation: metricArrive 460ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .output[data-shot-state="ready"] .metric:nth-child(2) { animation-delay: 35ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(3) { animation-delay: 70ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(4) { animation-delay: 105ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(5) { animation-delay: 140ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(6) { animation-delay: 175ms; }
+
+    @keyframes shotBodyLift {
+      0% { transform: translateY(0); opacity: 1; }
+      40% { transform: translateY(-6px); opacity: .86; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes metricArrive {
+      from { transform: translateY(12px) scale(.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 32px;
+      font-weight: 930;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 5px;
+    }
+
+    .metric span { color: var(--muted); font-size: 13px; }
+
+    .taste-panel {
+      position: relative;
+      padding: 16px;
+      margin: 0 0 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(0,0,0,0.22);
+      -webkit-backdrop-filter: blur(30px) saturate(175%) contrast(108%);
+      backdrop-filter: blur(30px) saturate(175%) contrast(108%);
+      box-shadow:
+        0 18px 38px rgba(0,0,0,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      overflow: hidden;
+    }
+
+    .taste-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(234,194,125,0.18), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(105,173,255,0.16), transparent 30%);
+      pointer-events: none;
+    }
+
+    .taste-panel-head,
+    .taste-scores,
+    .taste-relations {
+      position: relative;
+      z-index: 1;
+    }
+
+    .taste-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .taste-panel-head span {
+      font-size: 18px;
+      font-weight: 950;
+      color: #fff;
+    }
+
+    .taste-panel-head strong {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .taste-scores {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .taste-score {
+      padding: 12px;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.12), rgba(0,0,0,0.14)),
+        rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .taste-score-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .taste-score-top span {
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .taste-score-top strong {
+      color: var(--gold);
+      font-size: 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .taste-score-track {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.30);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+    }
+
+    .taste-score-fill {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(234,194,125,0.95), rgba(105,173,255,0.88));
+      transform: scaleX(var(--score, 0.5));
+      transform-origin: left center;
+      transition: transform 260ms cubic-bezier(.2,.8,.2,1);
+      box-shadow: 0 0 20px var(--mode-glow);
+    }
+
+    .taste-relations {
+      display: grid;
+      gap: 9px;
+    }
+
+    .taste-relation {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .taste-relation strong {
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .taste-relation strong span {
+      display: block;
+      margin-top: 4px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .taste-relation p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+      min-height: 322px;
+      align-content: start;
+    }
+
+    body[data-mode="machine"] .metrics {
+      min-height: 332px;
+    }
+
+    body[data-mode="machine"] .steps {
+      min-height: 338px;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .steps time { color: var(--gold); font-weight: 900; }
+    .steps p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .show-card {
+      min-height: 300px;
+      padding: 24px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(26px) saturate(170%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .show-card h3 { margin: 0 0 12px; font-size: 26px; }
+    .show-card p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 58px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.16);
+    }
+
+    @media (max-width: 980px) {
+      .hero, .workspace { grid-template-columns: 1fr; }
+      .output { position: static; }
+      .showcase { grid-template-columns: 1fr; }
+      .stage { min-height: 520px; }
+      .stage img { min-height: 520px; }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        width: calc(100% - 20px);
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-items: stretch;
+        padding: 12px;
+        border-radius: 24px;
+        top: 10px;
+      }
+      .brand { padding: 0 6px; }
+      .nav-links {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        font-size: 12px;
+      }
+      .nav-links a {
+        min-height: 38px;
+        justify-content: center;
+        padding: 0 8px;
+        background: rgba(255,255,255,0.08);
+        text-align: center;
+      }
+      .hero { width: min(100% - 24px, 1240px); }
+      h1 { font-size: clamp(48px, 16vw, 72px); }
+      .section { width: min(100% - 20px, 1180px); }
+      .section-head { max-width: 100%; }
+      .section-head h2 {
+        padding: 10px 12px 11px;
+        border-radius: 18px;
+        font-size: clamp(17px, 5.05vw, 24px);
+        box-shadow:
+          0 18px 44px rgba(0,0,0,0.30),
+          inset 0 1px 0 rgba(255,255,255,0.38),
+          inset 0 -14px 26px rgba(0,0,0,0.16);
+      }
+      .section-head h2::after {
+        left: 14px;
+        right: 14px;
+        bottom: -7px;
+        height: 8px;
+      }
+      .floating-card { grid-template-columns: 1fr; left: 16px; right: 16px; bottom: 16px; }
+      .bean-strip, .metrics, .segment, .bean-profile, .taste-scores { grid-template-columns: 1fr; }
+      .bean-profile img { width: 100%; height: 180px; }
+      .taste-relation { grid-template-columns: 1fr; }
+      .steps li { grid-template-columns: 1fr; }
+      .machine-console { margin-top: 12px; }
+      .machine-status-row {
+        margin-bottom: 10px;
+        padding: 0 2px;
+      }
+      .machine-preview {
+        min-height: 300px;
+        border-radius: 26px;
+      }
+      .indicator-lights { left: 20px; top: 22px; }
+      .brew-lever {
+        top: 68px;
+        right: 16px;
+        height: 192px;
+      }
+      .brew-stage { left: 43%; width: 170px; }
+      .water-outlet { width: 104px; }
+      .espresso-cup {
+        width: 116px;
+        height: 60px;
+      }
+      .espresso-cup::after {
+        right: -24px;
+        width: 30px;
+        height: 26px;
+        border-width: 7px;
+      }
+      .machine-action-hint {
+        bottom: 20px;
+        min-width: 148px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body data-mode="hand">
+  <div class="shell">
+    <header class="nav" aria-label="主导航">
+      <div class="brand">玻璃咖啡工坊</div>
+      <nav class="nav-links" aria-label="页面链接">
+        <a href="beans.html">咖啡豆图鉴</a>
+        <a href="#workspace">制作工作台</a>
+        <a href="#difference">模式差异</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">玻璃工坊</p>
+          <h1>把咖啡制作看清楚。</h1>
+          <p class="hero-copy">从真实咖啡豆开始，选择手冲或机器制作。页面会根据豆子和方式切换配方、参数与步骤。</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#workspace">开始制作</a>
+            <a class="btn ghost" href="beans.html">查看咖啡豆</a>
+          </div>
+        </div>
+        <div class="stage" aria-label="咖啡豆与制作视觉">
+          <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="真实烘焙咖啡豆特写">
+          <div class="floating-card">
+            <div>
+              <h2 id="heroBeanName">埃塞俄比亚 耶加雪菲</h2>
+              <p id="heroBeanText">花香、柑橘与茶感，适合更清晰的手冲表达。</p>
+            </div>
+            <span class="mode-pill" id="heroModeText">手冲咖啡</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="workspace" class="section">
+        <div class="section-head">
+          <h2>两套制作界面，不同的咖啡逻辑。</h2>
+          <p>手冲关注水流、比例和时间。机器制作关注压力、粉碗、液重和萃取窗口。</p>
+        </div>
+
+        <div class="workspace">
+          <form class="controls glass" aria-label="咖啡制作控制器">
+            <div class="group">
+              <div class="label-row"><span>制作方式</span><span class="live" id="modeLive">手冲制作</span></div>
+              <div class="mode-toggle" role="group" aria-label="制作方式">
+                <button type="button" data-mode="hand" aria-pressed="true">手冲咖啡</button>
+                <button type="button" data-mode="machine" aria-pressed="false">机器制作</button>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="label-row"><span>咖啡豆</span><a class="live" href="beans.html">查看图鉴</a></div>
+              <div class="bean-strip" id="beanStrip" role="group" aria-label="咖啡豆选择"></div>
+            </div>
+
+            <div class="group mode-only mode-hand">
+              <div class="label-row"><span>手冲器具</span></div>
+              <div class="segment" role="group" aria-label="手冲器具">
+                <button type="button" data-method="pour-over" aria-pressed="true">V60</button>
+                <button type="button" data-method="flatbed" aria-pressed="false">平底</button>
+                <button type="button" data-method="immersion" aria-pressed="false">浸泡</button>
+              </div>
+            </div>
+
+            <div class="group mode-only mode-machine">
+              <div class="label-row"><span>机器类型</span></div>
+              <div class="segment" role="group" aria-label="机器类型">
+                <button type="button" data-method="espresso" aria-pressed="true">意式机</button>
+                <button type="button" data-method="moka" aria-pressed="false">摩卡壶</button>
+                <button type="button" data-method="capsule" aria-pressed="false">胶囊机</button>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="label-row"><label for="flavor">风味方向</label></div>
+              <select id="flavor" name="flavor">
+                <option value="bright">明亮清爽</option>
+                <option value="balanced">均衡甜感</option>
+                <option value="round">厚实顺滑</option>
+              </select>
+            </div>
+
+            <div class="group">
+              <div class="label-row"><label for="grind">研磨度</label><span class="live"><span id="grindValue">58</span>/100</span></div>
+              <input id="grind" name="grind" type="range" min="20" max="85" value="58">
+              <div class="hint-row"><span>更细</span><span>更粗</span></div>
+            </div>
+
+            <div class="group">
+              <div class="label-row"><label for="temperature">水温</label><span class="live"><span id="temperatureValue">92</span>C</span></div>
+              <input id="temperature" name="temperature" type="range" min="86" max="96" value="92">
+            </div>
+
+            <div class="group">
+              <div class="label-row"><label for="dose">粉量</label><span class="live"><span id="doseValue">18</span>g</span></div>
+              <input id="dose" name="dose" type="range" min="12" max="24" value="18">
+            </div>
+
+            <div class="group mode-only mode-machine">
+              <div class="label-row"><label for="yield">目标液重 / 萃取液体</label><span class="live"><span id="yieldValue">36</span>g</span></div>
+              <input id="yield" name="yield" type="range" min="28" max="54" value="36">
+              <div class="hint-row"><span>更浓</span><span>更长</span></div>
+            </div>
+
+            <div class="group mode-only mode-machine">
+              <div class="label-row"><label for="pressure">萃取压力</label><span class="live"><span id="pressureValue">9</span> bar</span></div>
+              <input id="pressure" name="pressure" type="range" min="6" max="10" value="9">
+            </div>
+
+          </form>
+
+          <aside class="output glass" aria-live="polite" aria-label="生成配方" data-shot-state="hand">
+            <div class="recipe-body" id="recipeBody">
+            <p class="kicker" id="recipeKicker">手冲配方</p>
+              <h3 id="recipeName">玻璃手冲配方</h3>
+              <p class="summary" id="recipeSummary">清亮花香，酸质更明亮，适合慢一点的分段注水。</p>
+
+              <div class="machine-console" aria-label="咖啡机萃取控制台">
+                <div class="machine-status-row"><span>萃取开关</span><span class="live" id="brewStatus">待萃取</span></div>
+                <div class="machine-preview" aria-label="咖啡机萃取面板">
+                  <div class="indicator-lights" aria-hidden="true">
+                    <span class="indicator-light"></span>
+                    <span class="indicator-light"></span>
+                    <span class="indicator-light"></span>
+                  </div>
+                  <button class="brew-lever" id="brewLever" type="button" aria-label="拉下咖啡机提手开始萃取" aria-pressed="false">
+                    <span class="lever-track"></span>
+                    <span class="lever-knob" aria-hidden="true"></span>
+                  </button>
+                  <div class="brew-stage" aria-hidden="true">
+                    <div class="water-outlet"></div>
+                    <div class="water-stream"></div>
+                    <div class="drip-shadow"></div>
+                    <div class="espresso-cup"><span class="cup-body"><span class="cup-fill"></span></span></div>
+                  </div>
+                  <p class="machine-action-hint">拉下提手开始萃取</p>
+                </div>
+              </div>
+
+              <div class="bean-profile">
+                <img id="beanImageOut" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="当前选择咖啡豆">
+                <div>
+                  <h4 id="beanNameOut">埃塞俄比亚 耶加雪菲</h4>
+                  <p id="beanDescriptionOut">高海拔水洗豆，花香清晰，柑橘酸质干净，尾段像红茶。</p>
+                </div>
+              </div>
+
+              <div class="metrics" id="metrics"></div>
+              <section class="taste-panel" id="tastePanel" aria-label="参数口感变化">
+                <div class="taste-panel-head">
+                  <span>参数口感变化</span>
+                  <strong id="tasteMode">实时对应</strong>
+                </div>
+                <div class="taste-scores" id="tasteScores"></div>
+                <div class="taste-relations" id="tasteRelations"></div>
+              </section>
+              <ol class="steps" id="steps"></ol>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="difference" class="section">
+        <div class="section-head">
+          <h2>同一款豆子，两种表达。</h2>
+          <p>手冲把风味拉开，机器制作把浓度压实。选择模式后，页面的参数、步骤和视觉重心会一起变化。</p>
+        </div>
+        <div class="showcase">
+          <article class="show-card"><h3>手冲咖啡</h3><p>关注水流轨迹、粉水比和分段节奏。更适合表达花香、果酸、茶感和干净尾韵。</p></article>
+          <article class="show-card"><h3>机器制作</h3><p>关注压力、液重、粉碗剂量和萃取秒数。更适合浓缩、奶咖和厚实甜感。</p></article>
+          <article class="show-card"><h3>咖啡豆图鉴</h3><p>独立页面展示真实图片、产区、处理法和适合的制作方式，用来辨认和选择豆子。</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">Images load from Wikimedia Commons direct upload URLs. If an image fails, the layout keeps its glass fallback.</footer>
+  </div>
+
+  <script id="recipe-logic" type="text/plain">
+function getBeanMap() {
+  return {
+    yirgacheffe: {
+      id: "yirgacheffe",
+      name: "埃塞俄比亚 耶加雪菲",
+      origin: "埃塞俄比亚 · 耶加雪菲",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "高海拔水洗豆，花香清晰，柑橘酸质干净，尾段像红茶。",
+      traits: { acidity: 5, sweetness: 3, body: 2 },
+      defaultFlavor: "bright",
+      defaultTemp: 92,
+      tasting: {
+        bright: "清亮花香，酸质更明亮，适合慢一点的分段注水。",
+        balanced: "花香和蜂蜜甜感更平衡，适合稳定绕圈注水。",
+        round: "茶感更柔和，尾段更圆润，但仍保留干净酸质。"
+      }
+    },
+    sidamo: {
+      id: "sidamo",
+      name: "埃塞俄比亚 西达摩",
+      origin: "埃塞俄比亚 · 西达摩",
+      process: "日晒处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "莓果、热带水果和花香更外放，适合做香气鲜明的手冲。",
+      traits: { acidity: 5, sweetness: 4, body: 3 },
+      defaultFlavor: "bright",
+      defaultTemp: 92,
+      tasting: {
+        bright: "莓果和花香最清楚，酸质明亮，适合较快流速。",
+        balanced: "热带水果和蜂蜜甜感更圆，香气仍然开阔。",
+        round: "水果甜感被拉厚，尾段更像果酱和红茶。"
+      }
+    },
+    "kenya-aa": {
+      id: "kenya-aa",
+      name: "肯尼亚 AA",
+      origin: "肯尼亚 · 高海拔产区",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "黑醋栗、番茄和明亮酸质明显，适合表现清晰结构。",
+      traits: { acidity: 5, sweetness: 4, body: 4 },
+      defaultFlavor: "bright",
+      defaultTemp: 93,
+      tasting: {
+        bright: "黑醋栗和葡萄柚酸质突出，结构紧致。",
+        balanced: "酸甜更集中，像莓果果汁和红糖。",
+        round: "酸感收敛，口感更厚，尾段带黑糖。"
+      }
+    },
+    "ethiopia-guji": {
+      id: "ethiopia-guji",
+      name: "埃塞俄比亚 古吉",
+      origin: "埃塞俄比亚 · 古吉",
+      process: "日晒 / 水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "柑橘、白花、莓果和轻盈茶感突出，是精品手冲里很常见的明亮型选择。",
+      traits: { acidity: 5, sweetness: 4, body: 2 },
+      defaultFlavor: "bright",
+      defaultTemp: 92,
+      tasting: {
+        bright: "白花和柑橘最突出，口感轻盈，适合较细水流。",
+        balanced: "莓果甜感更稳，酸甜边界清楚。",
+        round: "茶感更圆，香气保留但酸度收敛。"
+      }
+    },
+    "panama-geisha": {
+      id: "panama-geisha",
+      name: "巴拿马 瑰夏",
+      origin: "巴拿马 · Boquete / Volcan",
+      process: "水洗 / 日晒处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "茉莉、佛手柑、蜂蜜和茶感细腻，适合用手冲保留香气层次。",
+      traits: { acidity: 5, sweetness: 5, body: 2 },
+      defaultFlavor: "bright",
+      defaultTemp: 91,
+      tasting: {
+        bright: "茉莉和佛手柑香气最清晰，尾段像乌龙茶。",
+        balanced: "蜂蜜甜感和花香更平衡，层次柔和。",
+        round: "酸感更低，甜感更厚，但仍保持清澈。"
+      }
+    },
+    huila: {
+      id: "huila",
+      name: "哥伦比亚 蕙兰",
+      origin: "哥伦比亚 · 蕙兰",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "红苹果酸质、焦糖甜感和坚果尾韵，是很稳的日常手冲豆。",
+      traits: { acidity: 4, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 91,
+      tasting: {
+        bright: "红苹果酸质更清楚，甜感像浅色焦糖。",
+        balanced: "红苹果、焦糖与坚果感均衡，适合标准比例冲煮。",
+        round: "甜感更集中，坚果尾韵更明显，口感更柔顺。"
+      }
+    },
+    "guatemala-antigua": {
+      id: "guatemala-antigua",
+      name: "危地马拉 安提瓜",
+      origin: "危地马拉 · 安提瓜",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "可可、香料、橙皮和稳定甜感，手冲与美式都很平衡。",
+      traits: { acidity: 3, sweetness: 4, body: 4 },
+      defaultFlavor: "balanced",
+      defaultTemp: 91,
+      tasting: {
+        bright: "橙皮和可可更清晰，酸甜边界明显。",
+        balanced: "可可、香料与焦糖甜感均衡，适合日常配方。",
+        round: "巧克力感更厚，尾段带烘烤坚果。"
+      }
+    },
+    "costa-rica-tarrazu": {
+      id: "costa-rica-tarrazu",
+      name: "哥斯达黎加 塔拉珠",
+      origin: "哥斯达黎加 · 塔拉珠",
+      process: "蜜处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "蜂蜜甜感、柑橘和圆润口感明显，容错度高。",
+      traits: { acidity: 4, sweetness: 5, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 91,
+      tasting: {
+        bright: "柑橘酸更亮，蜂蜜甜感干净。",
+        balanced: "蜂蜜、橙子和焦糖甜感平衡。",
+        round: "甜感更厚，酸度收敛，口感更顺。"
+      }
+    },
+    "rwanda-bourbon": {
+      id: "rwanda-bourbon",
+      name: "卢旺达 Bourbon",
+      origin: "卢旺达 · 西部高地",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "红茶、红莓、红糖和干净酸质明显，适合清晰甜感的手冲。",
+      traits: { acidity: 4, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 92,
+      tasting: {
+        bright: "红莓酸质更鲜明，尾段像红茶。",
+        balanced: "红糖甜感和莓果酸度更均衡。",
+        round: "甜感更厚，酸度柔化，口感更圆。"
+      }
+    },
+    "tanzania-peaberry": {
+      id: "tanzania-peaberry",
+      name: "坦桑尼亚 Peaberry",
+      origin: "坦桑尼亚 · Kilimanjaro",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "葡萄柚、黑莓和明亮酸质集中，圆豆常见风味更集中。",
+      traits: { acidity: 5, sweetness: 3, body: 3 },
+      defaultFlavor: "bright",
+      defaultTemp: 92,
+      tasting: {
+        bright: "葡萄柚酸质清楚，结构紧实。",
+        balanced: "黑莓和红糖甜感更明显。",
+        round: "酸度收敛，口感更厚，尾段带可可。"
+      }
+    },
+    cerrado: {
+      id: "cerrado",
+      name: "巴西 喜拉多",
+      origin: "巴西 · 喜拉多",
+      process: "日晒处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "machine",
+      description: "低酸、榛果、可可和奶油质地，适合做顺滑甜感的配方。",
+      traits: { acidity: 2, sweetness: 4, body: 4 },
+      defaultFlavor: "round",
+      defaultTemp: 89,
+      tasting: {
+        bright: "低酸基础上带一点莓果感，整体仍偏甜。",
+        balanced: "榛果、可可和焦糖甜感稳定，适合更宽容的萃取。",
+        round: "奶油质地更突出，低酸顺滑，尾段像可可。"
+      }
+    },
+    "bourbon-santos": {
+      id: "bourbon-santos",
+      name: "巴西 Bourbon Santos",
+      origin: "巴西 · Santos",
+      process: "日晒处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "machine",
+      description: "坚果、牛奶巧克力和低酸甜感，是经典商业浓缩基底。",
+      traits: { acidity: 2, sweetness: 4, body: 4 },
+      defaultFlavor: "round",
+      defaultTemp: 89,
+      tasting: {
+        bright: "低酸里带轻微果仁甜，适合短萃。",
+        balanced: "坚果、焦糖和牛奶巧克力稳定。",
+        round: "低酸厚实，奶咖里甜感和主体感很稳。"
+      }
+    },
+    mandheling: {
+      id: "mandheling",
+      name: "印度尼西亚 曼特宁",
+      origin: "印度尼西亚 · 苏门答腊",
+      process: "湿刨处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
+      recommendedMode: "machine",
+      description: "草本、黑巧克力和厚重口感明显，适合低温和较长接触时间。",
+      traits: { acidity: 2, sweetness: 4, body: 5 },
+      defaultFlavor: "round",
+      defaultTemp: 90,
+      tasting: {
+        bright: "草本调性更清晰，酸度仍低，尾段带黑巧。",
+        balanced: "黑巧、木质香和甜感平衡，口感厚但不沉闷。",
+        round: "草本香料、黑巧克力与厚实口感，适合低温慢浸泡。"
+      }
+    },
+    "sumatra-gayo": {
+      id: "sumatra-gayo",
+      name: "苏门答腊 Gayo",
+      origin: "印度尼西亚 · 亚齐 Gayo",
+      process: "湿刨处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
+      recommendedMode: "machine",
+      description: "木质香、黑糖和厚重口感明显，适合低温浓缩或法压。",
+      traits: { acidity: 2, sweetness: 3, body: 5 },
+      defaultFlavor: "round",
+      defaultTemp: 89,
+      tasting: {
+        bright: "草本和黑糖调性更清楚，酸度低。",
+        balanced: "木质香、黑巧和甜感更稳。",
+        round: "厚重、低酸、带香料感，适合奶咖基底。"
+      }
+    },
+    kona: {
+      id: "kona",
+      name: "夏威夷 Kona",
+      origin: "美国夏威夷 · Kona",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "坚果、蜂蜜、柔和果酸和顺滑口感，是温和均衡型代表。",
+      traits: { acidity: 3, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 90,
+      tasting: {
+        bright: "柔和柑橘和蜂蜜感更清楚。",
+        balanced: "坚果、蜂蜜和圆润口感平衡。",
+        round: "甜感更厚，口感更顺，酸度很温和。"
+      }
+    },
+    "jamaica-blue-mountain": {
+      id: "jamaica-blue-mountain",
+      name: "牙买加 蓝山",
+      origin: "牙买加 · Blue Mountain",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "低苦、坚果、花香和柔和甜感，适合做清楚但不尖锐的手冲。",
+      traits: { acidity: 3, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 90,
+      tasting: {
+        bright: "花香和柔和果酸更清楚。",
+        balanced: "坚果、花香和甜感很平衡。",
+        round: "低苦、顺滑，尾段带烘烤坚果。"
+      }
+    },
+    "peru-organic": {
+      id: "peru-organic",
+      name: "秘鲁 有机小农",
+      origin: "秘鲁 · Cajamarca / Cusco",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "可可、坚果、黄糖和柔和酸度，是日常手冲和美式的稳妥选择。",
+      traits: { acidity: 3, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 90,
+      tasting: {
+        bright: "轻微柑橘和黄糖感更明显。",
+        balanced: "可可、坚果和甜感稳定。",
+        round: "口感更厚，尾段带可可和烘烤香。"
+      }
+    },
+    "mexico-chiapas": {
+      id: "mexico-chiapas",
+      name: "墨西哥 Chiapas",
+      origin: "墨西哥 · Chiapas",
+      process: "水洗处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "榛果、红糖、轻微柑橘和柔和口感，适合日常黑咖啡。",
+      traits: { acidity: 3, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 90,
+      tasting: {
+        bright: "柑橘和红糖边界更清楚。",
+        balanced: "榛果、红糖和柔和酸度平衡。",
+        round: "坚果感更厚，低苦顺口。"
+      }
+    },
+    "nicaragua-jinotega": {
+      id: "nicaragua-jinotega",
+      name: "尼加拉瓜 Jinotega",
+      origin: "尼加拉瓜 · Jinotega",
+      process: "水洗 / 蜜处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "hand",
+      description: "焦糖、杏仁、可可和柔和果酸，手冲与美式都很稳定。",
+      traits: { acidity: 3, sweetness: 4, body: 4 },
+      defaultFlavor: "balanced",
+      defaultTemp: 91,
+      tasting: {
+        bright: "轻微果酸和焦糖甜感更明显。",
+        balanced: "杏仁、焦糖和可可均衡。",
+        round: "可可和坚果感更厚，口感更扎实。"
+      }
+    },
+    "monsooned-malabar": {
+      id: "monsooned-malabar",
+      name: "印度 Monsooned Malabar",
+      origin: "印度 · Malabar Coast",
+      process: "季风处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
+      recommendedMode: "machine",
+      description: "低酸、木质香、香料和厚重口感，常用于意式拼配增加主体感。",
+      traits: { acidity: 1, sweetness: 3, body: 5 },
+      defaultFlavor: "round",
+      defaultTemp: 88,
+      tasting: {
+        bright: "酸度仍低，香料和谷物感更明显。",
+        balanced: "木质香、焦糖和低酸厚度平衡。",
+        round: "厚重低酸，适合浓缩和奶咖增强质感。"
+      }
+    },
+    "espresso-blend": {
+      id: "espresso-blend",
+      name: "经典意式拼配",
+      origin: "巴西 / 哥伦比亚 / 印度尼西亚",
+      process: "拼配烘焙",
+      image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
+      recommendedMode: "machine",
+      description: "坚果、焦糖、可可和稳定油脂，适合家用咖啡机调试。",
+      traits: { acidity: 2, sweetness: 4, body: 5 },
+      defaultFlavor: "round",
+      defaultTemp: 90,
+      tasting: {
+        bright: "短萃时焦糖和轻微果酸更明显。",
+        balanced: "坚果、焦糖、可可和油脂平衡。",
+        round: "厚实、顺滑、适合浓缩和奶咖。"
+      }
+    },
+    "decaf-colombia": {
+      id: "decaf-colombia",
+      name: "哥伦比亚 低因",
+      origin: "哥伦比亚 · 低因处理",
+      process: "低因处理",
+      image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
+      recommendedMode: "hand",
+      description: "焦糖、坚果和温和果酸，适合晚间手冲或美式。",
+      traits: { acidity: 3, sweetness: 4, body: 3 },
+      defaultFlavor: "balanced",
+      defaultTemp: 90,
+      tasting: {
+        bright: "温和果酸更清楚，甜感轻盈。",
+        balanced: "焦糖、坚果和柔和果酸平衡。",
+        round: "甜感更厚，口感柔顺，尾段低苦。"
+      }
+    }
+  };
+}
+
+function clampTasteScore(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function parameterBias(value, low, high, lowText, midText, highText) {
+  if (value <= low) return lowText;
+  if (value >= high) return highText;
+  return midText;
+}
+
+function buildTasteProfile(input, bean, mode, temp, detail) {
+  var flavor = input.flavor || bean.defaultFlavor;
+  var dose = Number(input.dose || 18);
+  var grind = Number(input.grind || 58);
+  var temperature = Number(input.temperature || temp || bean.defaultTemp);
+  var pressure = Number(input.pressure || 9);
+  var targetYield = Number(input.yield || Math.round(dose * 2));
+  var extractionRatio = targetYield / Math.max(1, dose);
+  var isMachine = mode === "machine";
+  var acidity = bean.traits.acidity * 16 + (flavor === "bright" ? 10 : flavor === "round" ? -8 : 0);
+  var sweetness = bean.traits.sweetness * 16 + (flavor === "balanced" ? 8 : flavor === "round" ? 4 : 0);
+  var body = bean.traits.body * 16 + (flavor === "round" ? 10 : flavor === "bright" ? -4 : 2);
+  var bitterness = 18 + bean.traits.body * 4 + (flavor === "round" ? 6 : 0);
+  var relations;
+
+  if (isMachine) {
+    var ratioDelta = extractionRatio - 2;
+    acidity += (grind - 58) * 0.22 - (temperature - 92) * 1.2 - (pressure - 9) * 1.4 + ratioDelta * 7;
+    sweetness += 8 - Math.abs(grind - 52) * 0.16 - Math.abs(temperature - 92) - Math.abs(extractionRatio - 2.2) * 5;
+    body += (58 - grind) * 0.25 + (pressure - 9) * 4 - ratioDelta * 8 + (dose - 18) * 1.1;
+    bitterness += (58 - grind) * 0.35 + (temperature - 92) * 2.2 + (pressure - 9) * 3 - ratioDelta * 2;
+    relations = [
+      {
+        key: "grind",
+        label: "研磨度",
+        value: grind + "/100",
+        tone: parameterBias(grind, 45, 72, "偏细", "中等", "偏粗"),
+        effects: grind <= 45
+          ? ["萃取率上升", "苦感与醇厚度增加", "酸感被压低"]
+          : grind >= 72
+            ? ["萃取率下降", "酸感更突出", "口感可能偏薄"]
+            : ["萃取速度稳定", "酸甜苦较均衡"]
+      },
+      {
+        key: "temperature",
+        label: "水温",
+        value: temperature + "C",
+        tone: parameterBias(temperature, 89, 94, "偏低", "稳定", "偏高"),
+        effects: temperature <= 89
+          ? ["酸感保留", "甜感释放较慢", "苦感风险较低"]
+          : temperature >= 94
+            ? ["甜感与苦感更突出", "萃取更积极", "尾段更厚"]
+            : ["甜感展开稳定", "风味边界清楚"]
+      },
+      {
+        key: "yield",
+        label: "目标液重",
+        value: targetYield + "g",
+        tone: "1:" + (Math.round(extractionRatio * 10) / 10).toFixed(1).replace(".0", ""),
+        effects: extractionRatio <= 1.8
+          ? ["浓度更高", "酸感更集中", "液体更短更厚"]
+          : extractionRatio >= 2.4
+            ? ["浓度下降", "甜感被拉长", "尾段苦味可能增加"]
+            : ["浓度和甜感较平衡", "适合观察萃取窗口"]
+      },
+      {
+        key: "pressure",
+        label: "萃取压力",
+        value: pressure + " bar",
+        tone: parameterBias(pressure, 8, 10, "偏低", "标准", "偏高"),
+        effects: pressure <= 8
+          ? ["口感更柔", "油脂较少", "萃取不足风险上升"]
+          : pressure >= 10
+            ? ["油脂与厚度增加", "通道风险上升", "苦感更明显"]
+            : ["压力稳定", "甜感和厚度更容易平衡"]
+      },
+      {
+        key: "dose",
+        label: "粉量",
+        value: dose + "g",
+        tone: parameterBias(dose, 17, 22, "偏少", "常规", "偏多"),
+        effects: dose <= 17
+          ? ["浓度更轻", "流速更快", "层次更薄"]
+          : dose >= 22
+            ? ["浓度和厚度提高", "需要更均匀布粉", "通道风险增加"]
+            : ["粉床厚度稳定", "适合微调液重"]
+      }
+    ];
+  } else {
+    var handRatio = Number((detail && detail.ratio) || (input.method === "immersion" ? 16 : 15));
+    acidity += (grind - 58) * 0.25 - (temperature - 92) * 1.4 + (handRatio - 15) * 4;
+    sweetness += 8 - Math.abs(temperature - bean.defaultTemp) * 1.2 - Math.abs(grind - 58) * 0.12;
+    body += (58 - grind) * 0.16 + (dose - 18) * 0.8 - (handRatio - 15) * 4;
+    bitterness += (58 - grind) * 0.20 + (temperature - 92) * 1.6;
+    relations = [
+      {
+        key: "grind",
+        label: "研磨度",
+        value: grind + "/100",
+        tone: parameterBias(grind, 48, 72, "偏细", "中等", "偏粗"),
+        effects: grind <= 48
+          ? ["接触更充分", "甜感和厚度上升", "尾段苦感风险增加"]
+          : grind >= 72
+            ? ["流速更快", "酸感更明亮", "可能偏水或空"]
+            : ["流速稳定", "酸甜比较平衡"]
+      },
+      {
+        key: "temperature",
+        label: "水温",
+        value: temperature + "C",
+        tone: parameterBias(temperature, 89, 94, "偏低", "稳定", "偏高"),
+        effects: temperature <= 89
+          ? ["酸感和花香更轻", "甜感释放较慢"]
+          : temperature >= 94
+            ? ["甜感更快释放", "苦感和涩感风险上升"]
+            : ["香气和甜感较稳定"]
+      },
+      {
+        key: "dose",
+        label: "粉量",
+        value: dose + "g",
+        tone: parameterBias(dose, 16, 22, "轻量", "常规", "高粉量"),
+        effects: dose <= 16
+          ? ["杯感更轻", "香气更飘", "浓度降低"]
+          : dose >= 22
+            ? ["浓度和厚度提高", "需要更慢注水"]
+            : ["浓度稳定", "适合观察水流影响"]
+      },
+      {
+        key: "ratio",
+        label: "粉水比例",
+        value: "1:" + handRatio,
+        tone: handRatio >= 16 ? "偏清爽" : "偏浓",
+        effects: handRatio >= 16
+          ? ["浓度下降", "酸感更干净", "尾韵更轻"]
+          : ["浓度提高", "甜感更集中", "厚度更明显"]
+      }
+    ];
+  }
+
+  return {
+    mode: isMachine ? "机器参数" : "手冲参数",
+    scores: [
+      { key: "acidity", label: "酸感", value: clampTasteScore(acidity) },
+      { key: "sweetness", label: "甜感", value: clampTasteScore(sweetness) },
+      { key: "bitterness", label: "苦感风险", value: clampTasteScore(bitterness) },
+      { key: "body", label: "醇厚度", value: clampTasteScore(body) }
+    ],
+    relations: relations
+  };
+}
+
+function calculateRecipe(input) {
+  var beans = getBeanMap();
+  var bean = beans[input.bean] || beans.yirgacheffe;
+  var mode = input.mode === "machine" ? "machine" : "hand";
+  var flavor = input.flavor || bean.defaultFlavor;
+  var dose = Number(input.dose || 18);
+  var grind = Number(input.grind || 58);
+  var temperature = Number(input.temperature || bean.defaultTemp);
+  var pressure = Number(input.pressure || 9);
+  var targetYield = Number(input.yield || Math.round(dose * 2));
+  var roastOffset = bean.recommendedMode === "machine" ? -1 : 1;
+  var temp = Math.max(84, Math.min(96, Math.round(temperature + roastOffset + (flavor === "bright" ? 1 : flavor === "round" ? -1 : 0))));
+
+  if (mode === "machine") {
+    var method = input.method || "espresso";
+    var methodConfig = {
+      espresso: {
+        name: "压力萃取曲线",
+        label: "意式机配方",
+        focus: "pressure and yield",
+        minYield: 28,
+        maxYield: 54,
+        ratioOffset: 0,
+        extractionBase: 28,
+        steps: [
+          "预热冲煮头和杯子，保持温度稳定。",
+          "布粉后轻敲粉碗，压粉保持水平。",
+          "观察前 8 秒出液，控制液重到 {{yield}}g。",
+          "记录秒数和口感，下一杯用研磨微调。"
+        ]
+      },
+      moka: {
+        name: "摩卡壶压力杯",
+        label: "摩卡壶配方",
+        focus: "heat and liquid stop",
+        minYield: 44,
+        maxYield: 78,
+        ratioOffset: 1.1,
+        extractionBase: 58,
+        steps: [
+          "下壶加入热水到安全阀下方，粉槽填平不压实。",
+          "中小火加热，听到连续出液后降低火力。",
+          "目标液重接近 {{yield}}g 时离火冷却底座。",
+          "搅匀后品尝，下一杯用火力和研磨微调。"
+        ]
+      },
+      capsule: {
+        name: "胶囊短杯",
+        label: "胶囊机配方",
+        focus: "cup volume and temperature",
+        minYield: 28,
+        maxYield: 46,
+        ratioOffset: -0.2,
+        extractionBase: 22,
+        steps: [
+          "空跑 2 秒预热出水路径和杯子。",
+          "放入胶囊并确认杯量设置。",
+          "出液到 {{yield}}g 左右停止，避免尾段稀释。",
+          "如果偏淡，下一杯选择更短杯量或更深烘胶囊。"
+        ]
+      }
+    };
+    var config = methodConfig[method] || methodConfig.espresso;
+    var yieldWeight = Math.max(config.minYield, Math.min(config.maxYield, Math.round(targetYield + (method === "moka" ? 18 : 0))));
+    var ratioValue = (Math.round((yieldWeight / dose) * 10) / 10).toFixed(1).replace(".0", "");
+    var extractionMin = method === "espresso" ? 24 : method === "moka" ? 46 : 18;
+    var extractionMax = method === "espresso" ? 34 : method === "moka" ? 78 : 30;
+    var extraction = Math.max(extractionMin, Math.min(extractionMax, config.extractionBase + Math.round((9 - pressure) * 1.2) + Math.round((46 - grind) * 0.08)));
+    var machineTasteProfile = buildTasteProfile(input, bean, "machine", temp, { yieldWeight: yieldWeight, extraction: extraction });
+    return {
+      mode: "machine",
+      bean: bean,
+      methodLabel: config.label,
+      name: config.name,
+      summary: bean.tasting[flavor],
+      controlFocus: config.focus,
+      tasteProfile: machineTasteProfile,
+      metrics: [
+        { label: "粉量", value: dose + "g" },
+        { label: "目标液重", value: yieldWeight + "g" },
+        { label: "粉液比例", value: "1:" + ratioValue },
+        { label: "萃取压力", value: pressure + " bar" },
+        { label: "萃取窗口", value: extraction + "s" },
+        { label: "冲煮温度", value: temp + "C" }
+      ],
+      steps: config.steps.map(function(step) { return step.replace("{{yield}}", yieldWeight); })
+    };
+  }
+
+  var ratio = input.method === "immersion" ? 16 : 15;
+  var water = Math.round(dose * ratio);
+  var seconds = input.method === "immersion" ? 240 : 165 + Math.round((grind - 58) * 0.7);
+  var minutes = Math.floor(seconds / 60);
+  var rest = String(seconds % 60).padStart(2, "0");
+  var handTasteProfile = buildTasteProfile(input, bean, "hand", temp, { ratio: ratio, water: water, seconds: seconds });
+  return {
+    mode: "hand",
+    bean: bean,
+    methodLabel: "手冲配方",
+    name: input.method === "immersion" ? "浸泡预浸配方" : "玻璃感手冲",
+    summary: bean.tasting[flavor],
+    controlFocus: "pour rhythm",
+    tasteProfile: handTasteProfile,
+    metrics: [
+      { label: "粉水比例", value: "1:" + ratio },
+      { label: "总注水量", value: water + "g" },
+      { label: "建议时间", value: minutes + ":" + rest },
+      { label: "建议水温", value: temp + "C" }
+    ],
+    steps: [
+      "注入约 2 倍粉量的水，预浸 35 秒。",
+      "缓慢绕圈注水到总水量的 45%。",
+      "继续注水到 78%，保持粉床平整。",
+      "补足目标水量，等待自然滴滤完成。"
+    ]
+  };
+}
+  </script>
+
+  <script>
+    window.eval(document.getElementById("recipe-logic").textContent);
+    const params = new URLSearchParams(location.search);
+    const state = {
+      mode: params.get("mode") === "machine" ? "machine" : "hand",
+      bean: params.get("bean") || "yirgacheffe",
+      method: params.get("mode") === "machine" ? "espresso" : "pour-over",
+      flavor: "bright",
+      grind: 58,
+      temperature: 92,
+      dose: 18,
+      yield: 36,
+      pressure: 9,
+    };
+    const beans = getBeanMap();
+    if (!beans[state.bean]) state.bean = "yirgacheffe";
+    state.flavor = beans[state.bean].defaultFlavor;
+    state.temperature = beans[state.bean].defaultTemp;
+    if (beans[state.bean].recommendedMode === "machine" && !params.get("mode")) {
+      state.mode = "machine";
+      state.method = "espresso";
+    }
+
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      modeLive: $("modeLive"), flavor: $("flavor"), grind: $("grind"), temperature: $("temperature"),
+      dose: $("dose"), yield: $("yield"), pressure: $("pressure"), grindValue: $("grindValue"), temperatureValue: $("temperatureValue"),
+      doseValue: $("doseValue"), yieldValue: $("yieldValue"), pressureValue: $("pressureValue"), recipeKicker: $("recipeKicker"),
+      recipeName: $("recipeName"), recipeSummary: $("recipeSummary"), metrics: $("metrics"), steps: $("steps"),
+      tasteMode: $("tasteMode"), tasteScores: $("tasteScores"), tasteRelations: $("tasteRelations"),
+      beanImageOut: $("beanImageOut"), beanNameOut: $("beanNameOut"), beanDescriptionOut: $("beanDescriptionOut"),
+      heroImage: $("heroImage"), heroBeanName: $("heroBeanName"), heroBeanText: $("heroBeanText"), heroModeText: $("heroModeText"),
+      output: document.querySelector(".output"),
+      recipeBody: $("recipeBody"),
+      beanStrip: $("beanStrip"),
+      brewLever: $("brewLever"),
+      brewStatus: $("brewStatus")
+    };
+    let lastBrewSnapshot = null;
+    let machineDirty = true;
+    let isBrewing = false;
+    let renderQueued = false;
+
+    function getStateSnapshot() {
+      return {
+        mode: state.mode,
+        bean: state.bean,
+        method: state.method,
+        flavor: state.flavor,
+        grind: state.grind,
+        temperature: state.temperature,
+        dose: state.dose,
+        yield: state.yield,
+        pressure: state.pressure
+      };
+    }
+
+    function renderBeanCards() {
+      els.beanStrip.innerHTML = Object.values(beans).map((bean) => {
+        const traits = "酸" + bean.traits.acidity + " · 甜" + bean.traits.sweetness + " · 厚" + bean.traits.body;
+        return `<button class="bean-card" type="button" data-bean="${bean.id}" aria-pressed="false">
+          <img src="${bean.image}" alt="${bean.name}咖啡豆" loading="lazy">
+          <strong>${bean.name}</strong><span>${bean.process} · ${traits}</span>
+        </button>`;
+      }).join("");
+      document.querySelectorAll("[data-bean]").forEach((button) => {
+        button.addEventListener("click", () => { applyBean(button.dataset.bean); markMachineDirty(); render(); pulseOutput(); });
+      });
+    }
+
+    function markMachineDirty() {
+      if (state.mode === "machine") {
+        machineDirty = true;
+        lastBrewSnapshot = null;
+        document.body.dataset.shotState = "dirty";
+        els.output.dataset.shotState = "dirty";
+        els.brewLever.setAttribute("aria-pressed", "false");
+      }
+    }
+
+    function setPressed(selector, attr, value) {
+      document.querySelectorAll(selector).forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset[attr] === value));
+      });
+    }
+
+    function applyBean(beanId) {
+      const bean = beans[beanId] || beans.yirgacheffe;
+      state.bean = bean.id;
+      state.flavor = bean.defaultFlavor;
+      state.temperature = bean.defaultTemp;
+      els.flavor.value = state.flavor;
+      els.temperature.value = state.temperature;
+      setPressed("[data-bean]", "bean", state.bean);
+    }
+
+    function setMode(mode) {
+      state.mode = mode === "machine" ? "machine" : "hand";
+      if (state.mode === "machine" && !["espresso", "moka", "capsule"].includes(state.method)) state.method = "espresso";
+      if (state.mode === "hand" && !["pour-over", "flatbed", "immersion"].includes(state.method)) state.method = "pour-over";
+      if (state.mode === "hand") machineDirty = false;
+      document.body.dataset.mode = state.mode;
+      setPressed("button[data-mode]", "mode", state.mode);
+      setPressed("button[data-method]", "method", state.method);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function renderTasteProfile(profile) {
+      if (!profile) return;
+      els.tasteMode.textContent = profile.mode || "实时对应";
+      els.tasteScores.innerHTML = profile.scores.map((score) => {
+        const value = Math.max(0, Math.min(100, Number(score.value) || 0));
+        return `<article class="taste-score">
+          <div class="taste-score-top"><span>${escapeHtml(score.label)}</span><strong>${value}</strong></div>
+          <div class="taste-score-track"><span class="taste-score-fill" style="--score:${value / 100}"></span></div>
+        </article>`;
+      }).join("");
+      els.tasteRelations.innerHTML = profile.relations.map((relation) => {
+        const effects = relation.effects.map((effect) => escapeHtml(effect)).join(" / ");
+        return `<article class="taste-relation" data-relation="${escapeHtml(relation.key)}">
+          <strong>${escapeHtml(relation.label)}<span>${escapeHtml(relation.value)} · ${escapeHtml(relation.tone)}</span></strong>
+          <p>${effects}</p>
+        </article>`;
+      }).join("");
+    }
+
+    function render() {
+      setMode(state.mode);
+      setPressed("[data-bean]", "bean", state.bean);
+      const isMachinePending = state.mode === "machine" && (!lastBrewSnapshot || machineDirty);
+      const recipeInput = state.mode === "machine" && lastBrewSnapshot && !machineDirty ? lastBrewSnapshot : state;
+      const recipe = calculateRecipe(recipeInput);
+      const shotState = state.mode !== "machine" ? "hand" : isBrewing ? "brewing" : isMachinePending ? "dirty" : "ready";
+      document.body.dataset.shotState = shotState;
+      els.output.dataset.shotState = shotState;
+      els.modeLive.textContent = recipe.mode === "machine" ? "机器制作" : "手冲制作";
+      els.grindValue.textContent = state.grind;
+      els.temperatureValue.textContent = state.temperature;
+      els.doseValue.textContent = state.dose;
+      els.yield.value = state.yield;
+      els.yieldValue.textContent = state.yield;
+      els.pressureValue.textContent = state.pressure;
+      els.brewStatus.textContent = state.mode === "machine" ? (isBrewing ? "萃取中" : isMachinePending ? "待萃取" : "已出杯") : "";
+      if (state.mode === "machine" && isMachinePending) {
+        els.recipeKicker.textContent = "等待萃取";
+        els.recipeName.textContent = "等待按下提手";
+        els.recipeSummary.textContent = "已记录当前咖啡豆和机器参数。拉下状态卡里的咖啡机提手后，右侧才会根据这一次参数快照生成萃取时间和正式建议。";
+      } else {
+        els.recipeKicker.textContent = recipe.methodLabel;
+        els.recipeName.textContent = recipe.name;
+        els.recipeSummary.textContent = recipe.summary;
+      }
+      els.beanImageOut.src = recipe.bean.image;
+      els.beanImageOut.alt = recipe.bean.name + " coffee beans";
+      els.beanNameOut.textContent = recipe.bean.name;
+      els.beanDescriptionOut.textContent = recipe.bean.origin + " · " + recipe.bean.process + " · " + recipe.bean.description;
+      els.heroImage.src = recipe.bean.image;
+      els.heroBeanName.textContent = recipe.bean.name;
+      els.heroBeanText.textContent = recipe.bean.description;
+      els.heroModeText.textContent = recipe.mode === "machine" ? "机器制作" : "手冲咖啡";
+      renderTasteProfile(recipe.tasteProfile);
+      if (state.mode === "machine" && isMachinePending) {
+        els.metrics.innerHTML = [
+          { label: "粉量", value: state.dose + "g" },
+          { label: "目标液重", value: state.yield + "g" },
+          { label: "研磨度", value: state.grind + "/100" },
+          { label: "压力", value: state.pressure + " bar" },
+          { label: "萃取时间", value: "拉下后生成" },
+          { label: "水温", value: state.temperature + "C" }
+        ].map((metric) => `<div class="metric shot-not-ready"><strong>${metric.value}</strong><span>${metric.label}</span></div>`).join("");
+        els.steps.innerHTML = [
+          "调整研磨度、粉量、液重和压力。",
+          "确认粉碗水平，锁上手柄。",
+          "拉下状态卡里的提手，咖啡机会开始出水。",
+          "萃取完成后，右侧才会显示萃取时间和本次建议。"
+        ].map((step, index) => `<li><time>${String(index + 1).padStart(2, "0")}</time><p>${step}</p></li>`).join("");
+      } else {
+        els.metrics.innerHTML = recipe.metrics.map((metric) => `<div class="metric"><strong>${metric.value}</strong><span>${metric.label}</span></div>`).join("");
+        els.steps.innerHTML = recipe.steps.map((step, index) => `<li><time>${String(index + 1).padStart(2, "0")}</time><p>${step}</p></li>`).join("");
+      }
+    }
+
+    function pulseOutput() {
+      els.output.classList.remove("is-pulsing");
+      void els.output.offsetWidth;
+      els.output.classList.add("is-pulsing");
+    }
+
+    function queueRender() {
+      if (renderQueued) return;
+      renderQueued = true;
+      requestAnimationFrame(() => {
+        renderQueued = false;
+        render();
+      });
+    }
+
+    function brewShot() {
+      if (state.mode !== "machine" || isBrewing) return;
+      lastBrewSnapshot = getStateSnapshot();
+      machineDirty = false;
+      isBrewing = true;
+      document.body.classList.add("is-brewing");
+      document.body.dataset.shotState = "brewing";
+      els.output.dataset.shotState = "brewing";
+      els.brewLever.setAttribute("aria-pressed", "true");
+      els.brewStatus.textContent = "萃取中";
+      window.setTimeout(() => {
+        isBrewing = false;
+        document.body.classList.remove("is-brewing");
+        els.brewLever.setAttribute("aria-pressed", "false");
+        render();
+        pulseOutput();
+      }, 1200);
+    }
+
+    document.querySelectorAll("button[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => { setMode(button.dataset.mode); markMachineDirty(); render(); pulseOutput(); });
+    });
+    document.querySelectorAll("button[data-method]").forEach((button) => {
+      button.addEventListener("click", () => { state.method = button.dataset.method; markMachineDirty(); render(); pulseOutput(); });
+    });
+    els.flavor.addEventListener("change", () => { state.flavor = els.flavor.value; markMachineDirty(); render(); pulseOutput(); });
+    [els.grind, els.temperature, els.dose, els.yield, els.pressure].forEach((input) => {
+      input.addEventListener("input", () => { state[input.name] = Number(input.value); markMachineDirty(); queueRender(); });
+    });
+    document.addEventListener("click", (event) => {
+      const lever = event.target.closest("#brewLever");
+      if (!lever) return;
+      event.preventDefault();
+      brewShot();
+    });
+
+    renderBeanCards();
+    applyBean(state.bean);
+    setMode(state.mode);
+    if (state.mode === "hand") machineDirty = false;
+    render();
+  </script>
+</body>
+</html>
