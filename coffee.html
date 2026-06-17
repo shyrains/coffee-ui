@@ -3620,7 +3620,11 @@ function calculateRecipe(input) {
         <button class="carousel-dot" type="button" data-carousel-index="${index}" aria-label="查看${escapeHtml(bean.name)}" aria-current="false"></button>
       `).join("");
       els.carouselDots.querySelectorAll("[data-carousel-index]").forEach((button) => {
-        button.addEventListener("click", () => selectCarouselBean(Number(button.dataset.carouselIndex)));
+        button.addEventListener("pointerdown", (event) => event.stopPropagation());
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectCarouselBean(Number(button.dataset.carouselIndex));
+        });
       });
       syncHeroCarousel(state.bean);
     }
@@ -3659,6 +3663,10 @@ function calculateRecipe(input) {
     function stepCarousel(delta) {
       if (!carouselBeanIds.length) return;
       selectCarouselBean(carouselIndex + delta);
+    }
+
+    function isCarouselControlEvent(event) {
+      return Boolean(event.target.closest(".carousel-btn, .carousel-dot"));
     }
 
     function renderRecommendedMachineConfig() {
@@ -3863,9 +3871,12 @@ function calculateRecipe(input) {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && els.cafeLightbox && !els.cafeLightbox.hidden) closeCafeLightbox();
     });
+    els.carouselPrev.addEventListener("pointerdown", (event) => event.stopPropagation());
+    els.carouselNext.addEventListener("pointerdown", (event) => event.stopPropagation());
     els.carouselPrev.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); stepCarousel(-1); });
     els.carouselNext.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); stepCarousel(1); });
     els.beanCarousel.addEventListener("pointerdown", (event) => {
+      if (isCarouselControlEvent(event)) return;
       carouselDragging = true;
       carouselStartX = event.clientX;
       carouselDeltaX = 0;
