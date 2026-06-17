@@ -78,7 +78,7 @@
     a { color: inherit; }
     button, input, select { font: inherit; }
 
-    .shell { position: relative; isolation: isolate; }
+    .shell { position: relative; isolation: isolate; z-index: 1; }
 
     .nav {
       position: sticky;
@@ -109,6 +109,10 @@
     .nav::before,
     .glass::before,
     .floating-card::before,
+    .culture-card::before,
+    .mini-bean::before,
+    .drink-card::before,
+    .cafe-scene-card::before,
     .show-card::before {
       content: "";
       position: absolute;
@@ -134,12 +138,15 @@
 
     .nav-links {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 8px;
       align-items: center;
       color: var(--muted);
       font-size: 14px;
       position: relative;
       z-index: 1;
+      max-width: 780px;
     }
 
     .nav-links a {
@@ -149,6 +156,7 @@
       padding: 0 14px;
       border-radius: 999px;
       text-decoration: none;
+      white-space: nowrap;
       transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
     }
 
@@ -195,12 +203,29 @@
       text-shadow: 0 18px 54px rgba(0,0,0,0.38), 0 0 38px rgba(255,255,255,0.10);
     }
 
+    .hero-title-stack {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: nowrap;
+      gap: 0;
+      max-width: 100%;
+      font-size: clamp(34px, 5.6vw, 72px);
+      line-height: 1.05;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .hero-title-stack span {
+      display: inline;
+      white-space: nowrap;
+    }
+
     .hero-copy {
-      max-width: 620px;
-      margin: 24px 0 0;
+      max-width: 760px;
+      margin: 18px 0 0;
       color: var(--muted);
-      font-size: clamp(19px, 2.2vw, 27px);
-      line-height: 1.42;
+      font-size: clamp(16px, 1.6vw, 21px);
+      line-height: 1.5;
       font-weight: 560;
     }
 
@@ -265,13 +290,47 @@
         inset 0 -22px 42px rgba(0,0,0,0.16);
     }
 
-    .stage img {
+    .bean-carousel,
+    .bean-carousel-viewport,
+    .bean-carousel-track,
+    .bean-carousel-slide {
+      height: 100%;
+      min-height: 610px;
+    }
+
+    .bean-carousel {
+      position: absolute;
+      inset: 0;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .bean-carousel-viewport {
+      overflow: hidden;
+    }
+
+    .bean-carousel-track {
+      display: flex;
+      will-change: transform;
+      transition: transform 420ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .bean-carousel-slide {
+      min-width: 100%;
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage img,
+    .bean-carousel-slide img {
       width: 100%;
       height: 100%;
       min-height: 610px;
       object-fit: cover;
       display: block;
       filter: saturate(1.05) contrast(1.05);
+      pointer-events: none;
     }
 
     .stage::after {
@@ -281,6 +340,74 @@
       background:
         linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.62)),
         radial-gradient(circle at 20% 10%, rgba(255,255,255,0.24), transparent 32%);
+      pointer-events: none;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      z-index: 5;
+      width: 48px;
+      height: 48px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(13, 10, 8, 0.38);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+      backdrop-filter: blur(22px) saturate(170%);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .carousel-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.4;
+    }
+
+    .carousel-prev { left: 18px; }
+    .carousel-next { right: 18px; }
+
+    .carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 164px;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(10, 7, 5, 0.30);
+      border: 1px solid rgba(255,255,255,0.16);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+      transform: translateX(-50%);
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      cursor: pointer;
+      transition: width 180ms ease, background 180ms ease;
+    }
+
+    .carousel-dot[aria-current="true"] {
+      width: 24px;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
     }
 
     .floating-card {
@@ -356,9 +483,10 @@
       width: fit-content;
       max-width: 100%;
       margin: 0;
-      padding: 13px clamp(16px, 2vw, 24px) 15px;
+      padding: 13px clamp(16px, 2vw, 24px) 24px;
       border: 1px solid rgba(255,255,255,0.28);
       border-radius: 24px;
+      overflow: hidden;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.16)),
         rgba(18, 14, 12, 0.46);
@@ -379,10 +507,10 @@
     .section-head h2::after {
       content: "";
       position: absolute;
-      left: 22px;
-      right: 22px;
-      bottom: -8px;
-      height: 10px;
+      left: 28px;
+      right: 28px;
+      bottom: 7px;
+      height: 8px;
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 999px;
       background:
@@ -399,6 +527,173 @@
       font-size: 20px;
       line-height: 1.5;
       margin: 18px 0 0;
+    }
+
+    .cafe-showcase {
+      padding-top: clamp(36px, 5vw, 72px);
+    }
+
+    .cafe-showcase-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 0.5fr);
+      gap: clamp(18px, 4vw, 44px);
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .cafe-showcase-head h2 {
+      margin: 0;
+      max-width: none;
+      font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", "KaiTi", serif;
+      font-size: clamp(32px, 4.8vw, 66px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      font-weight: 650;
+      white-space: nowrap;
+      text-shadow: 0 22px 62px rgba(0,0,0,0.48), 0 0 20px rgba(255,255,255,0.10);
+    }
+
+    .cafe-showcase-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 680px;
+      font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "Microsoft YaHei UI", serif;
+      font-size: clamp(17px, 1.55vw, 22px);
+      line-height: 1.78;
+      font-weight: 620;
+      text-wrap: balance;
+      text-shadow: 0 16px 38px rgba(0,0,0,0.32);
+    }
+
+    .cafe-showcase-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 0.8fr;
+      grid-auto-rows: 184px;
+      gap: 16px;
+    }
+
+    .cafe-scene-card {
+      position: relative;
+      min-height: 184px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.10);
+      box-shadow:
+        0 26px 66px rgba(0,0,0,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.28);
+      cursor: zoom-in;
+      appearance: none;
+    }
+
+    .cafe-scene-card.featured {
+      grid-row: span 2;
+      min-height: 384px;
+    }
+
+    .cafe-scene-card.wide {
+      grid-column: span 2;
+    }
+
+    .cafe-scene-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(1.04) contrast(1.04) brightness(0.90);
+      transform: scale(1.01);
+      transition: transform 460ms cubic-bezier(.2,.8,.2,1), filter 260ms ease;
+      pointer-events: none;
+    }
+
+    .cafe-scene-card:hover img {
+      transform: scale(1.055);
+      filter: saturate(1.12) contrast(1.08) brightness(0.96);
+    }
+
+    .cafe-scene-card figcaption {
+      position: absolute;
+      left: 14px;
+      right: auto;
+      bottom: 14px;
+      z-index: 2;
+      display: inline-grid;
+      width: fit-content;
+      max-width: min(520px, calc(100% - 28px));
+      gap: 3px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      color: #fff;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08)),
+        rgba(16, 12, 10, 0.46);
+      border: 1px solid rgba(255,255,255,0.26);
+      -webkit-backdrop-filter: blur(26px) saturate(170%);
+      backdrop-filter: blur(26px) saturate(170%);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
+    }
+
+    .cafe-scene-card figcaption strong {
+      font-size: clamp(16px, 1.65vw, 22px);
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .cafe-scene-card figcaption span {
+      color: rgba(248,247,244,0.74);
+      font-size: 12px;
+      line-height: 1.38;
+      font-weight: 700;
+    }
+
+    .cafe-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 4vw, 48px);
+      background: rgba(5, 4, 3, 0.72);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+      backdrop-filter: blur(26px) saturate(150%);
+    }
+
+    .cafe-lightbox[hidden] {
+      display: none;
+    }
+
+    .cafe-lightbox img {
+      width: min(1180px, 94vw);
+      max-height: 86dvh;
+      object-fit: contain;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: 0 34px 110px rgba(0,0,0,0.62), inset 0 1px 0 rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cafe-lightbox-close {
+      position: fixed;
+      top: clamp(14px, 3vw, 28px);
+      right: clamp(14px, 3vw, 28px);
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff;
+      background: rgba(20, 17, 15, 0.62);
+      -webkit-backdrop-filter: blur(22px);
+      backdrop-filter: blur(22px);
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
     }
 
     .workspace {
@@ -629,6 +924,77 @@
     .machine-status-row span:last-child {
       color: var(--gold);
       font-variant-numeric: tabular-nums;
+    }
+
+    .machine-recommendation {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(0,0,0,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 16px 34px rgba(0,0,0,0.18);
+    }
+
+    .machine-recommendation-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .machine-recommendation-head span {
+      color: var(--gold);
+      font-size: 13px;
+    }
+
+    .recommended-config-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .recommended-config-grid div {
+      min-height: 54px;
+      padding: 8px 9px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .recommended-config-grid strong,
+    .recommended-config-grid span {
+      display: block;
+    }
+
+    .recommended-config-grid strong {
+      color: #fff;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .recommended-config-grid span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .recommended-config-action {
+      min-height: 38px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 950;
+      box-shadow: 0 12px 28px rgba(234,194,125,0.16), inset 0 1px 0 rgba(255,255,255,0.72);
     }
 
     .machine-preview {
@@ -1009,7 +1375,7 @@
       position: absolute;
       z-index: 8;
       left: 50%;
-      bottom: clamp(18px, 7%, 28px);
+      bottom: clamp(8px, 3%, 14px);
       transform: translateX(-50%);
       margin: 0;
       min-height: 34px;
@@ -1382,6 +1748,444 @@
     .steps time { color: var(--gold); font-weight: 900; }
     .steps p { margin: 0; color: var(--muted); line-height: 1.45; }
 
+    .culture-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .culture-card,
+    .mini-bean,
+    .drink-card,
+    .story-detail,
+    .variable-lab {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.10);
+      -webkit-backdrop-filter: blur(28px) saturate(175%);
+      backdrop-filter: blur(28px) saturate(175%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .culture-card > *,
+    .mini-bean > *,
+    .drink-card > *,
+    .story-detail > *,
+    .variable-lab > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .culture-card {
+      min-height: 360px;
+      padding: 26px;
+      border-radius: var(--radius-xl);
+    }
+
+    .culture-card h3 {
+      margin: 0 0 14px;
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    .culture-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .history-story-panel {
+      min-height: 420px;
+    }
+
+    .history-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .story-detail {
+      min-height: 210px;
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .story-detail span {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .story-detail h3,
+    .variable-lab h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      line-height: 1.18;
+    }
+
+    .story-detail p,
+    .variable-lab p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+      font-size: 14px;
+    }
+
+    .culture-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .culture-stat {
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .culture-stat strong {
+      display: block;
+      color: #fff;
+      font-size: clamp(18px, 1.7vw, 22px);
+      font-weight: 950;
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+
+    .culture-stat span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .story-timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-node {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 14px;
+      min-height: 112px;
+      padding: 18px;
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.16), rgba(0,0,0,0.16)),
+        rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 16px 32px rgba(0,0,0,0.18);
+    }
+
+    .story-node time {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-node h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .story-node p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .china-bean-grid,
+    .drink-lab-grid,
+    .drink-variable-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .china-bean-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .drink-lab-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .drink-variable-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .mini-bean,
+    .drink-card {
+      min-height: 230px;
+      padding: 20px;
+      border-radius: 26px;
+    }
+
+    .mini-bean {
+      display: grid;
+      align-content: start;
+    }
+
+    .bean-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .bean-thumb {
+      width: clamp(56px, 6vw, 74px);
+      aspect-ratio: 1;
+      flex: 0 0 auto;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .drink-card {
+      min-height: auto;
+      padding: 14px;
+    }
+
+    .drink-summary {
+      display: grid;
+      grid-template-rows: 190px auto auto;
+      gap: 14px;
+      min-height: auto;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .drink-summary::marker { content: ""; }
+    .drink-summary::-webkit-details-marker { display: none; }
+
+    .drink-photo {
+      width: 100%;
+      height: 190px;
+      display: block;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 18px 34px rgba(0,0,0,0.20);
+    }
+
+    .drink-copy {
+      padding: 4px 4px 8px;
+    }
+
+    .recipe-detail-toggle {
+      justify-self: start;
+      margin: 0 4px 4px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      box-shadow: 0 14px 30px rgba(234,194,125,0.20), inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .recipe-detail-card[open] {
+      box-shadow: 0 26px 62px rgba(0,0,0,0.34), 0 0 0 1px rgba(234,194,125,0.18), inset 0 1px 0 rgba(255,255,255,0.20);
+    }
+
+    .recipe-detail-card {
+      align-self: start;
+      transition: transform 200ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+
+    .recipe-detail-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.38);
+    }
+
+    .recipe-detail-card[open] .drink-photo {
+      transform: scale(1.018);
+    }
+
+    .recipe-steps {
+      display: grid;
+      gap: 10px;
+      margin: 14px 4px 4px;
+      padding: 14px 14px 14px 34px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .recipe-steps li::marker {
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .recipe-steps b {
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .drink-variables {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .drink-variables li {
+      padding: 10px 11px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .drink-variables b {
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .mini-bean span,
+    .drink-card span {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mini-bean h3,
+    .drink-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .mini-bean p,
+    .drink-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.52;
+      font-size: 14px;
+    }
+
+    .mini-bean strong,
+    .drink-card strong {
+      display: block;
+      margin-top: 16px;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .drink-card .recipe-detail-toggle {
+      justify-self: start;
+      width: fit-content;
+      min-height: 40px;
+      margin: 0 4px 4px;
+      padding: 0 15px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      border: 1px solid rgba(255,255,255,0.42);
+      box-shadow: 0 14px 30px rgba(234,194,125,0.20), inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .recipe-detail-card[open] .recipe-detail-toggle {
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .recipe-detail-card[open] .recipe-steps {
+      animation: recipeReveal 220ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    @keyframes recipeReveal {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .variable-lab {
+      min-height: 240px;
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .milk-foam-tips {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .foam-tip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .foam-tip {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .foam-tip b {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .variable-lab strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
     .showcase {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1412,9 +2216,22 @@
     @media (max-width: 980px) {
       .hero, .workspace { grid-template-columns: 1fr; }
       .output { position: static; }
+      .cafe-showcase-head { grid-template-columns: 1fr; }
+      .cafe-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cafe-scene-card.featured { grid-row: span 2; }
+      .cafe-scene-card.wide { grid-column: span 2; }
+      .culture-grid { grid-template-columns: 1fr; }
+      .china-bean-grid,
+      .drink-lab-grid,
+      .history-detail-grid,
+      .drink-variable-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .showcase { grid-template-columns: 1fr; }
       .stage { min-height: 520px; }
-      .stage img { min-height: 520px; }
+      .stage img,
+      .bean-carousel,
+      .bean-carousel-viewport,
+      .bean-carousel-track,
+      .bean-carousel-slide { min-height: 520px; }
     }
 
     @media (max-width: 640px) {
@@ -1434,6 +2251,7 @@
         width: 100%;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: 42px;
         gap: 6px;
         font-size: 12px;
       }
@@ -1449,7 +2267,7 @@
       .section { width: min(100% - 20px, 1180px); }
       .section-head { max-width: 100%; }
       .section-head h2 {
-        padding: 10px 12px 11px;
+        padding: 10px 14px 20px;
         border-radius: 18px;
         font-size: clamp(17px, 5.05vw, 24px);
         box-shadow:
@@ -1458,17 +2276,36 @@
           inset 0 -14px 26px rgba(0,0,0,0.16);
       }
       .section-head h2::after {
-        left: 14px;
-        right: 14px;
-        bottom: -7px;
-        height: 8px;
+        left: 16px;
+        right: 16px;
+        bottom: 6px;
+        height: 6px;
       }
       .floating-card { grid-template-columns: 1fr; left: 16px; right: 16px; bottom: 16px; }
-      .bean-strip, .metrics, .segment, .bean-profile, .taste-scores { grid-template-columns: 1fr; }
+      .carousel-btn { width: 42px; height: 42px; }
+      .carousel-prev { left: 12px; }
+      .carousel-next { right: 12px; }
+      .carousel-dots { bottom: 154px; }
+      .bean-strip, .metrics, .segment, .bean-profile, .taste-scores, .culture-stats, .culture-grid, .china-bean-grid, .drink-lab-grid, .history-detail-grid, .drink-variable-grid, .foam-tip-grid, .cafe-showcase-grid { grid-template-columns: 1fr; }
+      .cafe-showcase-head h2 { font-size: clamp(27px, 7.2vw, 38px); }
+      .cafe-scene-card,
+      .cafe-scene-card.featured,
+      .cafe-scene-card.wide {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 230px;
+      }
       .bean-profile img { width: 100%; height: 180px; }
+      .drink-card { min-height: auto; }
+      .drink-photo { height: 176px; }
+      .drink-summary { grid-template-rows: 176px auto auto; }
+      .bean-thumb { width: 58px; border-radius: 16px; }
       .taste-relation { grid-template-columns: 1fr; }
+      .story-node { grid-template-columns: 1fr; }
       .steps li { grid-template-columns: 1fr; }
       .machine-console { margin-top: 12px; }
+      .recommended-config-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .machine-recommendation-head { align-items: flex-start; flex-direction: column; }
       .machine-status-row {
         margin-bottom: 10px;
         padding: 0 2px;
@@ -1517,16 +2354,54 @@
       <div class="brand">寻常小馆</div>
       <nav class="nav-links" aria-label="页面链接">
         <a href="beans.html">咖啡豆图鉴</a>
+        <a href="#china-story">咖啡历史</a>
+        <a href="#china-beans">热门豆种</a>
+        <a href="#drink-methods">咖啡做法</a>
         <a href="#workspace">制作工作台</a>
         <a href="#difference">模式差异</a>
       </nav>
     </header>
 
     <main>
+      <section class="section cafe-showcase" aria-label="寻常小馆咖啡馆空间展示">
+        <div class="cafe-showcase-head">
+          <h2>晨光照进寻常小馆</h2>
+          <p>寻常小馆里,氤氲的香气中弥漫着浪漫的气息,每一口咖啡都像是品尝着时光的深邃。</p>
+        </div>
+        <div class="cafe-showcase-grid">
+          <button class="cafe-scene-card featured" type="button" data-lightbox-src="assets/cafe/2.jpg" data-lightbox-alt="小馆吧台" aria-label="放大查看小馆吧台">
+            <img src="assets/cafe/2.jpg" alt="小馆吧台" width="1920" height="1080" loading="lazy">
+          </button>
+          <button class="cafe-scene-card" type="button" data-lightbox-src="assets/cafe/1.jpg" data-lightbox-alt="吧台一角" aria-label="放大查看吧台一角">
+            <img src="assets/cafe/1.jpg" alt="吧台一角" width="1080" height="1440" loading="lazy">
+          </button>
+          <button class="cafe-scene-card" type="button" data-lightbox-src="assets/cafe/3.jpg" data-lightbox-alt="馆里一景" aria-label="放大查看馆里一景">
+            <img src="assets/cafe/3.jpg" alt="馆里一景" width="1080" height="1440" loading="lazy">
+          </button>
+          <button class="cafe-scene-card wide" type="button" data-lightbox-src="assets/cafe/4.jpg" data-lightbox-alt="咖啡豆展示" aria-label="放大查看咖啡豆展示">
+            <img src="assets/cafe/4.jpg" alt="咖啡豆展示" width="1080" height="1440" loading="lazy">
+          </button>
+          <button class="cafe-scene-card" type="button" data-lightbox-src="assets/cafe/5.jpg" data-lightbox-alt="咖啡机" aria-label="放大查看咖啡机">
+            <img src="assets/cafe/5.jpg" alt="咖啡机" width="1080" height="1440" loading="lazy">
+          </button>
+          <button class="cafe-scene-card" type="button" data-lightbox-src="assets/cafe/6.jpg" data-lightbox-alt="餐桌光影" aria-label="放大查看餐桌光影">
+            <img src="assets/cafe/6.jpg" alt="餐桌光影" width="1080" height="1440" loading="lazy">
+          </button>
+          <button class="cafe-scene-card" type="button" data-lightbox-src="assets/cafe/7.jpg" data-lightbox-alt="寻常小馆" aria-label="放大查看寻常小馆">
+            <img src="assets/cafe/7.jpg" alt="寻常小馆" width="1080" height="1440" loading="lazy">
+          </button>
+        </div>
+      </section>
+
+      <div class="cafe-lightbox" id="cafeLightbox" role="dialog" aria-modal="true" aria-label="咖啡馆照片大图" hidden>
+        <button class="cafe-lightbox-close" id="cafeLightboxClose" type="button" aria-label="关闭大图">×</button>
+        <img id="cafeLightboxImage" src="" alt="">
+      </div>
+
       <section class="hero">
         <div>
           <p class="eyebrow">寻常小馆</p>
-          <h1>把咖啡制作看清楚。</h1>
+          <h1 class="hero-title-stack" aria-label="把咖啡制作看清楚。"><span>把咖啡</span><span>制作看</span><span>清楚。</span></h1>
           <p class="hero-copy">从真实咖啡豆开始，选择手冲或机器制作。页面会根据豆子和方式切换配方、参数与步骤。</p>
           <div class="hero-actions">
             <a class="btn primary" href="#workspace">开始制作</a>
@@ -1534,7 +2409,22 @@
           </div>
         </div>
         <div class="stage" aria-label="咖啡豆与制作视觉">
-          <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="真实烘焙咖啡豆特写">
+          <div class="bean-carousel" id="beanCarousel" aria-label="滑动查看不同咖啡豆">
+            <div class="bean-carousel-viewport">
+              <div class="bean-carousel-track" id="beanCarouselTrack">
+                <figure class="bean-carousel-slide is-active">
+                  <img id="heroImage" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="真实烘焙咖啡豆特写" draggable="false">
+                </figure>
+              </div>
+            </div>
+            <button class="carousel-btn carousel-prev" id="carouselPrev" type="button" aria-label="上一种咖啡豆">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-btn carousel-next" id="carouselNext" type="button" aria-label="下一种咖啡豆">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <div class="carousel-dots" id="carouselDots" aria-label="咖啡豆轮播位置"></div>
+          </div>
           <div class="floating-card">
             <div>
               <h2 id="heroBeanName">埃塞俄比亚 耶加雪菲</h2>
@@ -1542,6 +2432,157 @@
             </div>
             <span class="mode-pill" id="heroModeText">手冲咖啡</span>
           </div>
+        </div>
+      </section>
+
+      <section id="china-story" class="section">
+        <div class="section-head">
+          <h2>咖啡历史，从云南山谷开始。</h2>
+          <p>这不是单一年份的故事，而是传教路线、边地贸易、云南山地种植、村落饮用习惯和现代城市咖啡馆一起写出来的路径。</p>
+        </div>
+        <div class="culture-grid">
+          <article class="culture-card history-story-panel">
+            <p class="kicker">咖啡历史故事</p>
+            <h3>从教堂后院的一株树，到吧台上的一杯云南豆。</h3>
+            <p>咖啡进入中国的叙事常从云南开始：19 世纪末，传教、商路和边地交流把咖啡带到西南山地；1904 年前后，法国传教士田德能在云南宾川朱苦拉一带种下咖啡苗，村民后来把咖啡采摘、铁锅古法烘焙、石臼捣碎、陶罐煮饮的习惯保留下来。再往后，保山、普洱、德宏、临沧等产区把咖啡从村落记忆推向产业，本土精品豆也开始进入独立咖啡馆和连锁咖啡馆菜单。</p>
+            <div class="culture-stats">
+              <div class="culture-stat"><strong>1892 / 1904</strong><span>一个是咖啡入滇叙事，一个是朱苦拉村落记忆。</span></div>
+              <div class="culture-stat"><strong>云南</strong><span>保山、普洱、德宏、临沧共同构成本土咖啡地图。</span></div>
+              <div class="culture-stat"><strong>小粒种</strong><span>从商品豆、拼配豆走向精品手冲和城市奶咖。</span></div>
+            </div>
+          </article>
+          <div class="story-timeline" aria-label="咖啡历史时间线">
+            <article class="story-node"><time>19 世纪末</time><div><h3>从外来饮品到山地作物</h3><p>咖啡先沿传教路线、边地贸易和侨民生活进入中国西南，并不是一开始就以城市饮品流行。</p></div></article>
+            <article class="story-node"><time>1904</time><div><h3>朱苦拉与田德能</h3><p>朱苦拉故事把咖啡具体落到村落：咖啡树、教堂、古法烘焙和村民自饮，构成“中国咖啡早期记忆”。</p></div></article>
+            <article class="story-node"><time>20 世纪</time><div><h3>从试种到产区</h3><p>云南小粒咖啡逐步扩种，保山、普洱、德宏、临沧等产区开始把咖啡从作物带向产业。</p></div></article>
+            <article class="story-node"><time>今天</time><div><h3>从产区进入菜单</h3><p>中国咖啡馆既使用云南本土豆，也用巴西、哥伦比亚、埃塞俄比亚、印尼等产区豆完成稳定出品。</p></div></article>
+          </div>
+        </div>
+        <div class="history-detail-grid">
+          <article class="story-detail"><span>村落线索</span><h3>朱苦拉不是符号，是一套生活方式。</h3><p>故事里的重点不只是“第一棵树”，还有采摘、铁锅古法烘焙、石臼捣碎、陶罐煮饮这些长期存在的日常习惯。</p></article>
+          <article class="story-detail"><span>产区扩展</span><h3>云南咖啡不只一个名字。</h3><p>保山常被记住为老产区，普洱承担更大的产业想象，德宏、临沧等地则让云南豆拥有更多海拔、处理法和风味表达。</p></article>
+          <article class="story-detail"><span>城市菜单</span><h3>本土精品进入吧台。</h3><p>今天的独立咖啡馆和连锁咖啡馆会把云南豆用于手冲、SOE、拿铁和生椰拿铁，消费者开始把“中国咖啡”当作可被选择的风味。</p></article>
+        </div>
+      </section>
+
+      <section id="china-beans" class="section">
+        <div class="section-head">
+          <h2>中国咖啡馆常用豆种。</h2>
+          <p>吧台常见选择通常分两类：稳定出品的意式拼配豆，和用于手冲、特调的单一产区豆。</p>
+        </div>
+        <div class="china-bean-grid">
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>本土产区</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="云南卡蒂姆咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>云南卡蒂姆</h3><p>坚果、可可、低酸和烘烤甜感明显，价格和稳定性适合日常美式、拿铁和冷萃。</p><strong>常见：美式 / 拿铁 / 生椰拿铁</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>经典品种</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="铁皮卡和波旁咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>铁皮卡 / 波旁</h3><p>干净、甜感细、酸质柔和，常被咖啡馆用于展示云南精品豆或单品豆的层次。</p><strong>常见：手冲 / 冰滴 / 精品美式</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>拼配基底</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="巴西咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>巴西</h3><p>坚果、巧克力和低酸感稳定，是很多中国咖啡馆意式拼配里的厚度来源。</p><strong>常见：浓缩 / 拿铁 / 摩卡</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>均衡甜感</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="哥伦比亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>哥伦比亚</h3><p>焦糖、红果和均衡酸甜适合做单品，也常和巴西、云南豆一起进入拼配。</p><strong>常见：美式 / 澳白 / 手冲</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>明亮香气</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="埃塞俄比亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>埃塞俄比亚</h3><p>花香、柑橘、莓果和茶感突出，适合需要“香气记忆点”的手冲和果咖特调。</p><strong>常见：手冲 / 橙C美式 / 冷萃</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>厚重低酸</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="曼特宁咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>曼特宁</h3><p>草本、黑巧、香料和厚重口感明显，适合做浓郁黑咖和奶咖基底。</p><strong>常见：深烘美式 / 拿铁 / Dirty</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>高酸结构</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="肯尼亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>肯尼亚</h3><p>黑醋栗、番茄和明亮酸质辨识度高，常用于想突出果酸结构的单品菜单。</p><strong>常见：手冲 / 冰美式 / 果咖</strong>
+          </article>
+          <article class="mini-bean">
+            <div class="bean-card-head"><span>门店拼配</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="意式综合豆小图" width="120" height="120" loading="lazy"></div>
+            <h3>意式综合豆</h3><p>通常用巴西、哥伦比亚、云南、印尼或埃塞做比例组合，目标是稳定油脂、甜感和奶咖融合度。</p><strong>常见：全店基础浓缩</strong>
+          </article>
+        </div>
+      </section>
+
+      <section id="drink-methods" class="section">
+        <div class="section-head">
+          <h2>不同咖啡做法，看懂变量和口感。</h2>
+          <p>一杯咖啡不是只有配方名，研磨度、粉水比、萃取率、水温、液重、奶泡、冰量和橙汁比例都会改变酸感、甜感、苦感、厚度与余韵。</p>
+        </div>
+        <div class="drink-lab-grid">
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Iced_Coffee_%286088101587%29.jpg?width=900" alt="橙C美式成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>清爽果咖</span><h3>橙C美式</h3><p>浓缩、冷萃或冰美式做基底，加入橙汁、橙片和冰块。适合埃塞、肯尼亚、浅烘云南豆这种有柑橘酸和花果香的豆子。</p><strong>结构：咖啡 + 橙汁 / 橙味基底 + 冰水</strong><ul class="drink-variables"><li><b>橙汁比例</b>越高，酸甜和果香越明显，但咖啡余韵会被削弱。</li><li><b>冰量</b>越多，入口更清爽；冰太少会显得甜腻、酸感集中。</li><li><b>萃取率</b>偏低会尖酸，偏高会让橙皮感变苦。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备杯底：</b>杯中加入冰块至七分满，倒入 80-110g 橙汁或橙味基底。</li><li><b>处理咖啡：</b>用 18g 粉萃取 32-38g 浓缩，想更清爽可换成 90-120g 冷萃。</li><li><b>控制分层：</b>沿杯壁或勺背缓慢倒入咖啡，保留上层深色层次。</li><li><b>校准口感：</b>如果橙汁太甜，增加 20-30g 冰水；如果咖啡发苦，下次把研磨略调粗。</li><li><b>出杯收尾：</b>用橙片或橙皮点香，喝前轻搅两下，让酸甜和咖啡余韵融合。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Coffee_life_%28Unsplash%29.jpg?width=900" alt="美式咖啡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>黑咖基础</span><h3>美式</h3><p>浓缩加水，目标是降低浓度但保留香气。它会放大豆子的干净度，所以稳定拼配或甜感清楚的单品更适合。</p><strong>结构：浓缩 + 热水 / 冰水</strong><ul class="drink-variables"><li><b>液重</b>越高，浓缩越稀释，苦感降低但厚度变薄。</li><li><b>水温</b>热美式更放大苦甜，冰美式更强调酸感和清爽度。</li><li><b>研磨度</b>太粗会酸薄，太细会苦涩、余韵发干。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>选择杯型：</b>热美式先温杯，冰美式加冰至七分满，准备 120-180g 水。</li><li><b>萃取浓缩：</b>用 18g 粉萃取 30-42g 浓缩，观察流速是否落在 25-32 秒。</li><li><b>决定顺序：</b>热饮建议浓缩倒入热水，保留香气；冰饮先水和冰，再倒浓缩快速降温。</li><li><b>判断味道：</b>酸薄通常是萃取不足或水太多，苦涩发干通常是研磨过细或液重过长。</li><li><b>记录下次：</b>先闻香再入口，记录液重、水量和研磨度，下一杯只改一个变量。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Latte_art_in_pasadena_%28Unsplash%29.jpg?width=900" alt="拿铁成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>奶咖日常</span><h3>拿铁</h3><p>浓缩加入大量牛奶，奶甜会柔化酸感和苦感。巴西、云南卡蒂姆、曼特宁或意式综合豆更容易做出顺滑甜感。</p><strong>结构：浓缩 + 牛奶 + 轻奶泡</strong><ul class="drink-variables"><li><b>奶量</b>越多，口感越柔，咖啡香气越弱。</li><li><b>奶温</b>过高会带熟奶味，甜感反而变钝。</li><li><b>萃取率</b>偏高会在奶里表现为焦苦，偏低则像酸奶感。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>萃取基底：</b>萃取 32-40g 浓缩，优先选择坚果、可可或焦糖调豆子。</li><li><b>蒸奶打发：</b>倒入冷牛奶至拉花缸 1/3-1/2，蒸汽棒贴近液面打入少量空气。</li><li><b>细化奶泡：</b>形成漩涡后把大泡打碎，55-62C 停止，牛奶应像湿油漆一样有光泽。</li><li><b>融合咖啡：</b>先从高处细流注入，让浓缩和牛奶混合，降低表面色差。</li><li><b>完成拉花：</b>贴近液面推出图案；若图案散开，说明奶泡太薄或注入太快。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese_coffee_with_milk_and_ice.jpg?width=900" alt="Dirty咖啡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>强烈分层</span><h3>Dirty</h3><p>冰牛奶上直接接热浓缩，入口先热后冷、先浓后甜。它依赖浓缩厚度和温差，适合油脂稳定、可可坚果调的豆子。</p><strong>结构：冰牛奶 + 热浓缩</strong><ul class="drink-variables"><li><b>液重</b>短一点更厚重，长一点更柔和但分层感下降。</li><li><b>牛奶温度</b>越低，冷热反差越明显。</li><li><b>杯型</b>窄杯更容易保留分层，宽杯更快融合。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>提前冷藏：</b>把玻璃杯和牛奶冷藏，杯中倒入 120-150g 冰牛奶。</li><li><b>短萃浓缩：</b>建议 18g 粉出 28-34g 液体，让浓缩厚度更集中。</li><li><b>保留温差：</b>浓缩萃好后立刻倒入，不要等待太久，否则 Dirty 的冷热反差会消失。</li><li><b>做出分层：</b>让浓缩沿杯壁或勺背落到牛奶表面，减少搅动和混合。</li><li><b>立即饮用：</b>先感受热浓缩的强度，再让冰牛奶的甜感收尾；放久会变成普通冰拿铁。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cup_saucer_and_coffee_art_%28Unsplash%29.jpg?width=900" alt="澳白成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>细腻奶感</span><h3>澳白</h3><p>比拿铁更突出咖啡浓度，奶泡更薄，入口更绵密。适合甜感清晰、苦感干净的中深烘拼配。</p><strong>结构：双份浓缩 + 少量牛奶 + 薄奶泡</strong><ul class="drink-variables"><li><b>咖啡占比</b>越高，苦甜和烘焙香越突出。</li><li><b>奶泡厚度</b>越薄，口感越丝滑；太厚会接近卡布奇诺。</li><li><b>粉量</b>不足会水感明显，粉量过高会压住奶甜。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备小杯：</b>选择 150-180ml 杯量，让咖啡浓度保留在前段。</li><li><b>萃取双份：</b>使用双份浓缩，液重控制在 32-38g，避免拉太长变水。</li><li><b>薄打牛奶：</b>牛奶只打入极少空气，目标是薄而亮的微泡，不做厚泡层。</li><li><b>低位融合：</b>先低位注入融合咖啡和奶，再用细流收尾保持表面细腻。</li><li><b>检查口感：</b>入口应紧致、丝滑、咖啡存在感清楚；像拿铁则奶量过多或奶泡太厚。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cappuccino_at_Sightglass_Coffee.jpg?width=900" alt="卡布奇诺成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>经典比例</span><h3>卡布奇诺</h3><p>咖啡、牛奶、奶泡更接近三段平衡，口感蓬松，香气更浮在上层，适合想保留咖啡存在感的奶咖。</p><strong>结构：浓缩 + 牛奶 + 厚奶泡</strong><ul class="drink-variables"><li><b>奶泡</b>越厚，触感越轻盈，液体甜感会变弱。</li><li><b>杯量</b>越小，咖啡浓度越明显，苦甜更集中。</li><li><b>水温 / 萃取率</b>偏高会让奶泡下的咖啡显苦。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>萃取浓缩：</b>萃取 30-36g 浓缩，中深烘拼配更容易做出稳定苦甜。</li><li><b>蒸奶进气：</b>蒸牛奶时比拿铁多打入一点空气，让奶泡有支撑但不粗糙。</li><li><b>建立泡层：</b>注入时先穿透 crema 融合，再提高拉花缸形成厚泡层。</li><li><b>控制比例：</b>杯量越小咖啡越突出，奶泡越厚触感越轻，但液体甜感会下降。</li><li><b>完成判断：</b>表面可撒少量可可粉，入口应轻盈、绵密，且咖啡存在感清楚。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Caff%C3%A8_Mocha_by_Phil.jpg?width=900" alt="摩卡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>巧克力调</span><h3>摩卡</h3><p>拿铁里加入巧克力酱或可可基底，适合低酸、坚果、可可调性的咖啡豆。酸质太高会和巧克力冲突。</p><strong>结构：浓缩 + 牛奶 + 巧克力</strong><ul class="drink-variables"><li><b>巧克力量</b>越高，甜感和厚度增加，咖啡香会后退。</li><li><b>豆子酸感</b>越高，越容易出现果酸和可可分离。</li><li><b>奶量</b>越少，可可苦和咖啡苦越明显。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>做巧克力底：</b>杯底加入 15-25g 巧克力酱或可可糖浆，酸感高的豆子要减少用量。</li><li><b>萃取并搅匀：</b>萃取浓缩后先与巧克力充分搅匀，避免糖浆沉底。</li><li><b>打奶到拿铁厚度：</b>牛奶温度控制在 55-62C，奶泡薄而顺滑即可。</li><li><b>组合饮品：</b>倒入牛奶时先融合，再保留一点表面纹理，让可可香和咖啡苦甜连接。</li><li><b>调整甜度：</b>过甜时下次减少巧克力或提高咖啡占比；苦涩时缩短液重或换低酸豆。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cafe_Vecchio_Cappuccino_al_gusto_de_coco.jpg?width=900" alt="生椰拿铁成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>中式热门</span><h3>生椰拿铁</h3><p>用椰乳替代部分牛奶，甜感更外放，适合云南、巴西或意式综合豆做稳定基底。椰香强时要避免过酸豆子。</p><strong>结构：浓缩 + 椰乳 + 冰块</strong><ul class="drink-variables"><li><b>椰乳比例</b>越高，香气更热带，但咖啡厚度会被盖住。</li><li><b>冰量</b>控制稀释速度，冰多更清爽，冰少更甜腻。</li><li><b>液重</b>短萃更适合椰乳，长萃容易显苦和发空。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备椰乳：</b>杯中加入冰块，倒入 120-160g 冰椰乳，椰乳越多香气越外放。</li><li><b>短萃浓缩：</b>使用 18g 粉萃取 30-36g 浓缩，保持厚度和苦甜支撑。</li><li><b>控制倒入：</b>把浓缩缓慢倒在冰块上，形成咖啡与椰乳的层次。</li><li><b>平衡口感：</b>如果椰香盖过咖啡，下次减少椰乳或把液重缩短；如果发苦，略调粗研磨。</li><li><b>出杯饮用：</b>喝前轻搅，让椰香、咖啡苦甜和冰块稀释速度稳定融合。</li></ol>
+          </details>
+        </div>
+        <div class="drink-variable-grid">
+          <article class="variable-lab"><strong>手冲变量</strong><h3>研磨度 + 粉水比决定骨架。</h3><p>研磨越细、粉水比越高，浓度和厚度上升，但过度会苦涩；研磨越粗、比例越低，口感更清，但容易酸薄、余韵短。</p></article>
+          <article class="variable-lab"><strong>萃取变量</strong><h3>水温 + 时间影响酸甜苦。</h3><p>水温高、时间长会提高萃取率，甜感之后苦感也会上来；水温低、时间短更明亮，但不足时会出现尖酸和空洞感。</p></article>
+          <article class="variable-lab"><strong>机器变量</strong><h3>粉量 + 液重决定浓缩表达。</h3><p>同样 18g 粉，液重 30g 更厚更短，36g 更均衡，42g 更清瘦；萃取时间偏短会酸，偏长会苦涩发干。</p></article>
+          <article class="variable-lab"><strong>奶咖变量</strong><h3>奶量、奶泡和冰量决定口感。</h3><p>奶量增加会降低咖啡存在感，奶泡增加会让口感更轻，冰量增加会让入口更清爽但也更快稀释甜感。</p></article>
+          <article class="variable-lab milk-foam-tips"><strong>完美奶泡</strong><h3>蒸汽棒先打发空气，再用漩涡细化。</h3><p>奶泡成功的核心不是“越厚越好”，而是让牛奶有光泽、流动性和细腻微泡。这样拿铁更顺滑，澳白更绵密，拉花也更容易铺开。</p><div class="foam-tip-grid"><div class="foam-tip"><b>1. 纸巾擦净</b>蒸汽棒先排水，再用纸巾擦净喷嘴，避免冷凝水和残奶影响味道。</div><div class="foam-tip"><b>2. 先打发</b>喷嘴贴近液面听到轻微进气声，1-3 秒即可，声音尖锐说明进气太猛。</div><div class="foam-tip"><b>3. 做漩涡</b>把喷嘴略微埋入牛奶侧边，让液面旋转，粗泡会被卷进液体里变细。</div><div class="foam-tip"><b>4. 控温拉花</b>55-62C 停止，轻敲拉花缸并旋转，得到可流动的细腻微泡。</div></div></article>
         </div>
       </section>
 
@@ -1629,6 +2670,14 @@
               <p class="summary" id="recipeSummary">清亮花香，酸质更明亮，适合慢一点的分段注水。</p>
 
               <div class="machine-console" aria-label="咖啡机萃取控制台">
+                <div class="machine-recommendation" id="recommendedMachineConfig" aria-label="建议配置参数">
+                  <div class="machine-recommendation-head">
+                    <strong>建议配置参数</strong>
+                    <span>填入右侧调整栏，制作更稳定的咖啡</span>
+                  </div>
+                  <div class="recommended-config-grid" id="recommendedConfigGrid"></div>
+                  <button class="recommended-config-action" id="applyRecommendedConfig" type="button">一键填入推荐参数</button>
+                </div>
                 <div class="machine-status-row"><span>萃取开关</span><span class="live" id="brewStatus">待萃取</span></div>
                 <div class="machine-preview" aria-label="咖啡机萃取面板">
                   <div class="indicator-lights" aria-hidden="true">
@@ -2221,6 +3270,96 @@ function buildTasteProfile(input, bean, mode, temp, detail) {
   };
 }
 
+function getMachineRecommendation(input) {
+  var method = input && input.method ? input.method : "espresso";
+  var bean = getBeanMap()[(input && input.bean) || "espresso-blend"] || getBeanMap()["espresso-blend"];
+  if (method === "moka") {
+    return {
+      grind: 58,
+      temperature: 92,
+      dose: 18,
+      yield: 72,
+      pressure: 2,
+      ratio: "1:4",
+      time: "45-75 秒",
+      note: "摩卡壶用中细研磨、热水入壶、粉槽填平不压实。"
+    };
+  }
+  if (method === "capsule") {
+    return {
+      grind: 50,
+      temperature: 92,
+      dose: 6,
+      yield: 40,
+      pressure: 9,
+      ratio: "胶囊短杯",
+      time: "18-28 秒",
+      note: "胶囊机优先短杯量，避免尾段把咖啡拉淡。"
+    };
+  }
+  var darkBean = bean.recommendedMode === "machine" || /曼特宁|综合|巴西/.test(bean.name);
+  return {
+    grind: darkBean ? 42 : 46,
+    temperature: darkBean ? 92 : 93,
+    dose: 18,
+    yield: 36,
+    pressure: 9,
+    ratio: "1:2",
+    time: "25-30 秒",
+    note: "网上常见做法：意式浓缩以 18g 粉、36g 液重、1:2、9 bar、25-30 秒为起点。"
+  };
+}
+
+function diagnoseMachineExtraction(input) {
+  var recommendation = getMachineRecommendation(input || {});
+  var method = input && input.method ? input.method : "espresso";
+  var grind = Number(input && input.grind || recommendation.grind);
+  var temperature = Number(input && input.temperature || recommendation.temperature);
+  var dose = Math.max(1, Number(input && input.dose || recommendation.dose));
+  var targetYield = Number(input && input.yield || recommendation.yield);
+  var pressure = Number(input && input.pressure || recommendation.pressure);
+  var ratio = targetYield / dose;
+  var advice = [];
+
+  if (method === "moka") {
+    if (targetYield > 80 || ratio > 4.6) advice.push("水感偏重：目标液重过多会把后段苦水带进杯中，建议提前离火或减少目标液重。");
+    if (grind < 46) advice.push("苦感偏重：摩卡壶研磨过细会让流速变慢，建议研磨调粗一点。");
+    if (grind > 68) advice.push("酸感偏尖：研磨过粗会萃取不足，建议研磨调细并保持中小火。");
+    if (!advice.length) advice.push("参数接近合理区间：保持中小火，听到连续出液后降火，尾段及时离火。");
+    return advice;
+  }
+
+  if (method === "capsule") {
+    if (targetYield > 45) advice.push("水感偏重：胶囊杯量过长会稀释香气，建议选择短杯量或减少目标液重。");
+    if (targetYield < 25) advice.push("浓度偏高：杯量过短会显得厚重，建议增加少量液重观察甜感。");
+    if (!advice.length) advice.push("参数接近合理区间：先用短杯量观察香气，再用液重微调浓度。");
+    return advice;
+  }
+
+  if (grind >= 64 || temperature <= 89 || pressure <= 7.5 || ratio < 1.8) {
+    advice.push("酸感偏尖：可能萃取不足，建议研磨调细、把水温提高到 92-94C，或把压力靠近 9 bar。");
+  }
+  if (grind <= 36 || temperature >= 95 || pressure >= 10 || ratio > 2.35) {
+    advice.push("苦感偏重：可能过度萃取，建议研磨调粗、降低水温，或减少尾段萃取。");
+  }
+  if (ratio >= 2.45 || targetYield >= dose * 2.5) {
+    advice.push("水感偏重：目标液重过多会稀释厚度，建议减少目标液重，回到 1:2 附近。");
+  }
+  if (ratio <= 1.65) {
+    advice.push("浓度偏高：液重太短会让酸感集中，建议略微增加目标液重到 1:1.8-1:2。");
+  }
+  if (dose < 17) {
+    advice.push("粉量偏少：粉床太薄容易流速快、口感空，建议提高到 18g 左右。");
+  }
+  if (dose > 21) {
+    advice.push("粉量偏多：粉床太厚容易通道和苦涩，建议先回到 18-20g 再微调。");
+  }
+  if (!advice.length) {
+    advice.push("参数接近合理区间：以 1:2、25-30 秒为目标，下一杯只微调研磨半格观察甜感。");
+  }
+  return advice;
+}
+
 function calculateRecipe(input) {
   var beans = getBeanMap();
   var bean = beans[input.bean] || beans.yirgacheffe;
@@ -2246,7 +3385,7 @@ function calculateRecipe(input) {
         ratioOffset: 0,
         extractionBase: 28,
         steps: [
-          "预热冲煮头和杯子，保持温度稳定。",
+          "网上常见做法以 18g 粉、36g 液重、1:2、25-30 秒为起点，入门区间也可观察 20-30 秒。",
           "布粉后轻敲粉碗，压粉保持水平。",
           "观察前 8 秒出液，控制液重到 {{yield}}g。",
           "记录秒数和口感，下一杯用研磨微调。"
@@ -2372,16 +3511,29 @@ function calculateRecipe(input) {
       tasteMode: $("tasteMode"), tasteScores: $("tasteScores"), tasteRelations: $("tasteRelations"),
       beanImageOut: $("beanImageOut"), beanNameOut: $("beanNameOut"), beanDescriptionOut: $("beanDescriptionOut"),
       heroImage: $("heroImage"), heroBeanName: $("heroBeanName"), heroBeanText: $("heroBeanText"), heroModeText: $("heroModeText"),
+      beanCarousel: $("beanCarousel"), beanCarouselTrack: $("beanCarouselTrack"), carouselPrev: $("carouselPrev"),
+      carouselNext: $("carouselNext"), carouselDots: $("carouselDots"),
       output: document.querySelector(".output"),
       recipeBody: $("recipeBody"),
       beanStrip: $("beanStrip"),
       brewLever: $("brewLever"),
-      brewStatus: $("brewStatus")
+      brewStatus: $("brewStatus"),
+      recommendedMachineConfig: $("recommendedMachineConfig"),
+      recommendedConfigGrid: $("recommendedConfigGrid"),
+      applyRecommendedConfig: $("applyRecommendedConfig"),
+      cafeLightbox: $("cafeLightbox"),
+      cafeLightboxImage: $("cafeLightboxImage"),
+      cafeLightboxClose: $("cafeLightboxClose")
     };
     let lastBrewSnapshot = null;
     let machineDirty = true;
     let isBrewing = false;
     let renderQueued = false;
+    let carouselBeanIds = Object.values(beans).map((bean) => bean.id);
+    let carouselIndex = Math.max(0, carouselBeanIds.indexOf(state.bean));
+    let carouselStartX = 0;
+    let carouselDeltaX = 0;
+    let carouselDragging = false;
 
     function getStateSnapshot() {
       return {
@@ -2456,6 +3608,119 @@ function calculateRecipe(input) {
       }[char]));
     }
 
+    function renderHeroCarousel() {
+      const beanList = Object.values(beans);
+      carouselBeanIds = beanList.map((bean) => bean.id);
+      els.beanCarouselTrack.innerHTML = beanList.map((bean) => `
+        <figure class="bean-carousel-slide" data-carousel-bean="${escapeHtml(bean.id)}">
+          <img src="${escapeHtml(bean.image)}" alt="${escapeHtml(bean.name)}咖啡豆特写" draggable="false" loading="lazy">
+        </figure>
+      `).join("");
+      els.carouselDots.innerHTML = beanList.map((bean, index) => `
+        <button class="carousel-dot" type="button" data-carousel-index="${index}" aria-label="查看${escapeHtml(bean.name)}" aria-current="false"></button>
+      `).join("");
+      els.carouselDots.querySelectorAll("[data-carousel-index]").forEach((button) => {
+        button.addEventListener("click", () => selectCarouselBean(Number(button.dataset.carouselIndex)));
+      });
+      syncHeroCarousel(state.bean);
+    }
+
+    function syncHeroCarousel(beanId) {
+      if (!els.beanCarouselTrack) return;
+      const nextIndex = Math.max(0, carouselBeanIds.indexOf(beanId || state.bean));
+      carouselIndex = nextIndex;
+      els.beanCarouselTrack.style.transition = "";
+      els.beanCarouselTrack.style.transform = "translate3d(" + (-carouselIndex * 100) + "%, 0, 0)";
+      els.beanCarouselTrack.querySelectorAll(".bean-carousel-slide").forEach((slide) => {
+        slide.classList.toggle("is-active", slide.dataset.carouselBean === carouselBeanIds[carouselIndex]);
+      });
+      els.carouselDots.querySelectorAll(".carousel-dot").forEach((dot) => {
+        dot.setAttribute("aria-current", String(Number(dot.dataset.carouselIndex) === carouselIndex));
+      });
+      els.heroImage = els.beanCarouselTrack.querySelector(".bean-carousel-slide.is-active img") || els.heroImage;
+    }
+
+    function selectCarouselBean(index) {
+      const total = carouselBeanIds.length;
+      if (!total) return;
+      const nextIndex = (index + total) % total;
+      applyBean(carouselBeanIds[nextIndex]);
+      markMachineDirty();
+      render();
+      pulseOutput();
+    }
+
+    function moveCarouselBy(delta) {
+      if (!els.beanCarouselTrack) return;
+      els.beanCarouselTrack.style.transition = "none";
+      els.beanCarouselTrack.style.transform = "translate3d(calc(" + (-carouselIndex * 100) + "% + " + delta + "px), 0, 0)";
+    }
+
+    function stepCarousel(delta) {
+      if (!carouselBeanIds.length) return;
+      selectCarouselBean(carouselIndex + delta);
+    }
+
+    function renderRecommendedMachineConfig() {
+      if (!els.recommendedConfigGrid) return;
+      const recommendation = getMachineRecommendation(getStateSnapshot());
+      els.recommendedConfigGrid.innerHTML = [
+        { label: "研磨度", value: recommendation.grind + "/100" },
+        { label: "水温", value: recommendation.temperature + "C" },
+        { label: "粉量", value: recommendation.dose + "g" },
+        { label: "液重", value: recommendation.yield + "g" },
+        { label: "压力", value: recommendation.pressure + " bar" },
+        { label: "比例", value: recommendation.ratio },
+        { label: "时间", value: recommendation.time }
+      ].map((item) => `<div><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span></div>`).join("");
+      els.recommendedMachineConfig?.setAttribute?.("data-note", recommendation.note);
+    }
+
+    function applyRecommendedMachineConfig() {
+      const recommendation = getMachineRecommendation(getStateSnapshot());
+      state.grind = recommendation.grind;
+      state.temperature = recommendation.temperature;
+      state.dose = recommendation.dose;
+      state.yield = recommendation.yield;
+      state.pressure = recommendation.pressure;
+      els.grind.value = state.grind;
+      els.temperature.value = state.temperature;
+      els.dose.value = state.dose;
+      els.yield.value = state.yield;
+      els.pressure.value = state.pressure;
+      markMachineDirty();
+      render();
+      pulseOutput();
+    }
+
+    function buildMachineAdvice(input) {
+      const recommendation = getMachineRecommendation(input);
+      const advice = diagnoseMachineExtraction(input);
+      const baseline = `建议基准：${recommendation.dose}g 粉 → ${recommendation.yield}g 液，${recommendation.ratio}，${recommendation.time}，${recommendation.pressure} bar。`;
+      return [baseline].concat(advice);
+    }
+
+    function renderMachineAdvice(input) {
+      return buildMachineAdvice(input).map((step, index) => {
+        const label = index === 0 ? "基准" : "诊断";
+        return `<li><time>${label}</time><p>${escapeHtml(step)}</p></li>`;
+      }).join("");
+    }
+
+    function openCafeLightbox(src, alt) {
+      if (!els.cafeLightbox || !els.cafeLightboxImage) return;
+      els.cafeLightboxImage.src = src;
+      els.cafeLightboxImage.alt = alt || "寻常小馆咖啡馆照片";
+      els.cafeLightbox.hidden = false;
+      els.cafeLightboxClose?.focus?.();
+    }
+
+    function closeCafeLightbox() {
+      if (!els.cafeLightbox || !els.cafeLightboxImage) return;
+      els.cafeLightbox.hidden = true;
+      els.cafeLightboxImage.src = "";
+    }
+
     function renderTasteProfile(profile) {
       if (!profile) return;
       els.tasteMode.textContent = profile.mode || "实时对应";
@@ -2478,6 +3743,7 @@ function calculateRecipe(input) {
     function render() {
       setMode(state.mode);
       setPressed("[data-bean]", "bean", state.bean);
+      renderRecommendedMachineConfig();
       const isMachinePending = state.mode === "machine" && (!lastBrewSnapshot || machineDirty);
       const recipeInput = state.mode === "machine" && lastBrewSnapshot && !machineDirty ? lastBrewSnapshot : state;
       const recipe = calculateRecipe(recipeInput);
@@ -2505,7 +3771,8 @@ function calculateRecipe(input) {
       els.beanImageOut.alt = recipe.bean.name + " coffee beans";
       els.beanNameOut.textContent = recipe.bean.name;
       els.beanDescriptionOut.textContent = recipe.bean.origin + " · " + recipe.bean.process + " · " + recipe.bean.description;
-      els.heroImage.src = recipe.bean.image;
+      syncHeroCarousel(recipe.bean.id);
+      if (els.heroImage) els.heroImage.src = recipe.bean.image;
       els.heroBeanName.textContent = recipe.bean.name;
       els.heroBeanText.textContent = recipe.bean.description;
       els.heroModeText.textContent = recipe.mode === "machine" ? "机器制作" : "手冲咖啡";
@@ -2527,7 +3794,9 @@ function calculateRecipe(input) {
         ].map((step, index) => `<li><time>${String(index + 1).padStart(2, "0")}</time><p>${step}</p></li>`).join("");
       } else {
         els.metrics.innerHTML = recipe.metrics.map((metric) => `<div class="metric"><strong>${metric.value}</strong><span>${metric.label}</span></div>`).join("");
-        els.steps.innerHTML = recipe.steps.map((step, index) => `<li><time>${String(index + 1).padStart(2, "0")}</time><p>${step}</p></li>`).join("");
+        els.steps.innerHTML = state.mode === "machine"
+          ? renderMachineAdvice(recipeInput)
+          : recipe.steps.map((step, index) => `<li><time>${String(index + 1).padStart(2, "0")}</time><p>${step}</p></li>`).join("");
       }
     }
 
@@ -2581,8 +3850,49 @@ function calculateRecipe(input) {
       event.preventDefault();
       brewShot();
     });
+    els.applyRecommendedConfig.addEventListener("click", applyRecommendedMachineConfig);
+    document.querySelectorAll("[data-lightbox-src]").forEach((button) => {
+      button.addEventListener("click", () => {
+        openCafeLightbox(button.dataset.lightboxSrc, button.dataset.lightboxAlt || button.getAttribute("aria-label"));
+      });
+    });
+    els.cafeLightboxClose.addEventListener("click", closeCafeLightbox);
+    els.cafeLightbox.addEventListener("click", (event) => {
+      if (event.target === els.cafeLightbox) closeCafeLightbox();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && els.cafeLightbox && !els.cafeLightbox.hidden) closeCafeLightbox();
+    });
+    els.carouselPrev.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); stepCarousel(-1); });
+    els.carouselNext.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); stepCarousel(1); });
+    els.beanCarousel.addEventListener("pointerdown", (event) => {
+      carouselDragging = true;
+      carouselStartX = event.clientX;
+      carouselDeltaX = 0;
+      els.beanCarousel.setPointerCapture?.(event.pointerId);
+    });
+    els.beanCarousel.addEventListener("pointermove", (event) => {
+      if (!carouselDragging) return;
+      carouselDeltaX = event.clientX - carouselStartX;
+      moveCarouselBy(carouselDeltaX);
+    });
+    els.beanCarousel.addEventListener("pointerup", (event) => {
+      if (!carouselDragging) return;
+      carouselDragging = false;
+      els.beanCarousel.releasePointerCapture?.(event.pointerId);
+      if (Math.abs(carouselDeltaX) > 52) {
+        selectCarouselBean(carouselIndex + (carouselDeltaX < 0 ? 1 : -1));
+      } else {
+        syncHeroCarousel(state.bean);
+      }
+    });
+    els.beanCarousel.addEventListener("pointercancel", () => {
+      carouselDragging = false;
+      syncHeroCarousel(state.bean);
+    });
 
     renderBeanCards();
+    renderHeroCarousel();
     applyBean(state.bean);
     setMode(state.mode);
     if (state.mode === "hand") machineDirty = false;

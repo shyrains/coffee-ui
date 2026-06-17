@@ -109,6 +109,13 @@
       text-shadow: 0 1px 18px rgba(255,255,255,.24);
     }
     .nav nav { position: relative; z-index: 1; }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      align-items: center;
+    }
     .nav a {
       min-height: 40px;
       display: inline-flex;
@@ -493,7 +500,7 @@
       .bean:nth-child(even) .media { order: 0; }
       .media, .media img { min-height: 360px; }
     }
-    @media (max-width: 560px) {
+    @media (max-width: 680px) {
       .nav {
         width: calc(100% - 20px);
         display: grid;
@@ -511,7 +518,13 @@
         justify-self: start;
         margin-left: 6px;
       }
-      .nav nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .nav-links {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: 42px;
+        gap: 6px;
+      }
       .nav a { justify-content: center; padding: 0 8px; background: rgba(255,255,255,.08); text-align: center; }
       .bean-summary, .recipe-strip, .filter-bar { grid-template-columns: 1fr; }
       .content-head { flex-direction: column; }
@@ -526,9 +539,13 @@
 <body data-view="editorial">
   <header class="nav">
     <div class="brand">寻常小馆</div>
-    <nav aria-label="页面链接">
-      <a href="coffee.html">制作工作台</a>
-      <a href="#gallery">咖啡豆</a>
+    <nav class="nav-links" aria-label="页面链接">
+      <a href="#gallery" aria-current="page">咖啡豆图鉴</a>
+      <a href="coffee.html#china-story">咖啡历史</a>
+      <a href="coffee.html#china-beans">热门豆种</a>
+      <a href="coffee.html#drink-methods">咖啡做法</a>
+      <a href="coffee.html#workspace">制作工作台</a>
+      <a href="coffee.html#difference">模式差异</a>
     </nav>
   </header>
   <main>
