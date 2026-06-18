@@ -32,11 +32,15 @@
       position: fixed;
       inset: 0;
       z-index: 0;
+      isolation: isolate;
       overflow: hidden;
       background: #120b07;
     }
 
     .entry-bg img {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
       width: 100%;
       height: 100%;
       display: block;
@@ -46,10 +50,45 @@
       transform: scale(1.01);
     }
 
+    .entry-dot-field {
+      position: absolute;
+      inset: -2%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.76;
+      mix-blend-mode: screen;
+    }
+
+    .dot-field-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .dot-field-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 340px;
+      height: 340px;
+      margin: -170px 0 0 -170px;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate3d(-9999px, -9999px, 0);
+      background:
+        radial-gradient(circle, rgba(240,199,126,0.26), rgba(255,250,242,0.13) 38%, transparent 72%);
+      filter: blur(8px);
+      will-change: transform, opacity;
+    }
+
     .entry-bg::after {
       content: "";
       position: absolute;
       inset: 0;
+      z-index: 2;
+      pointer-events: none;
       background:
         linear-gradient(90deg, rgba(0,0,0,0.70), rgba(0,0,0,0.18) 48%, rgba(0,0,0,0.58)),
         linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.18) 36%, rgba(0,0,0,0.72)),
@@ -190,6 +229,10 @@
         width: 100%;
         min-height: 62px;
       }
+
+      .entry-dot-field {
+        opacity: 0.54;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -205,6 +248,10 @@
 <body class="entry-page">
   <div class="entry-bg" aria-hidden="true">
     <img src="assets/cafe/2.jpg" alt="" width="1920" height="1080">
+    <div class="entry-dot-field">
+      <canvas class="dot-field-canvas"></canvas>
+      <div class="dot-field-glow"></div>
+    </div>
   </div>
 
   <main class="entry-shell">
@@ -217,5 +264,180 @@
       </div>
     </section>
   </main>
+  <script>
+    (() => {
+      const TWO_PI = Math.PI * 2;
+
+      window.EntryDotField = function initEntryDotField() {
+        const field = document.querySelector('.entry-dot-field');
+        const canvas = document.querySelector('.dot-field-canvas');
+        const glow = document.querySelector('.dot-field-glow');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!field || !canvas) return;
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const pointer = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
+        const size = { width: 0, height: 0, left: 0, top: 0 };
+        let dots = [];
+        let frame = 0;
+        let engagement = 0;
+        let glowOpacity = 0;
+        let raf = 0;
+        let resizeTimer = 0;
+
+        function buildDots() {
+          const spacing = window.innerWidth < 680 ? 20 : 17;
+          const radius = window.innerWidth < 680 ? 1.15 : 1.35;
+          const cols = Math.ceil(size.width / spacing) + 1;
+          const rows = Math.ceil(size.height / spacing) + 1;
+          const offsetX = (size.width - (cols - 1) * spacing) / 2;
+          const offsetY = (size.height - (rows - 1) * spacing) / 2;
+          const nextDots = [];
+
+          for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+              const x = offsetX + col * spacing;
+              const y = offsetY + row * spacing;
+              nextDots.push({ ax: x, ay: y, sx: x, sy: y, radius });
+            }
+          }
+
+          dots = nextDots;
+        }
+
+        function resize() {
+          const rect = field.getBoundingClientRect();
+          size.width = rect.width;
+          size.height = rect.height;
+          size.left = rect.left + window.scrollX;
+          size.top = rect.top + window.scrollY;
+
+          canvas.width = Math.round(size.width * dpr);
+          canvas.height = Math.round(size.height * dpr);
+          canvas.style.width = `${size.width}px`;
+          canvas.style.height = `${size.height}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          buildDots();
+        }
+
+        function onResize() {
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(resize, 120);
+        }
+
+        function onPointerMove(event) {
+          pointer.x = event.pageX - size.left;
+          pointer.y = event.pageY - size.top;
+        }
+
+        function onPointerLeave() {
+          pointer.x = -9999;
+          pointer.y = -9999;
+        }
+
+        function updatePointerSpeed() {
+          const dx = pointer.prevX - pointer.x;
+          const dy = pointer.prevY - pointer.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          pointer.speed += (distance - pointer.speed) * 0.42;
+          if (pointer.speed < 0.001) pointer.speed = 0;
+          pointer.prevX = pointer.x;
+          pointer.prevY = pointer.y;
+        }
+
+        function draw() {
+          frame++;
+          updatePointerSpeed();
+
+          const targetEngagement = reducedMotion ? 0 : Math.min(pointer.speed / 6, 1);
+          engagement += (targetEngagement - engagement) * 0.08;
+          if (engagement < 0.001) engagement = 0;
+
+          glowOpacity += (engagement - glowOpacity) * 0.09;
+          if (glow) {
+            glow.style.opacity = glowOpacity.toFixed(3);
+            glow.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0)`;
+          }
+
+          ctx.clearRect(0, 0, size.width, size.height);
+
+          const gradient = ctx.createLinearGradient(0, 0, size.width, size.height);
+          gradient.addColorStop(0, 'rgba(255, 250, 242, 0.34)');
+          gradient.addColorStop(0.48, 'rgba(240, 199, 126, 0.32)');
+          gradient.addColorStop(1, 'rgba(115, 183, 255, 0.16)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+
+          const cursorRadius = window.innerWidth < 680 ? 180 : 340;
+          const cursorRadiusSq = cursorRadius * cursorRadius;
+          const bulgeStrength = window.innerWidth < 680 ? 18 : 38;
+
+          for (let i = 0; i < dots.length; i++) {
+            const dot = dots[i];
+            const dx = pointer.x - dot.ax;
+            const dy = pointer.y - dot.ay;
+            const distanceSq = dx * dx + dy * dy;
+
+            if (!reducedMotion && distanceSq < cursorRadiusSq && engagement > 0.01) {
+              const distance = Math.sqrt(distanceSq);
+              const force = 1 - distance / cursorRadius;
+              const push = force * force * bulgeStrength * engagement;
+              const angle = Math.atan2(dy, dx);
+              dot.sx += (dot.ax - Math.cos(angle) * push - dot.sx) * 0.16;
+              dot.sy += (dot.ay - Math.sin(angle) * push - dot.sy) * 0.16;
+            } else {
+              dot.sx += (dot.ax - dot.sx) * 0.11;
+              dot.sy += (dot.ay - dot.sy) * 0.11;
+            }
+
+            const drift = Math.sin(dot.ax * 0.012 + frame * 0.008) * 0.48;
+            const drawX = dot.sx;
+            const drawY = dot.sy + (reducedMotion ? 0 : drift);
+            const twinkle = ((i * 2654435761) ^ (frame >> 4)) >>> 0;
+            const radius = twinkle % 97 < 2 ? dot.radius * 1.8 : dot.radius;
+
+            ctx.moveTo(drawX + radius, drawY);
+            ctx.arc(drawX, drawY, radius, 0, TWO_PI);
+          }
+
+          ctx.fill();
+
+          if (!reducedMotion) {
+            raf = window.requestAnimationFrame(draw);
+          }
+        }
+
+        resize();
+        draw();
+
+        if (!reducedMotion) {
+          window.addEventListener('pointermove', onPointerMove, { passive: true });
+          window.addEventListener('pointerleave', onPointerLeave, { passive: true });
+        }
+
+        window.addEventListener('resize', onResize);
+
+        return () => {
+          window.cancelAnimationFrame(raf);
+          window.clearTimeout(resizeTimer);
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerleave', onPointerLeave);
+          window.removeEventListener('resize', onResize);
+        };
+      };
+
+      function initEntryDotField() {
+        window.EntryDotField();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEntryDotField, { once: true });
+      } else {
+        initEntryDotField();
+      }
+    })();
+  </script>
 </body>
 </html>
