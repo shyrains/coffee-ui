@@ -1,0 +1,2554 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>咖啡做法 | 寻常小馆</title>
+<style>
+    :root {
+      --ink: #f8f7f4;
+      --ink-deep: #14110f;
+      --muted: rgba(248, 247, 244, 0.72);
+      --muted-dark: #71665e;
+      --glass: rgba(255, 255, 255, 0.16);
+      --glass-strong: rgba(255, 255, 255, 0.24);
+      --glass-border: rgba(255, 255, 255, 0.34);
+      --glass-surface: rgba(255, 255, 255, 0.22);
+      --glass-surface-deep: rgba(255, 255, 255, 0.08);
+      --glass-edge: rgba(255, 255, 255, 0.56);
+      --glass-shadow: rgba(0, 0, 0, 0.44);
+      --accent: #eac27d;
+      --accent-2: #69adff;
+      --mode-glow: rgba(234, 194, 125, 0.28);
+      --blue: #69adff;
+      --blue-solid: #0071e3;
+      --gold: #eac27d;
+      --coffee: #7a421f;
+      --espresso: #1e1510;
+      --machine: #d8dde6;
+      --shadow-lg: 0 34px 110px rgba(0, 0, 0, 0.38);
+      --shadow-md: 0 20px 54px rgba(0, 0, 0, 0.24);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      color-scheme: dark;
+    }
+
+    body[data-mode="hand"] {
+      --accent: #eac27d;
+      --accent-2: #69adff;
+      --mode-glow: rgba(234, 194, 125, 0.28);
+    }
+
+    body[data-mode="machine"] {
+      --accent: #69adff;
+      --accent-2: #f3f7ff;
+      --mode-glow: rgba(105, 173, 255, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "HarmonyOS Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(118deg, rgba(8, 7, 7, 0.84), rgba(59, 34, 21, 0.62) 42%, rgba(5, 10, 16, 0.86)),
+        url("https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg") center / cover,
+        #120d0a;
+      letter-spacing: 0;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,0.12), transparent 18%, transparent 70%, rgba(255,255,255,0.08)),
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 44px 44px, 44px 44px;
+      mask-image: linear-gradient(to bottom, #000, transparent 76%);
+      opacity: 0.42;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+
+    .shell { position: relative; isolation: isolate; z-index: 1; }
+
+    .nav {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      width: min(1180px, calc(100% - 28px));
+      min-height: 58px;
+      margin: 14px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 10px 8px 18px;
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.30), rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.18)),
+        rgba(20, 17, 15, 0.54);
+      -webkit-backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      backdrop-filter: blur(36px) saturate(180%) contrast(108%);
+      box-shadow:
+        0 30px 76px rgba(0,0,0,0.34),
+        0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.46),
+        inset 0 -18px 34px rgba(255,255,255,0.06);
+    }
+
+    .nav::before,
+    .glass::before,
+    .floating-card::before,
+    .culture-card::before,
+    .mini-bean::before,
+    .drink-card::before,
+    .cafe-scene-card::before,
+    .show-card::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        linear-gradient(130deg, rgba(255,255,255,0.42), transparent 22%),
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,0.22), transparent 32%),
+        radial-gradient(circle at 86% 100%, var(--mode-glow), transparent 34%);
+      opacity: 0.72;
+      mix-blend-mode: screen;
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-shadow: 0 1px 18px rgba(255,255,255,0.24);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+    }
+
+    .nav-links a {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 24px rgba(0,0,0,0.16);
+    }
+
+    .hero {
+      width: min(1240px, calc(100% - 32px));
+      min-height: calc(100dvh - 86px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 76px);
+      padding: clamp(48px, 8vw, 92px) 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--gold);
+      font-weight: 800;
+      backdrop-filter: blur(18px);
+      margin: 0 0 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(58px, 10vw, 128px);
+      line-height: 0.9;
+      letter-spacing: 0;
+      max-width: 760px;
+      font-weight: 950;
+      text-wrap: balance;
+      text-shadow: 0 18px 54px rgba(0,0,0,0.38), 0 0 38px rgba(255,255,255,0.10);
+    }
+
+    .hero-title-stack {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: nowrap;
+      gap: 0;
+      max-width: 100%;
+      font-size: clamp(34px, 5.6vw, 72px);
+      line-height: 1.05;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .hero-title-stack span {
+      display: inline;
+      white-space: nowrap;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(16px, 1.6vw, 21px);
+      line-height: 1.5;
+      font-weight: 560;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .btn.primary {
+      background: #fff;
+      color: var(--ink-deep);
+      box-shadow: 0 14px 38px rgba(255,255,255,0.16);
+      font-weight: 800;
+    }
+
+    .btn.ghost {
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+      backdrop-filter: blur(20px);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(105,173,255,0.62);
+      outline-offset: 3px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 610px;
+      border-radius: 46px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.24), rgba(255,255,255,0.08)),
+        rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.34);
+      box-shadow:
+        0 42px 120px rgba(0,0,0,0.48),
+        0 18px 46px rgba(105,173,255,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.34),
+        inset 0 -22px 42px rgba(0,0,0,0.16);
+    }
+
+    .bean-carousel,
+    .bean-carousel-viewport,
+    .bean-carousel-track,
+    .bean-carousel-slide {
+      height: 100%;
+      min-height: 610px;
+    }
+
+    .bean-carousel {
+      position: absolute;
+      inset: 0;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .bean-carousel-viewport {
+      overflow: hidden;
+    }
+
+    .bean-carousel-track {
+      display: flex;
+      will-change: transform;
+      transition: transform 420ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .bean-carousel-slide {
+      min-width: 100%;
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage img,
+    .bean-carousel-slide img {
+      width: 100%;
+      height: 100%;
+      min-height: 610px;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.05);
+      pointer-events: none;
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.62)),
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.24), transparent 32%);
+      pointer-events: none;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      z-index: 5;
+      width: 48px;
+      height: 48px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(13, 10, 8, 0.38);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+      backdrop-filter: blur(22px) saturate(170%);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .carousel-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.4;
+    }
+
+    .carousel-prev { left: 18px; }
+    .carousel-next { right: 18px; }
+
+    .carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 164px;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(10, 7, 5, 0.30);
+      border: 1px solid rgba(255,255,255,0.16);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+      transform: translateX(-50%);
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      cursor: pointer;
+      transition: width 180ms ease, background 180ms ease;
+    }
+
+    .carousel-dot[aria-current="true"] {
+      width: 24px;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+    }
+
+    .floating-card {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 28px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.12)),
+        rgba(19, 15, 13, 0.34);
+      border: 1px solid rgba(255,255,255,0.46);
+      -webkit-backdrop-filter: blur(38px) saturate(185%) contrast(108%);
+      backdrop-filter: blur(38px) saturate(185%) contrast(108%);
+      box-shadow:
+        0 28px 70px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.42),
+        inset 0 -16px 32px rgba(255,255,255,0.06);
+    }
+
+    .floating-card > *,
+    .show-card > *,
+    .glass > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .floating-card h2 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900;
+      text-shadow: 0 12px 34px rgba(0,0,0,0.34);
+    }
+
+    .floating-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.28);
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(58px, 8vw, 104px) 0;
+    }
+
+    .section-head {
+      max-width: 980px;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+      padding: 13px clamp(16px, 2vw, 24px) 24px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.16)),
+        rgba(18, 14, 12, 0.46);
+      -webkit-backdrop-filter: blur(34px) saturate(180%) contrast(108%);
+      backdrop-filter: blur(34px) saturate(180%) contrast(108%);
+      box-shadow:
+        0 24px 60px rgba(0,0,0,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.40),
+        inset 0 -18px 32px rgba(0,0,0,0.16);
+      font-size: clamp(20px, 3.8vw, 46px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 950;
+      white-space: nowrap;
+      text-shadow: 0 12px 28px rgba(0,0,0,0.34);
+    }
+
+    .section-head h2::after {
+      content: "";
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 7px;
+      height: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(234,194,125,0.92), rgba(105,173,255,0.78)),
+        rgba(255,255,255,0.18);
+      box-shadow:
+        0 14px 30px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.48);
+      pointer-events: none;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.5;
+      margin: 18px 0 0;
+    }
+
+    .cafe-showcase {
+      padding-top: clamp(36px, 5vw, 72px);
+    }
+
+    .cafe-showcase-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 0.5fr);
+      gap: clamp(18px, 4vw, 44px);
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .cafe-showcase-head h2 {
+      margin: 0;
+      max-width: none;
+      font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", "KaiTi", serif;
+      font-size: clamp(32px, 4.8vw, 66px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      font-weight: 650;
+      white-space: nowrap;
+      text-shadow: 0 22px 62px rgba(0,0,0,0.48), 0 0 20px rgba(255,255,255,0.10);
+    }
+
+    .cafe-showcase-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 680px;
+      font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "Microsoft YaHei UI", serif;
+      font-size: clamp(17px, 1.55vw, 22px);
+      line-height: 1.78;
+      font-weight: 620;
+      text-wrap: balance;
+      text-shadow: 0 16px 38px rgba(0,0,0,0.32);
+    }
+
+    .cafe-showcase-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 0.8fr;
+      grid-auto-rows: 184px;
+      gap: 16px;
+    }
+
+    .cafe-scene-card {
+      position: relative;
+      min-height: 184px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.10);
+      box-shadow:
+        0 26px 66px rgba(0,0,0,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.28);
+      cursor: zoom-in;
+      appearance: none;
+    }
+
+    .cafe-scene-card.featured {
+      grid-row: span 2;
+      min-height: 384px;
+    }
+
+    .cafe-scene-card.wide {
+      grid-column: span 2;
+    }
+
+    .cafe-scene-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(1.04) contrast(1.04) brightness(0.90);
+      transform: scale(1.01);
+      transition: transform 460ms cubic-bezier(.2,.8,.2,1), filter 260ms ease;
+      pointer-events: none;
+    }
+
+    .cafe-scene-card:hover img {
+      transform: scale(1.055);
+      filter: saturate(1.12) contrast(1.08) brightness(0.96);
+    }
+
+    .cafe-scene-card figcaption {
+      position: absolute;
+      left: 14px;
+      right: auto;
+      bottom: 14px;
+      z-index: 2;
+      display: inline-grid;
+      width: fit-content;
+      max-width: min(520px, calc(100% - 28px));
+      gap: 3px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      color: #fff;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08)),
+        rgba(16, 12, 10, 0.46);
+      border: 1px solid rgba(255,255,255,0.26);
+      -webkit-backdrop-filter: blur(26px) saturate(170%);
+      backdrop-filter: blur(26px) saturate(170%);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
+    }
+
+    .cafe-scene-card figcaption strong {
+      font-size: clamp(16px, 1.65vw, 22px);
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .cafe-scene-card figcaption span {
+      color: rgba(248,247,244,0.74);
+      font-size: 12px;
+      line-height: 1.38;
+      font-weight: 700;
+    }
+
+    .cafe-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 4vw, 48px);
+      background: rgba(5, 4, 3, 0.72);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+      backdrop-filter: blur(26px) saturate(150%);
+    }
+
+    .cafe-lightbox[hidden] {
+      display: none;
+    }
+
+    .cafe-lightbox img {
+      width: min(1180px, 94vw);
+      max-height: 86dvh;
+      object-fit: contain;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: 0 34px 110px rgba(0,0,0,0.62), inset 0 1px 0 rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cafe-lightbox-close {
+      position: fixed;
+      top: clamp(14px, 3vw, 28px);
+      right: clamp(14px, 3vw, 28px);
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff;
+      background: rgba(20, 17, 15, 0.62);
+      -webkit-backdrop-filter: blur(22px);
+      backdrop-filter: blur(22px);
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .glass {
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(138deg, rgba(255,255,255,0.32), rgba(255,255,255,0.10) 45%, rgba(255,255,255,0.20)),
+        rgba(16, 13, 12, 0.42);
+      -webkit-backdrop-filter: blur(38px) saturate(185%) contrast(110%);
+      backdrop-filter: blur(38px) saturate(185%) contrast(110%);
+      box-shadow:
+        0 34px 92px rgba(0,0,0,0.42),
+        0 14px 36px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.46),
+        inset 0 -22px 44px rgba(255,255,255,0.06),
+        inset 18px 0 38px rgba(255,255,255,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .controls { padding: clamp(18px, 3vw, 28px); }
+    .group + .group { margin-top: 24px; }
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 11px;
+      font-weight: 800;
+    }
+
+    .live { color: var(--gold); font-variant-numeric: tabular-nums; }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 7px;
+      border-radius: 999px;
+      background:
+        linear-gradient(145deg, rgba(0,0,0,0.30), rgba(255,255,255,0.08)),
+        rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -12px 26px rgba(0,0,0,0.18);
+    }
+
+    .mode-toggle button,
+    .segment button {
+      min-height: 46px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .mode-toggle button[aria-pressed="true"],
+    .segment button[aria-pressed="true"] {
+      color: var(--ink-deep);
+      background: linear-gradient(180deg, #fff, #eaf2ff);
+      box-shadow:
+        0 12px 32px rgba(255,255,255,0.18),
+        0 4px 14px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.86);
+      font-weight: 850;
+      transform: translateY(-1px);
+    }
+
+    .bean-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-height: 418px;
+      overflow: auto;
+      padding: 2px 4px 4px 2px;
+      scrollbar-color: rgba(255,255,255,0.34) transparent;
+    }
+
+    .bean-card {
+      position: relative;
+      min-height: 156px;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,255,255,0.07)),
+        rgba(255,255,255,0.08);
+      color: #fff;
+      text-align: left;
+      padding: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform 220ms cubic-bezier(.2,.8,.2,1), border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .bean-card[aria-pressed="true"] {
+      border-color: rgba(255,255,255,0.72);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(105,173,255,0.18)),
+        rgba(105,173,255,0.20);
+      box-shadow:
+        0 22px 52px rgba(0,0,0,0.30),
+        0 0 0 1px rgba(105,173,255,0.28),
+        0 0 34px var(--mode-glow),
+        inset 0 1px 0 rgba(255,255,255,0.54);
+      transform: translateY(-4px) scale(1.015);
+    }
+
+    .bean-card[aria-pressed="true"]::after {
+      content: "Selected";
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.90);
+      color: #12100d;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.24);
+    }
+
+    .bean-card[aria-pressed="true"]::before {
+      content: "";
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(115deg, transparent 36%, rgba(255,255,255,0.24), transparent 62%);
+      transform: translateX(-46%) rotate(8deg);
+      animation: beanShine 1800ms cubic-bezier(.2,.8,.2,1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes beanShine {
+      0%, 42% { transform: translateX(-48%) rotate(8deg); opacity: 0; }
+      58% { opacity: 1; }
+      100% { transform: translateX(48%) rotate(8deg); opacity: 0; }
+    }
+
+    .bean-card:hover { transform: translateY(-3px); }
+    .bean-card[aria-pressed="true"]:hover { transform: translateY(-5px) scale(1.018); }
+
+    .bean-card img {
+      width: 100%;
+      height: 74px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 11px;
+      background: linear-gradient(145deg, #4a2413, #c18a4a);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+
+    .bean-card strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .bean-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .segment {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      padding: 7px;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      min-height: 46px;
+    }
+
+    select {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      color: #fff;
+      background: rgba(0,0,0,0.30);
+      padding: 0 14px;
+    }
+
+    input[type="range"] { accent-color: var(--blue); cursor: pointer; }
+    .hint-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -4px;
+    }
+
+    .machine-console {
+      display: none;
+      margin: 18px 0 22px;
+    }
+
+    body[data-mode="machine"] .machine-console {
+      display: block;
+    }
+
+    .machine-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .machine-status-row span:last-child {
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .machine-recommendation {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(0,0,0,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 16px 34px rgba(0,0,0,0.18);
+    }
+
+    .machine-recommendation-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .machine-recommendation-head span {
+      color: var(--gold);
+      font-size: 13px;
+    }
+
+    .recommended-config-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .recommended-config-grid div {
+      min-height: 54px;
+      padding: 8px 9px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .recommended-config-grid strong,
+    .recommended-config-grid span {
+      display: block;
+    }
+
+    .recommended-config-grid strong {
+      color: #fff;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .recommended-config-grid span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .recommended-config-action {
+      min-height: 38px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 950;
+      box-shadow: 0 12px 28px rgba(234,194,125,0.16), inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+
+    .machine-preview {
+      position: relative;
+      min-height: 314px;
+      border-radius: 30px;
+      overflow: hidden;
+      contain: paint;
+      border: 1px solid rgba(255,255,255,0.25);
+      background:
+        radial-gradient(circle at 21% 12%, rgba(255,255,255,0.34), transparent 24%),
+        radial-gradient(circle at 80% 16%, rgba(105,173,255,0.15), transparent 28%),
+        linear-gradient(150deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08) 42%, rgba(0,0,0,0.34)),
+        rgba(24,22,22,0.42);
+      box-shadow:
+        0 30px 72px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.40),
+        inset 0 -34px 60px rgba(0,0,0,0.28);
+    }
+
+    .machine-preview::before,
+    .machine-preview::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .machine-preview::before {
+      inset: 14px 18px 18px;
+      z-index: 0;
+      border-radius: 26px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.12), transparent 12%, transparent 88%, rgba(255,255,255,0.10)),
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 42%, rgba(0,0,0,0.22));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        inset 0 -28px 48px rgba(0,0,0,0.24);
+    }
+
+    .machine-preview::after {
+      inset: 0;
+      z-index: 10;
+      border-radius: inherit;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.30), transparent 17%, transparent 74%, rgba(255,255,255,0.08)),
+        linear-gradient(180deg, transparent 72%, rgba(0,0,0,0.16));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .indicator-lights,
+    .indicator-light,
+    .brew-stage,
+    .water-outlet,
+    .water-stream,
+    .drip-shadow,
+    .espresso-cup,
+    .lever-track,
+    .lever-knob {
+      pointer-events: none;
+    }
+
+    .indicator-lights {
+      position: absolute;
+      z-index: 7;
+      top: 28px;
+      left: 30px;
+      display: inline-flex;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)),
+        rgba(13,17,20,0.24);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 16px 30px rgba(0,0,0,0.18);
+    }
+
+    .indicator-light {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.30);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.30);
+      transition: background 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    }
+
+    body[data-shot-state="dirty"] .indicator-light:first-child {
+      background: #f2c46f;
+      box-shadow: 0 0 20px rgba(242,196,111,0.58), inset 0 1px 0 rgba(255,255,255,0.42);
+    }
+
+    body[data-shot-state="brewing"] .indicator-light:nth-child(2) {
+      background: #8fe6b2;
+      transform: scale(1.12);
+      box-shadow: 0 0 22px rgba(143,230,178,0.66), inset 0 1px 0 rgba(255,255,255,0.50);
+    }
+
+    body[data-shot-state="ready"] .indicator-light:nth-child(3) {
+      background: #69adff;
+      box-shadow: 0 0 22px rgba(105,173,255,0.62), inset 0 1px 0 rgba(255,255,255,0.48);
+    }
+
+    .brew-lever {
+      position: absolute;
+      z-index: 8;
+      top: 60px;
+      right: clamp(18px, 6vw, 44px);
+      width: 72px;
+      height: clamp(174px, 64%, 220px);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .brew-lever:focus-visible {
+      outline: 3px solid rgba(105,173,255,0.74);
+      outline-offset: 5px;
+      border-radius: 28px;
+    }
+
+    .lever-track {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.22), transparent 46%, rgba(0,0,0,0.26)),
+        linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.22));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.26),
+        inset 0 -18px 28px rgba(0,0,0,0.24),
+        0 16px 30px rgba(0,0,0,0.20);
+    }
+
+    .lever-track::before,
+    .lever-track::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.46);
+      box-shadow: 0 0 12px rgba(255,255,255,0.18);
+    }
+
+    .lever-track::before { top: 18px; }
+    .lever-track::after { bottom: 18px; }
+
+    .lever-knob {
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      width: 66px;
+      height: 52px;
+      transform: translateX(-50%) translateY(0);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255,255,255,0.94), rgba(255,255,255,0.28) 24%, transparent 28%),
+        linear-gradient(145deg, #f7f9fd, #a9b2be 48%, #4f5964);
+      border: 1px solid rgba(255,255,255,0.34);
+      box-shadow:
+        0 24px 42px rgba(0,0,0,0.34),
+        inset 0 2px 0 rgba(255,255,255,0.82),
+        inset 0 -12px 20px rgba(0,0,0,0.20);
+      transition:
+        transform 340ms cubic-bezier(.2,.86,.24,1),
+        box-shadow 220ms ease,
+        filter 220ms ease;
+      will-change: transform;
+    }
+
+    .lever-knob::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 10px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(38,43,49,0.44);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .lever-knob::before {
+      content: "";
+      position: absolute;
+      inset: 10px 18px auto;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    body[data-shot-state="dirty"] .lever-knob {
+      box-shadow:
+        0 0 0 5px rgba(105,173,255,0.13),
+        0 24px 42px rgba(0,0,0,0.34),
+        inset 0 2px 0 rgba(255,255,255,0.82),
+        inset 0 -12px 20px rgba(0,0,0,0.20);
+    }
+
+    body.is-brewing .lever-knob,
+    body[data-shot-state="brewing"] .lever-knob { transform: translateX(-50%) translateY(122px); filter: saturate(1.08); }
+
+    .brew-stage {
+      position: absolute;
+      z-index: 4;
+      left: 48%;
+      top: 68px;
+      width: clamp(178px, 48%, 246px);
+      height: 210px;
+      transform: translateX(-50%);
+    }
+
+    .water-outlet {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 0;
+      width: 118px;
+      height: 48px;
+      transform: translateX(-50%);
+      border-radius: 22px 22px 24px 24px;
+      background:
+        radial-gradient(ellipse at 50% 7px, rgba(255,255,255,0.88), rgba(255,255,255,0.26) 32%, transparent 36%),
+        linear-gradient(180deg, #f5f7fb, #b4bec9 52%, #59636f);
+      box-shadow:
+        0 20px 34px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.72),
+        inset 0 -9px 16px rgba(0,0,0,0.24);
+    }
+
+    .water-outlet::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -11px;
+      width: 28px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 0 0 999px 999px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.22), transparent 38%),
+        linear-gradient(180deg, #77818d, #252b32);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 10px 18px rgba(0,0,0,0.24);
+    }
+
+    .water-stream {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      top: 58px;
+      width: 8px;
+      height: 0;
+      transform: translateX(-50%);
+      transform-origin: 50% 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(248,218,157,0.12), rgba(215,143,70,0.90), rgba(84,35,16,0.96));
+      opacity: 0;
+      transition: height 190ms ease, opacity 160ms ease;
+      filter: drop-shadow(0 0 12px rgba(234,194,125,0.35));
+      will-change: transform, opacity;
+    }
+
+    .drip-shadow {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 142px;
+      width: 56px;
+      height: 14px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(92,43,20,0.40);
+      opacity: 0;
+      filter: blur(9px);
+      transition: opacity 180ms ease;
+    }
+
+    .espresso-cup {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 116px;
+      width: 132px;
+      height: 68px;
+      transform: translateX(-50%);
+      border-radius: 0 0 42px 42px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(216,225,236,0.88));
+      box-shadow:
+        0 24px 40px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.78),
+        inset 0 -9px 18px rgba(154,164,176,0.22);
+    }
+
+    .cup-body {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .espresso-cup::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      right: -8px;
+      top: -10px;
+      height: 22px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.98), rgba(238,243,250,0.78) 52%, rgba(180,190,204,0.82) 54%),
+        linear-gradient(180deg, #fff, #d9dee6);
+      box-shadow:
+        inset 0 -4px 10px rgba(0,0,0,0.16),
+        0 10px 18px rgba(0,0,0,0.16);
+    }
+
+    .espresso-cup::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: 13px;
+      width: 36px;
+      height: 30px;
+      border: 8px solid rgba(229,235,244,0.86);
+      border-left: 0;
+      border-radius: 0 999px 999px 0;
+    }
+
+    .cup-fill {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      height: 0;
+      border-radius: 0 0 32px 32px;
+      background: linear-gradient(180deg, rgba(194,121,61,0.92), rgba(74,31,15,0.96));
+      transition: height 220ms ease;
+    }
+
+    .cup-fill::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -5px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(244,201,131,0.78);
+      opacity: .82;
+    }
+
+    body.is-brewing .water-stream,
+    body[data-shot-state="brewing"] .water-stream { height: 78px; opacity: 1; animation: streamPulse 620ms ease-in-out infinite alternate; }
+    body.is-brewing .drip-shadow,
+    body[data-shot-state="brewing"] .drip-shadow { opacity: 1; animation: streamPulse 620ms ease-in-out infinite alternate; }
+    body.is-brewing .cup-fill,
+    body[data-shot-state="brewing"] .cup-fill { animation: cupFill 1200ms ease forwards; }
+    body[data-shot-state="ready"] .cup-fill { height: 30px; }
+    .machine-action-hint {
+      position: absolute;
+      z-index: 8;
+      left: 50%;
+      bottom: clamp(8px, 3%, 14px);
+      transform: translateX(-50%);
+      margin: 0;
+      min-height: 34px;
+      min-width: 168px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border-radius: 999px;
+      color: rgba(251,248,242,0.84);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04)),
+        rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.14),
+        0 12px 22px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+
+    body.is-brewing .machine-action-hint,
+    body[data-shot-state="brewing"] .machine-action-hint { color: #fff; background: rgba(143,230,178,0.16); }
+
+    @keyframes streamPulse {
+      from { transform: translateX(-50%) scaleY(0.84); opacity: 0.68; }
+      to { transform: translateX(-50%) scaleY(1.06); opacity: 1; }
+    }
+
+    @keyframes cupFill {
+      from { height: 0; }
+      to { height: 28px; }
+    }
+
+    .mode-only { display: none; }
+    body[data-mode="hand"] .mode-hand { display: block; }
+    body[data-mode="machine"] .mode-machine { display: block; }
+
+    .output {
+      padding: clamp(22px, 4vw, 34px);
+      min-height: 100%;
+      position: sticky;
+      top: 92px;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .output.is-pulsing {
+      animation: glassPulse 520ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes glassPulse {
+      0% {
+        transform: translateY(0) scale(1);
+        box-shadow:
+          0 34px 92px rgba(0,0,0,0.42),
+          0 14px 36px var(--mode-glow),
+          inset 0 1px 0 rgba(255,255,255,0.46);
+      }
+      45% {
+        transform: translateY(-5px) scale(1.012);
+        box-shadow:
+          0 44px 120px rgba(0,0,0,0.50),
+          0 0 0 1px rgba(255,255,255,0.18),
+          0 20px 58px var(--mode-glow),
+          inset 0 1px 0 rgba(255,255,255,0.62);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .output h3 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.94;
+      letter-spacing: 0;
+      font-weight: 930;
+      text-shadow: 0 12px 30px rgba(0,0,0,0.28);
+    }
+
+    .kicker { margin: 0 0 10px; color: var(--gold); font-weight: 900; }
+    .summary {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+      margin: 18px 0 24px;
+      min-height: 140px;
+    }
+
+    .bean-profile {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 24px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      margin-bottom: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 36px rgba(0,0,0,0.16);
+    }
+
+    .bean-profile img {
+      width: 116px;
+      height: 116px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.28);
+    }
+
+    .bean-profile h4 { margin: 0 0 7px; font-size: 22px; }
+    .bean-profile p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 22px 0;
+      min-height: 218px;
+      align-content: start;
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 16px;
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.16), rgba(0,0,0,0.20)),
+        rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 16px 32px rgba(0,0,0,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      transition: transform 220ms cubic-bezier(.2,.8,.2,1), border-color 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+    }
+
+    .metric.shot-not-ready {
+      border-color: rgba(105,173,255,0.26);
+      opacity: 0.82;
+    }
+
+    .recipe-body {
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output[data-shot-state="brewing"] .recipe-body {
+      animation: shotBodyLift 900ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .output[data-shot-state="ready"] .metric {
+      animation: metricArrive 460ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .output[data-shot-state="ready"] .metric:nth-child(2) { animation-delay: 35ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(3) { animation-delay: 70ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(4) { animation-delay: 105ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(5) { animation-delay: 140ms; }
+    .output[data-shot-state="ready"] .metric:nth-child(6) { animation-delay: 175ms; }
+
+    @keyframes shotBodyLift {
+      0% { transform: translateY(0); opacity: 1; }
+      40% { transform: translateY(-6px); opacity: .86; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes metricArrive {
+      from { transform: translateY(12px) scale(.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 32px;
+      font-weight: 930;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 5px;
+    }
+
+    .metric span { color: var(--muted); font-size: 13px; }
+
+    .taste-panel {
+      position: relative;
+      padding: 16px;
+      margin: 0 0 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(0,0,0,0.22);
+      -webkit-backdrop-filter: blur(30px) saturate(175%) contrast(108%);
+      backdrop-filter: blur(30px) saturate(175%) contrast(108%);
+      box-shadow:
+        0 18px 38px rgba(0,0,0,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.16);
+      overflow: hidden;
+    }
+
+    .taste-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(234,194,125,0.18), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(105,173,255,0.16), transparent 30%);
+      pointer-events: none;
+    }
+
+    .taste-panel-head,
+    .taste-scores,
+    .taste-relations {
+      position: relative;
+      z-index: 1;
+    }
+
+    .taste-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .taste-panel-head span {
+      font-size: 18px;
+      font-weight: 950;
+      color: #fff;
+    }
+
+    .taste-panel-head strong {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .taste-scores {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .taste-score {
+      padding: 12px;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.12), rgba(0,0,0,0.14)),
+        rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .taste-score-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .taste-score-top span {
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .taste-score-top strong {
+      color: var(--gold);
+      font-size: 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .taste-score-track {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.30);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+    }
+
+    .taste-score-fill {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(234,194,125,0.95), rgba(105,173,255,0.88));
+      transform: scaleX(var(--score, 0.5));
+      transform-origin: left center;
+      transition: transform 260ms cubic-bezier(.2,.8,.2,1);
+      box-shadow: 0 0 20px var(--mode-glow);
+    }
+
+    .taste-relations {
+      display: grid;
+      gap: 9px;
+    }
+
+    .taste-relation {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .taste-relation strong {
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .taste-relation strong span {
+      display: block;
+      margin-top: 4px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .taste-relation p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+      min-height: 322px;
+      align-content: start;
+    }
+
+    body[data-mode="machine"] .metrics {
+      min-height: 332px;
+    }
+
+    body[data-mode="machine"] .steps {
+      min-height: 338px;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .steps time { color: var(--gold); font-weight: 900; }
+    .steps p { margin: 0; color: var(--muted); line-height: 1.45; }
+
+    .culture-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .culture-card,
+    .mini-bean,
+    .drink-card,
+    .story-detail,
+    .variable-lab {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.10);
+      -webkit-backdrop-filter: blur(28px) saturate(175%);
+      backdrop-filter: blur(28px) saturate(175%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .culture-card > *,
+    .mini-bean > *,
+    .drink-card > *,
+    .story-detail > *,
+    .variable-lab > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .culture-card {
+      min-height: 360px;
+      padding: 26px;
+      border-radius: var(--radius-xl);
+    }
+
+    .culture-card h3 {
+      margin: 0 0 14px;
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    .culture-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .history-story-panel {
+      min-height: 420px;
+    }
+
+    .history-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .story-detail {
+      min-height: 210px;
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .story-detail span {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .story-detail h3,
+    .variable-lab h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      line-height: 1.18;
+    }
+
+    .story-detail p,
+    .variable-lab p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+      font-size: 14px;
+    }
+
+    .culture-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .culture-stat {
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .culture-stat strong {
+      display: block;
+      color: #fff;
+      font-size: clamp(18px, 1.7vw, 22px);
+      font-weight: 950;
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+
+    .culture-stat span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .story-timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-node {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 14px;
+      min-height: 112px;
+      padding: 18px;
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.16), rgba(0,0,0,0.16)),
+        rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 16px 32px rgba(0,0,0,0.18);
+    }
+
+    .story-node time {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-node h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .story-node p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .china-bean-grid,
+    .drink-lab-grid,
+    .drink-variable-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .china-bean-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .drink-lab-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .drink-variable-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .mini-bean,
+    .drink-card {
+      min-height: 230px;
+      padding: 20px;
+      border-radius: 26px;
+    }
+
+    .mini-bean {
+      display: grid;
+      align-content: start;
+    }
+
+    .bean-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .bean-thumb {
+      width: clamp(56px, 6vw, 74px);
+      aspect-ratio: 1;
+      flex: 0 0 auto;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .drink-card {
+      min-height: auto;
+      padding: 14px;
+    }
+
+    .drink-summary {
+      display: grid;
+      grid-template-rows: 190px auto auto;
+      gap: 14px;
+      min-height: auto;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .drink-summary::marker { content: ""; }
+    .drink-summary::-webkit-details-marker { display: none; }
+
+    .drink-photo {
+      width: 100%;
+      height: 190px;
+      display: block;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 18px 34px rgba(0,0,0,0.20);
+    }
+
+    .drink-copy {
+      padding: 4px 4px 8px;
+    }
+
+    .recipe-detail-toggle {
+      justify-self: start;
+      margin: 0 4px 4px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      box-shadow: 0 14px 30px rgba(234,194,125,0.20), inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .recipe-detail-card[open] {
+      box-shadow: 0 26px 62px rgba(0,0,0,0.34), 0 0 0 1px rgba(234,194,125,0.18), inset 0 1px 0 rgba(255,255,255,0.20);
+    }
+
+    .recipe-detail-card {
+      align-self: start;
+      transition: transform 200ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+
+    .recipe-detail-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.38);
+    }
+
+    .recipe-detail-card[open] .drink-photo {
+      transform: scale(1.018);
+    }
+
+    .recipe-steps {
+      display: grid;
+      gap: 10px;
+      margin: 14px 4px 4px;
+      padding: 14px 14px 14px 34px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .recipe-steps li::marker {
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .recipe-steps b {
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .drink-variables {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .drink-variables li {
+      padding: 10px 11px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .drink-variables b {
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .mini-bean span,
+    .drink-card span {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mini-bean h3,
+    .drink-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .mini-bean p,
+    .drink-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.52;
+      font-size: 14px;
+    }
+
+    .mini-bean strong,
+    .drink-card strong {
+      display: block;
+      margin-top: 16px;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .drink-card .recipe-detail-toggle {
+      justify-self: start;
+      width: fit-content;
+      min-height: 40px;
+      margin: 0 4px 4px;
+      padding: 0 15px;
+      color: #17110c;
+      background: linear-gradient(180deg, #fff8ea, #eac27d);
+      border: 1px solid rgba(255,255,255,0.42);
+      box-shadow: 0 14px 30px rgba(234,194,125,0.20), inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .recipe-detail-card[open] .recipe-detail-toggle {
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .recipe-detail-card[open] .recipe-steps {
+      animation: recipeReveal 220ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    @keyframes recipeReveal {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .variable-lab {
+      min-height: 240px;
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .milk-foam-tips {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .foam-tip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .foam-tip {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .foam-tip b {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .variable-lab strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .show-card {
+      min-height: 300px;
+      padding: 24px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(26px) saturate(170%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .show-card h3 { margin: 0 0 12px; font-size: 26px; }
+    .show-card p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 58px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.16);
+    }
+
+    @media (max-width: 980px) {
+      .hero, .workspace { grid-template-columns: 1fr; }
+      .output { position: static; }
+      .cafe-showcase-head { grid-template-columns: 1fr; }
+      .cafe-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cafe-scene-card.featured { grid-row: span 2; }
+      .cafe-scene-card.wide { grid-column: span 2; }
+      .culture-grid { grid-template-columns: 1fr; }
+      .china-bean-grid,
+      .drink-lab-grid,
+      .history-detail-grid,
+      .drink-variable-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .showcase { grid-template-columns: 1fr; }
+      .stage { min-height: 520px; }
+      .stage img,
+      .bean-carousel,
+      .bean-carousel-viewport,
+      .bean-carousel-track,
+      .bean-carousel-slide { min-height: 520px; }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        position: relative;
+        width: calc(100% - 20px);
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        align-items: stretch;
+        padding: 12px 12px 14px;
+        border-radius: 24px;
+        top: auto;
+        margin: 14px auto 22px;
+      }
+      .brand { padding: 0 6px; }
+      .nav-links {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: 38px;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .nav-links a {
+        min-height: 36px;
+        justify-content: center;
+        padding: 0 8px;
+        background: rgba(255,255,255,0.08);
+        text-align: center;
+      }
+      .hero {
+        width: min(100% - 24px, 1240px);
+        min-height: auto;
+        padding: clamp(22px, 7vw, 34px) 0 52px;
+        gap: 24px;
+        align-items: start;
+      }
+      h1 { font-size: clamp(48px, 16vw, 72px); }
+      .section { width: min(100% - 20px, 1180px); }
+      .section-head { max-width: 100%; }
+      .section-head h2 {
+        padding: 10px 14px 20px;
+        border-radius: 18px;
+        font-size: clamp(17px, 5.05vw, 24px);
+        box-shadow:
+          0 18px 44px rgba(0,0,0,0.30),
+          inset 0 1px 0 rgba(255,255,255,0.38),
+          inset 0 -14px 26px rgba(0,0,0,0.16);
+      }
+      .section-head h2::after {
+        left: 16px;
+        right: 16px;
+        bottom: 6px;
+        height: 6px;
+      }
+      .stage {
+        border-radius: 34px;
+        margin-top: 4px;
+      }
+      .floating-card { grid-template-columns: 1fr; left: 16px; right: 16px; bottom: 16px; }
+      .carousel-btn { width: 42px; height: 42px; }
+      .carousel-prev { left: 12px; }
+      .carousel-next { right: 12px; }
+      .carousel-dots { display: none; }
+      .bean-strip, .metrics, .segment, .bean-profile, .taste-scores, .culture-stats, .culture-grid, .china-bean-grid, .drink-lab-grid, .history-detail-grid, .drink-variable-grid, .foam-tip-grid, .cafe-showcase-grid { grid-template-columns: 1fr; }
+      .cafe-showcase-head h2 { font-size: clamp(27px, 7.2vw, 38px); }
+      .cafe-showcase-grid {
+        grid-auto-rows: auto;
+        gap: 24px;
+      }
+      .cafe-scene-card,
+      .cafe-scene-card.featured,
+      .cafe-scene-card.wide {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 260px;
+        aspect-ratio: 4 / 3;
+      }
+      .bean-profile img { width: 100%; height: 180px; }
+      .drink-card { min-height: auto; }
+      .drink-photo { height: 176px; }
+      .drink-summary { grid-template-rows: 176px auto auto; }
+      .bean-thumb { width: 58px; border-radius: 16px; }
+      .taste-relation { grid-template-columns: 1fr; }
+      .story-node { grid-template-columns: 1fr; }
+      .steps li { grid-template-columns: 1fr; }
+      .machine-console { margin-top: 12px; }
+      .recommended-config-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .machine-recommendation-head { align-items: flex-start; flex-direction: column; }
+      .machine-status-row {
+        margin-bottom: 10px;
+        padding: 0 2px;
+      }
+      .machine-preview {
+        min-height: 300px;
+        border-radius: 26px;
+      }
+      .indicator-lights { left: 20px; top: 22px; }
+      .brew-lever {
+        top: 68px;
+        right: 16px;
+        height: 192px;
+      }
+      .brew-stage { left: 43%; width: 170px; }
+      .water-outlet { width: 104px; }
+      .espresso-cup {
+        width: 116px;
+        height: 60px;
+      }
+      .espresso-cup::after {
+        right: -24px;
+        width: 30px;
+        height: 26px;
+        border-width: 7px;
+      }
+      .machine-action-hint {
+        bottom: 20px;
+        min-width: 148px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+  <style>
+
+    .page-shell {
+      min-height: 100dvh;
+    }
+
+    .nav-current {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .slide-link {
+      position: relative;
+      text-decoration: none;
+    }
+
+    .slide-link:focus-visible {
+      outline: 3px solid rgba(105,173,255,.72);
+      outline-offset: 3px;
+    }
+
+    [data-page-shell] {
+      transition: transform 220ms ease, opacity 220ms ease;
+      will-change: transform, opacity;
+    }
+
+    body.slide-out-left [data-page-shell] {
+      transform: translateX(-24px);
+      opacity: 0;
+    }
+
+    body.slide-out-right [data-page-shell] {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+
+    body.slide-in [data-page-shell] {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-page-shell] {
+        transition: none !important;
+      }
+    }
+
+    .page-hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(26px, 5vw, 54px) 0 16px;
+    }
+
+    .page-hero h1 {
+      margin: 0;
+      font-size: clamp(40px, 6vw, 84px);
+      line-height: .95;
+      letter-spacing: 0;
+      font-weight: 930;
+      text-wrap: balance;
+      text-shadow: 0 18px 54px rgba(0,0,0,.38), 0 0 38px rgba(255,255,255,.10);
+    }
+
+    .page-hero p {
+      max-width: 860px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.55;
+    }
+
+
+  </style>
+</head>
+<body data-page-shell>
+  <div class="shell page-shell">
+    <header class="nav">
+      <div class="brand">寻常小馆</div>
+      <nav class="nav-links" aria-label="页面链接">
+      <a class="slide-link" href="coffee.html" data-slide="right">首页</a>
+      <a class="slide-link" href="beans.html">咖啡豆图鉴</a>
+      <a class="slide-link" href="history.html">咖啡历史</a>
+      <a class="slide-link" href="china-beans.html">热门豆种</a>
+      <span class="nav-current" aria-current="page">咖啡做法</span>
+      <a class="slide-link" href="workspace.html">制作工作台</a>
+      <a class="slide-link" href="difference.html">模式差异</a>
+      </nav>
+    </header>
+    <main>
+      <section class="page-hero">
+        <p class="eyebrow">咖啡做法</p>
+        <h1>不同咖啡做法，看懂变量和口感。</h1>
+        <p>研磨度、粉水比、萃取率、水温、液重、奶泡、冰量和橙汁比例，都会改变一杯咖啡的骨架和余韵。</p>
+      </section>
+<section id="drink-methods" class="section">
+        <div class="section-head">
+          <h2>不同咖啡做法，看懂变量和口感。</h2>
+          <p>一杯咖啡不是只有配方名，研磨度、粉水比、萃取率、水温、液重、奶泡、冰量和橙汁比例都会改变酸感、甜感、苦感、厚度与余韵。</p>
+        </div>
+        <div class="drink-lab-grid">
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Iced_Coffee_%286088101587%29.jpg?width=900" alt="橙C美式成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>清爽果咖</span><h3>橙C美式</h3><p>浓缩、冷萃或冰美式做基底，加入橙汁、橙片和冰块。适合埃塞、肯尼亚、浅烘云南豆这种有柑橘酸和花果香的豆子。</p><strong>结构：咖啡 + 橙汁 / 橙味基底 + 冰水</strong><ul class="drink-variables"><li><b>橙汁比例</b>越高，酸甜和果香越明显，但咖啡余韵会被削弱。</li><li><b>冰量</b>越多，入口更清爽；冰太少会显得甜腻、酸感集中。</li><li><b>萃取率</b>偏低会尖酸，偏高会让橙皮感变苦。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备杯底：</b>杯中加入冰块至七分满，倒入 80-110g 橙汁或橙味基底。</li><li><b>处理咖啡：</b>用 18g 粉萃取 32-38g 浓缩，想更清爽可换成 90-120g 冷萃。</li><li><b>控制分层：</b>沿杯壁或勺背缓慢倒入咖啡，保留上层深色层次。</li><li><b>校准口感：</b>如果橙汁太甜，增加 20-30g 冰水；如果咖啡发苦，下次把研磨略调粗。</li><li><b>出杯收尾：</b>用橙片或橙皮点香，喝前轻搅两下，让酸甜和咖啡余韵融合。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Coffee_life_%28Unsplash%29.jpg?width=900" alt="美式咖啡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>黑咖基础</span><h3>美式</h3><p>浓缩加水，目标是降低浓度但保留香气。它会放大豆子的干净度，所以稳定拼配或甜感清楚的单品更适合。</p><strong>结构：浓缩 + 热水 / 冰水</strong><ul class="drink-variables"><li><b>液重</b>越高，浓缩越稀释，苦感降低但厚度变薄。</li><li><b>水温</b>热美式更放大苦甜，冰美式更强调酸感和清爽度。</li><li><b>研磨度</b>太粗会酸薄，太细会苦涩、余韵发干。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>选择杯型：</b>热美式先温杯，冰美式加冰至七分满，准备 120-180g 水。</li><li><b>萃取浓缩：</b>用 18g 粉萃取 30-42g 浓缩，观察流速是否落在 25-32 秒。</li><li><b>决定顺序：</b>热饮建议浓缩倒入热水，保留香气；冰饮先水和冰，再倒浓缩快速降温。</li><li><b>判断味道：</b>酸薄通常是萃取不足或水太多，苦涩发干通常是研磨过细或液重过长。</li><li><b>记录下次：</b>先闻香再入口，记录液重、水量和研磨度，下一杯只改一个变量。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Latte_art_in_pasadena_%28Unsplash%29.jpg?width=900" alt="拿铁成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>奶咖日常</span><h3>拿铁</h3><p>浓缩加入大量牛奶，奶甜会柔化酸感和苦感。巴西、云南卡蒂姆、曼特宁或意式综合豆更容易做出顺滑甜感。</p><strong>结构：浓缩 + 牛奶 + 轻奶泡</strong><ul class="drink-variables"><li><b>奶量</b>越多，口感越柔，咖啡香气越弱。</li><li><b>奶温</b>过高会带熟奶味，甜感反而变钝。</li><li><b>萃取率</b>偏高会在奶里表现为焦苦，偏低则像酸奶感。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>萃取基底：</b>萃取 32-40g 浓缩，优先选择坚果、可可或焦糖调豆子。</li><li><b>蒸奶打发：</b>倒入冷牛奶至拉花缸 1/3-1/2，蒸汽棒贴近液面打入少量空气。</li><li><b>细化奶泡：</b>形成漩涡后把大泡打碎，55-62C 停止，牛奶应像湿油漆一样有光泽。</li><li><b>融合咖啡：</b>先从高处细流注入，让浓缩和牛奶混合，降低表面色差。</li><li><b>完成拉花：</b>贴近液面推出图案；若图案散开，说明奶泡太薄或注入太快。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese_coffee_with_milk_and_ice.jpg?width=900" alt="Dirty咖啡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>强烈分层</span><h3>Dirty</h3><p>冰牛奶上直接接热浓缩，入口先热后冷、先浓后甜。它依赖浓缩厚度和温差，适合油脂稳定、可可坚果调的豆子。</p><strong>结构：冰牛奶 + 热浓缩</strong><ul class="drink-variables"><li><b>液重</b>短一点更厚重，长一点更柔和但分层感下降。</li><li><b>牛奶温度</b>越低，冷热反差越明显。</li><li><b>杯型</b>窄杯更容易保留分层，宽杯更快融合。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>提前冷藏：</b>把玻璃杯和牛奶冷藏，杯中倒入 120-150g 冰牛奶。</li><li><b>短萃浓缩：</b>建议 18g 粉出 28-34g 液体，让浓缩厚度更集中。</li><li><b>保留温差：</b>浓缩萃好后立刻倒入，不要等待太久，否则 Dirty 的冷热反差会消失。</li><li><b>做出分层：</b>让浓缩沿杯壁或勺背落到牛奶表面，减少搅动和混合。</li><li><b>立即饮用：</b>先感受热浓缩的强度，再让冰牛奶的甜感收尾；放久会变成普通冰拿铁。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cup_saucer_and_coffee_art_%28Unsplash%29.jpg?width=900" alt="澳白成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>细腻奶感</span><h3>澳白</h3><p>比拿铁更突出咖啡浓度，奶泡更薄，入口更绵密。适合甜感清晰、苦感干净的中深烘拼配。</p><strong>结构：双份浓缩 + 少量牛奶 + 薄奶泡</strong><ul class="drink-variables"><li><b>咖啡占比</b>越高，苦甜和烘焙香越突出。</li><li><b>奶泡厚度</b>越薄，口感越丝滑；太厚会接近卡布奇诺。</li><li><b>粉量</b>不足会水感明显，粉量过高会压住奶甜。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备小杯：</b>选择 150-180ml 杯量，让咖啡浓度保留在前段。</li><li><b>萃取双份：</b>使用双份浓缩，液重控制在 32-38g，避免拉太长变水。</li><li><b>薄打牛奶：</b>牛奶只打入极少空气，目标是薄而亮的微泡，不做厚泡层。</li><li><b>低位融合：</b>先低位注入融合咖啡和奶，再用细流收尾保持表面细腻。</li><li><b>检查口感：</b>入口应紧致、丝滑、咖啡存在感清楚；像拿铁则奶量过多或奶泡太厚。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cappuccino_at_Sightglass_Coffee.jpg?width=900" alt="卡布奇诺成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>经典比例</span><h3>卡布奇诺</h3><p>咖啡、牛奶、奶泡更接近三段平衡，口感蓬松，香气更浮在上层，适合想保留咖啡存在感的奶咖。</p><strong>结构：浓缩 + 牛奶 + 厚奶泡</strong><ul class="drink-variables"><li><b>奶泡</b>越厚，触感越轻盈，液体甜感会变弱。</li><li><b>杯量</b>越小，咖啡浓度越明显，苦甜更集中。</li><li><b>水温 / 萃取率</b>偏高会让奶泡下的咖啡显苦。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>萃取浓缩：</b>萃取 30-36g 浓缩，中深烘拼配更容易做出稳定苦甜。</li><li><b>蒸奶进气：</b>蒸牛奶时比拿铁多打入一点空气，让奶泡有支撑但不粗糙。</li><li><b>建立泡层：</b>注入时先穿透 crema 融合，再提高拉花缸形成厚泡层。</li><li><b>控制比例：</b>杯量越小咖啡越突出，奶泡越厚触感越轻，但液体甜感会下降。</li><li><b>完成判断：</b>表面可撒少量可可粉，入口应轻盈、绵密，且咖啡存在感清楚。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Caff%C3%A8_Mocha_by_Phil.jpg?width=900" alt="摩卡成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>巧克力调</span><h3>摩卡</h3><p>拿铁里加入巧克力酱或可可基底，适合低酸、坚果、可可调性的咖啡豆。酸质太高会和巧克力冲突。</p><strong>结构：浓缩 + 牛奶 + 巧克力</strong><ul class="drink-variables"><li><b>巧克力量</b>越高，甜感和厚度增加，咖啡香会后退。</li><li><b>豆子酸感</b>越高，越容易出现果酸和可可分离。</li><li><b>奶量</b>越少，可可苦和咖啡苦越明显。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>做巧克力底：</b>杯底加入 15-25g 巧克力酱或可可糖浆，酸感高的豆子要减少用量。</li><li><b>萃取并搅匀：</b>萃取浓缩后先与巧克力充分搅匀，避免糖浆沉底。</li><li><b>打奶到拿铁厚度：</b>牛奶温度控制在 55-62C，奶泡薄而顺滑即可。</li><li><b>组合饮品：</b>倒入牛奶时先融合，再保留一点表面纹理，让可可香和咖啡苦甜连接。</li><li><b>调整甜度：</b>过甜时下次减少巧克力或提高咖啡占比；苦涩时缩短液重或换低酸豆。</li></ol>
+          </details>
+          <details class="drink-card recipe-detail-card">
+            <summary class="drink-summary">
+              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cafe_Vecchio_Cappuccino_al_gusto_de_coco.jpg?width=900" alt="生椰拿铁成品图" width="900" height="620" loading="lazy">
+              <div class="drink-copy"><span>中式热门</span><h3>生椰拿铁</h3><p>用椰乳替代部分牛奶，甜感更外放，适合云南、巴西或意式综合豆做稳定基底。椰香强时要避免过酸豆子。</p><strong>结构：浓缩 + 椰乳 + 冰块</strong><ul class="drink-variables"><li><b>椰乳比例</b>越高，香气更热带，但咖啡厚度会被盖住。</li><li><b>冰量</b>控制稀释速度，冰多更清爽，冰少更甜腻。</li><li><b>液重</b>短萃更适合椰乳，长萃容易显苦和发空。</li></ul></div>
+              <span class="recipe-detail-toggle">查看详细步骤</span>
+            </summary>
+            <ol class="recipe-steps"><li><b>准备椰乳：</b>杯中加入冰块，倒入 120-160g 冰椰乳，椰乳越多香气越外放。</li><li><b>短萃浓缩：</b>使用 18g 粉萃取 30-36g 浓缩，保持厚度和苦甜支撑。</li><li><b>控制倒入：</b>把浓缩缓慢倒在冰块上，形成咖啡与椰乳的层次。</li><li><b>平衡口感：</b>如果椰香盖过咖啡，下次减少椰乳或把液重缩短；如果发苦，略调粗研磨。</li><li><b>出杯饮用：</b>喝前轻搅，让椰香、咖啡苦甜和冰块稀释速度稳定融合。</li></ol>
+          </details>
+        </div>
+        <div class="drink-variable-grid">
+          <article class="variable-lab"><strong>手冲变量</strong><h3>研磨度 + 粉水比决定骨架。</h3><p>研磨越细、粉水比越高，浓度和厚度上升，但过度会苦涩；研磨越粗、比例越低，口感更清，但容易酸薄、余韵短。</p></article>
+          <article class="variable-lab"><strong>萃取变量</strong><h3>水温 + 时间影响酸甜苦。</h3><p>水温高、时间长会提高萃取率，甜感之后苦感也会上来；水温低、时间短更明亮，但不足时会出现尖酸和空洞感。</p></article>
+          <article class="variable-lab"><strong>机器变量</strong><h3>粉量 + 液重决定浓缩表达。</h3><p>同样 18g 粉，液重 30g 更厚更短，36g 更均衡，42g 更清瘦；萃取时间偏短会酸，偏长会苦涩发干。</p></article>
+          <article class="variable-lab"><strong>奶咖变量</strong><h3>奶量、奶泡和冰量决定口感。</h3><p>奶量增加会降低咖啡存在感，奶泡增加会让口感更轻，冰量增加会让入口更清爽但也更快稀释甜感。</p></article>
+          <article class="variable-lab milk-foam-tips"><strong>完美奶泡</strong><h3>蒸汽棒先打发空气，再用漩涡细化。</h3><p>奶泡成功的核心不是“越厚越好”，而是让牛奶有光泽、流动性和细腻微泡。这样拿铁更顺滑，澳白更绵密，拉花也更容易铺开。</p><div class="foam-tip-grid"><div class="foam-tip"><b>1. 纸巾擦净</b>蒸汽棒先排水，再用纸巾擦净喷嘴，避免冷凝水和残奶影响味道。</div><div class="foam-tip"><b>2. 先打发</b>喷嘴贴近液面听到轻微进气声，1-3 秒即可，声音尖锐说明进气太猛。</div><div class="foam-tip"><b>3. 做漩涡</b>把喷嘴略微埋入牛奶侧边，让液面旋转，粗泡会被卷进液体里变细。</div><div class="foam-tip"><b>4. 控温拉花</b>55-62C 停止，轻敲拉花缸并旋转，得到可流动的细腻微泡。</div></div></article>
+        </div>
+      </section>
+
+      
+    </main>
+    <footer class="footer">Images load from Wikimedia Commons direct upload URLs. If an image fails, the layout keeps its glass fallback.</footer>
+  </div>
+  <script src="slide-navigation.js"></script>
+</body>
+</html>
