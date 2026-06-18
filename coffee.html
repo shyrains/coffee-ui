@@ -342,8 +342,8 @@
     }
   </style>
 </head>
-<body data-page-shell>
-  <div class="shell">
+<body>
+  <div class="shell" data-page-shell>
     <section class="hero">
       <div>
         <p class="hero-brand">寻常小馆</p>
@@ -414,11 +414,13 @@
       </a>
     </main>
 
-    <div class="cafe-lightbox" id="cafeLightbox" role="dialog" aria-modal="true" aria-label="咖啡馆大图预览" hidden>
-      <button class="lightbox-close" type="button" id="cafeLightboxClose" aria-label="关闭大图">×</button>
-      <img id="cafeLightboxImage" src="" alt="咖啡馆大图预览">
-    </div>
   </div>
+
+  <div class="cafe-lightbox" id="cafeLightbox" role="dialog" aria-modal="true" aria-label="咖啡馆大图预览" hidden>
+    <button class="lightbox-close" type="button" id="cafeLightboxClose" aria-label="关闭大图">×</button>
+    <img id="cafeLightboxImage" src="" alt="咖啡馆大图预览">
+  </div>
+
   <script>
     (() => {
       const lightbox = document.getElementById("cafeLightbox");
