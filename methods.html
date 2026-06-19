@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -31,7 +31,6 @@
       --radius-xl: 34px;
       --radius-lg: 24px;
       --radius-md: 16px;
-      color-scheme: dark;
     }
 
     body[data-mode="hand"] {
@@ -2444,15 +2443,16 @@
 
 
   </style>
+  <link rel="stylesheet" href="assets/cafe-magazine.css">
 </head>
-<body data-page-shell>
+<body class="magazine-page methods-page" data-page-shell>
   <div class="shell page-shell">
     <header class="nav">
       <div class="brand">寻常小馆</div>
       <nav class="nav-links" aria-label="页面链接">
       <a class="slide-link" href="coffee.html" data-slide="right">首页</a>
       <a class="slide-link" href="beans.html">咖啡豆图鉴</a>
-      <a class="slide-link" href="history.html">咖啡历史</a>
+      <a class="slide-link" href="history.html">世界咖啡史</a>
       <a class="slide-link" href="china-beans.html">热门豆种</a>
       <span class="nav-current" aria-current="page">咖啡做法</span>
       <a class="slide-link" href="workspace.html">制作工作台</a>
@@ -2462,7 +2462,7 @@
     <main>
       <section class="page-hero">
         <p class="eyebrow">咖啡做法</p>
-        <h1>不同咖啡做法，看懂变量和口感。</h1>
+        <h1><span>不同咖啡做法，</span><span>看懂变量和口感。</span></h1>
         <p>研磨度、粉水比、萃取率、水温、液重、奶泡、冰量和橙汁比例，都会改变一杯咖啡的骨架和余韵。</p>
       </section>
 <section id="drink-methods" class="section">
@@ -2473,7 +2473,6 @@
         <div class="drink-lab-grid">
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Iced_Coffee_%286088101587%29.jpg?width=900" alt="橙C美式成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>清爽果咖</span><h3>橙C美式</h3><p>浓缩、冷萃或冰美式做基底，加入橙汁、橙片和冰块。适合埃塞、肯尼亚、浅烘云南豆这种有柑橘酸和花果香的豆子。</p><strong>结构：咖啡 + 橙汁 / 橙味基底 + 冰水</strong><ul class="drink-variables"><li><b>橙汁比例</b>越高，酸甜和果香越明显，但咖啡余韵会被削弱。</li><li><b>冰量</b>越多，入口更清爽；冰太少会显得甜腻、酸感集中。</li><li><b>萃取率</b>偏低会尖酸，偏高会让橙皮感变苦。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2481,7 +2480,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Coffee_life_%28Unsplash%29.jpg?width=900" alt="美式咖啡成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>黑咖基础</span><h3>美式</h3><p>浓缩加水，目标是降低浓度但保留香气。它会放大豆子的干净度，所以稳定拼配或甜感清楚的单品更适合。</p><strong>结构：浓缩 + 热水 / 冰水</strong><ul class="drink-variables"><li><b>液重</b>越高，浓缩越稀释，苦感降低但厚度变薄。</li><li><b>水温</b>热美式更放大苦甜，冰美式更强调酸感和清爽度。</li><li><b>研磨度</b>太粗会酸薄，太细会苦涩、余韵发干。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2489,7 +2487,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Latte_art_in_pasadena_%28Unsplash%29.jpg?width=900" alt="拿铁成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>奶咖日常</span><h3>拿铁</h3><p>浓缩加入大量牛奶，奶甜会柔化酸感和苦感。巴西、云南卡蒂姆、曼特宁或意式综合豆更容易做出顺滑甜感。</p><strong>结构：浓缩 + 牛奶 + 轻奶泡</strong><ul class="drink-variables"><li><b>奶量</b>越多，口感越柔，咖啡香气越弱。</li><li><b>奶温</b>过高会带熟奶味，甜感反而变钝。</li><li><b>萃取率</b>偏高会在奶里表现为焦苦，偏低则像酸奶感。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2497,7 +2494,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese_coffee_with_milk_and_ice.jpg?width=900" alt="Dirty咖啡成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>强烈分层</span><h3>Dirty</h3><p>冰牛奶上直接接热浓缩，入口先热后冷、先浓后甜。它依赖浓缩厚度和温差，适合油脂稳定、可可坚果调的豆子。</p><strong>结构：冰牛奶 + 热浓缩</strong><ul class="drink-variables"><li><b>液重</b>短一点更厚重，长一点更柔和但分层感下降。</li><li><b>牛奶温度</b>越低，冷热反差越明显。</li><li><b>杯型</b>窄杯更容易保留分层，宽杯更快融合。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2505,7 +2501,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cup_saucer_and_coffee_art_%28Unsplash%29.jpg?width=900" alt="澳白成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>细腻奶感</span><h3>澳白</h3><p>比拿铁更突出咖啡浓度，奶泡更薄，入口更绵密。适合甜感清晰、苦感干净的中深烘拼配。</p><strong>结构：双份浓缩 + 少量牛奶 + 薄奶泡</strong><ul class="drink-variables"><li><b>咖啡占比</b>越高，苦甜和烘焙香越突出。</li><li><b>奶泡厚度</b>越薄，口感越丝滑；太厚会接近卡布奇诺。</li><li><b>粉量</b>不足会水感明显，粉量过高会压住奶甜。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2513,7 +2508,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cappuccino_at_Sightglass_Coffee.jpg?width=900" alt="卡布奇诺成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>经典比例</span><h3>卡布奇诺</h3><p>咖啡、牛奶、奶泡更接近三段平衡，口感蓬松，香气更浮在上层，适合想保留咖啡存在感的奶咖。</p><strong>结构：浓缩 + 牛奶 + 厚奶泡</strong><ul class="drink-variables"><li><b>奶泡</b>越厚，触感越轻盈，液体甜感会变弱。</li><li><b>杯量</b>越小，咖啡浓度越明显，苦甜更集中。</li><li><b>水温 / 萃取率</b>偏高会让奶泡下的咖啡显苦。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2521,7 +2515,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Caff%C3%A8_Mocha_by_Phil.jpg?width=900" alt="摩卡成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>巧克力调</span><h3>摩卡</h3><p>拿铁里加入巧克力酱或可可基底，适合低酸、坚果、可可调性的咖啡豆。酸质太高会和巧克力冲突。</p><strong>结构：浓缩 + 牛奶 + 巧克力</strong><ul class="drink-variables"><li><b>巧克力量</b>越高，甜感和厚度增加，咖啡香会后退。</li><li><b>豆子酸感</b>越高，越容易出现果酸和可可分离。</li><li><b>奶量</b>越少，可可苦和咖啡苦越明显。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>
@@ -2529,7 +2522,6 @@
           </details>
           <details class="drink-card recipe-detail-card">
             <summary class="drink-summary">
-              <img class="drink-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cafe_Vecchio_Cappuccino_al_gusto_de_coco.jpg?width=900" alt="生椰拿铁成品图" width="900" height="620" loading="lazy">
               <div class="drink-copy"><span>中式热门</span><h3>生椰拿铁</h3><p>用椰乳替代部分牛奶，甜感更外放，适合云南、巴西或意式综合豆做稳定基底。椰香强时要避免过酸豆子。</p><strong>结构：浓缩 + 椰乳 + 冰块</strong><ul class="drink-variables"><li><b>椰乳比例</b>越高，香气更热带，但咖啡厚度会被盖住。</li><li><b>冰量</b>控制稀释速度，冰多更清爽，冰少更甜腻。</li><li><b>液重</b>短萃更适合椰乳，长萃容易显苦和发空。</li></ul></div>
               <span class="recipe-detail-toggle">查看详细步骤</span>
             </summary>

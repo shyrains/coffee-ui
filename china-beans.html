@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -31,7 +31,6 @@
       --radius-xl: 34px;
       --radius-lg: 24px;
       --radius-md: 16px;
-      color-scheme: dark;
     }
 
     body[data-mode="hand"] {
@@ -2444,15 +2443,16 @@
 
 
   </style>
+  <link rel="stylesheet" href="assets/cafe-magazine.css">
 </head>
-<body data-page-shell>
+<body class="magazine-page popular-beans-page" data-page-shell>
   <div class="shell page-shell">
     <header class="nav">
       <div class="brand">寻常小馆</div>
       <nav class="nav-links" aria-label="页面链接">
       <a class="slide-link" href="coffee.html" data-slide="right">首页</a>
       <a class="slide-link" href="beans.html">咖啡豆图鉴</a>
-      <a class="slide-link" href="history.html">咖啡历史</a>
+      <a class="slide-link" href="history.html">世界咖啡史</a>
       <span class="nav-current" aria-current="page">热门豆种</span>
       <a class="slide-link" href="methods.html">咖啡做法</a>
       <a class="slide-link" href="workspace.html">制作工作台</a>
@@ -2472,43 +2472,59 @@
         </div>
         <div class="china-bean-grid">
           <article class="mini-bean">
-            <div class="bean-card-head"><span>本土产区</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="云南卡蒂姆咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>云南卡蒂姆</h3><p>坚果、可可、低酸和烘烤甜感明显，价格和稳定性适合日常美式、拿铁和冷萃。</p><strong>常见：美式 / 拿铁 / 生椰拿铁</strong>
+            <div class="bean-card-head"><span>本土产区</span><em>常见叫法：云南小粒咖啡 / 卡蒂姆</em></div>
+            <h3>云南卡蒂姆 Catimor</h3>
+            <p>中国咖啡馆里很常见的基础豆种，风味多为坚果、可可、烘烤甜感和低酸，价格稳定，适合做门店日常出品。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>云南保山、普洱、德宏、临沧</dd></div><div><dt>适合</dt><dd>美式 / 拿铁 / 生椰拿铁</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>经典品种</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="铁皮卡和波旁咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>铁皮卡 / 波旁</h3><p>干净、甜感细、酸质柔和，常被咖啡馆用于展示云南精品豆或单品豆的层次。</p><strong>常见：手冲 / 冰滴 / 精品美式</strong>
+            <div class="bean-card-head"><span>经典品种</span><em>常见叫法：Typica / Bourbon</em></div>
+            <h3>铁皮卡 Typica / 波旁 Bourbon</h3>
+            <p>精品单品菜单里更容易出现的传统阿拉比卡品种，干净、甜感细，酸质柔和，常用来展示产区层次。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>云南精品庄园、拉美精品产区</dd></div><div><dt>适合</dt><dd>手冲 / 冰滴 / 精品美式</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>拼配基底</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="巴西咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>巴西</h3><p>坚果、巧克力和低酸感稳定，是很多中国咖啡馆意式拼配里的厚度来源。</p><strong>常见：浓缩 / 拿铁 / 摩卡</strong>
+            <div class="bean-card-head"><span>拼配基底</span><em>常见叫法：黄波旁 / 新世界 / 卡杜艾</em></div>
+            <h3>巴西黄波旁 Yellow Bourbon</h3>
+            <p>很多意式拼配会用巴西豆做厚度和甜感来源，常见风味是坚果、巧克力、焦糖和低酸。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>巴西喜拉多、米纳斯、圣保罗等</dd></div><div><dt>适合</dt><dd>浓缩 / 拿铁 / 摩卡</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>均衡甜感</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="哥伦比亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>哥伦比亚</h3><p>焦糖、红果和均衡酸甜适合做单品，也常和巴西、云南豆一起进入拼配。</p><strong>常见：美式 / 澳白 / 手冲</strong>
+            <div class="bean-card-head"><span>均衡甜感</span><em>常见叫法：卡杜拉 / 卡斯蒂优</em></div>
+            <h3>哥伦比亚卡杜拉 Caturra</h3>
+            <p>中浅到中烘都常见，焦糖、红果和均衡酸甜清晰，既能做单品，也能进入更干净的拼配。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>哥伦比亚慧兰、考卡、娜玲珑</dd></div><div><dt>适合</dt><dd>美式 / 澳白 / 手冲</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>明亮香气</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="埃塞俄比亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>埃塞俄比亚</h3><p>花香、柑橘、莓果和茶感突出，适合需要“香气记忆点”的手冲和果咖特调。</p><strong>常见：手冲 / 橙C美式 / 冷萃</strong>
+            <div class="bean-card-head"><span>明亮香气</span><em>常见叫法：耶加雪菲 / 西达摩 / 古吉</em></div>
+            <h3>埃塞耶加雪菲 Heirloom</h3>
+            <p>以花香、柑橘、莓果和茶感被记住，适合做有香气记忆点的手冲、冷萃和水果特调。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>埃塞俄比亚耶加雪菲、古吉、西达摩</dd></div><div><dt>适合</dt><dd>手冲 / 橙C美式 / 冷萃</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>厚重低酸</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg" alt="曼特宁咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>曼特宁</h3><p>草本、黑巧、香料和厚重口感明显，适合做浓郁黑咖和奶咖基底。</p><strong>常见：深烘美式 / 拿铁 / Dirty</strong>
+            <div class="bean-card-head"><span>厚重低酸</span><em>常见叫法：苏门答腊曼特宁</em></div>
+            <h3>印尼曼特宁 Mandheling</h3>
+            <p>草本、黑巧、香料和厚重口感明显，低酸、醇厚，适合偏深烘的黑咖和奶咖基底。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>印尼苏门答腊、亚齐、林东</dd></div><div><dt>适合</dt><dd>深烘美式 / 拿铁 / Dirty</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>高酸结构</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg" alt="肯尼亚咖啡豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>肯尼亚</h3><p>黑醋栗、番茄和明亮酸质辨识度高，常用于想突出果酸结构的单品菜单。</p><strong>常见：手冲 / 冰美式 / 果咖</strong>
+            <div class="bean-card-head"><span>高酸结构</span><em>常见叫法：SL28 / SL34 / AA</em></div>
+            <h3>肯尼亚 SL28 / SL34</h3>
+            <p>黑醋栗、番茄、莓果和明亮酸质辨识度高，常用于想突出果酸结构的单品菜单。</p>
+            <dl class="bean-facts"><div><dt>产地</dt><dd>肯尼亚涅里、基安布、奇里尼亚加</dd></div><div><dt>适合</dt><dd>手冲 / 冰美式 / 果咖</dd></div></dl>
           </article>
           <article class="mini-bean">
-            <div class="bean-card-head"><span>门店拼配</span><img class="bean-thumb" src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg" alt="意式综合豆小图" width="120" height="120" loading="lazy"></div>
-            <h3>意式综合豆</h3><p>通常用巴西、哥伦比亚、云南、印尼或埃塞做比例组合，目标是稳定油脂、甜感和奶咖融合度。</p><strong>常见：全店基础浓缩</strong>
+            <div class="bean-card-head"><span>门店拼配</span><em>常见叫法：意式综合 / House Blend</em></div>
+            <h3>意式拼配 House Blend</h3>
+            <p>通常由巴西黄波旁、哥伦比亚卡杜拉、云南卡蒂姆、印尼曼特宁或埃塞豆组合，目标是稳定油脂、甜感和奶咖融合度。</p>
+            <dl class="bean-facts"><div><dt>构成</dt><dd>2 到 4 支豆按比例组合</dd></div><div><dt>适合</dt><dd>全店基础浓缩 / 奶咖 / 美式</dd></div></dl>
           </article>
         </div>
       </section>
 
       
     </main>
-    <footer class="footer">Images load from Wikimedia Commons direct upload URLs. If an image fails, the layout keeps its glass fallback.</footer>
+    <footer class="footer">豆种名称按咖啡馆菜单里的常见叫法整理，实际风味会随产区、处理法和烘焙度变化。</footer>
   </div>
   <script src="slide-navigation.js"></script>
 </body>

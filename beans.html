@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -16,7 +16,6 @@
       --glass-edge: rgba(255,255,255,.54);
       --mode-glow: rgba(234,194,125,.28);
       --shadow: 0 34px 100px rgba(0,0,0,.38);
-      color-scheme: dark;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -535,13 +534,14 @@
       *, *::before, *::after { transition-duration: .001ms !important; scroll-behavior: auto !important; }
     }
   </style>
+  <link rel="stylesheet" href="assets/cafe-magazine.css">
 </head>
-<body data-view="editorial">
+<body class="magazine-page" data-view="editorial">
   <header class="nav">
     <div class="brand">寻常小馆</div>
     <nav class="nav-links" aria-label="页面链接">
       <a href="#gallery" aria-current="page">咖啡豆图鉴</a>
-      <a href="history.html">咖啡历史</a>
+      <a href="history.html">世界咖啡史</a>
       <a href="china-beans.html">热门豆种</a>
       <a href="methods.html">咖啡做法</a>
       <a href="workspace.html">制作工作台</a>
@@ -551,7 +551,7 @@
   <main>
     <section class="hero">
       <span class="eyebrow">豆种图鉴</span>
-      <h1>先认识豆子，再决定冲煮。</h1>
+      <h1><span>先认识豆子，</span><span>再决定冲煮。</span></h1>
       <p>真实图片帮助辨认豆子；产区、处理法和风味特征帮助选择适合手冲或机器制作的路线。</p>
     </section>
     <section class="gallery-dock" aria-label="咖啡豆图鉴工具台">

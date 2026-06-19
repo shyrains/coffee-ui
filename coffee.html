@@ -5,107 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>寻常小馆 | 咖啡功能入口</title>
   <style>
-    :root {
-      --ink: #f9f6f1;
-      --muted: rgba(249, 246, 241, .74);
-      --line: rgba(255,255,255,.18);
-      --panel: rgba(16,11,8,.42);
-      --gold: #f0c77e;
-      --blue: #73b7ff;
-      color-scheme: dark;
+    .magazine-home .home-issue {
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: clamp(16px, 3vw, 28px);
+      align-items: start;
+      padding: clamp(24px, 4vw, 42px) 0 clamp(34px, 5vw, 58px);
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      background:
-        linear-gradient(180deg, rgba(10,7,5,.48), rgba(10,7,5,.78)),
-        url("assets/cafe/2.jpg") center / cover,
-        #0f0906;
-      color: var(--ink);
-      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "HarmonyOS Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: 0;
-      overflow-x: hidden;
-    }
-    a { color: inherit; }
-    .shell {
-      min-height: 100dvh;
-      position: relative;
-      z-index: 1;
-      padding: 18px 0 42px;
-    }
-    .hero {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      min-height: clamp(330px, 47vw, 500px);
+    .photo-landing {
+      min-height: calc(100dvh - clamp(80px, 9vw, 114px));
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(360px, .56fr);
-      gap: clamp(18px, 4vw, 42px);
+      grid-template-columns: minmax(340px, .86fr) minmax(440px, 1fr);
       align-items: center;
-      padding: clamp(22px, 4vw, 44px);
-      border-radius: 32px;
-      border: 1px solid rgba(255,255,255,.24);
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.60)),
-        rgba(16,11,8,.32);
-      box-shadow: 0 38px 110px rgba(0,0,0,.42);
+      gap: clamp(28px, 5vw, 72px);
+      padding: clamp(22px, 3vw, 42px) 0 clamp(62px, 7vw, 90px);
+      position: relative;
     }
-    .hero-brand {
-      display: inline-flex;
-      min-height: 36px;
-      align-items: center;
-      padding: 0 16px;
+    .scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(12px, 2vw, 24px);
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(201, 100, 66, .5);
       border-radius: 999px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.26), rgba(255,255,255,.09)),
-        rgba(16,12,9,.44);
-      border: 1px solid rgba(255,255,255,.18);
-      color: var(--ink);
-      font-weight: 900;
-      margin: 0 0 18px;
-      width: fit-content;
-      text-shadow: 0 1px 18px rgba(255,255,255,.24);
+      color: var(--mag-accent);
+      background: rgba(250, 249, 245, .88);
+      text-decoration: none;
+      transform: translateX(-50%);
+      animation: scroll-cue-float 1500ms ease-in-out infinite;
     }
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(38px, 5.9vw, 72px);
-      line-height: 1.02;
-      letter-spacing: 0;
-      font-weight: 950;
-      max-width: none;
+    .scroll-cue span {
+      width: 12px;
+      height: 12px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+    }
+    @keyframes scroll-cue-float {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, 8px); }
+    }
+    .magazine-home .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .photo-landing .hero {
+      max-width: 640px;
+    }
+    .magazine-home .hero h1 {
+      max-width: 9.4ch;
+      white-space: normal;
+    }
+    .magazine-home .hero h1 span {
+      display: block;
       white-space: nowrap;
-      text-shadow: 0 18px 54px rgba(0,0,0,.42), 0 0 38px rgba(255,255,255,.10);
     }
-    .hero-copy {
-      max-width: 720px;
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: clamp(16px, 1.9vw, 22px);
-      line-height: 1.5;
+    .photo-landing .hero-copy {
+      max-width: 34rem;
     }
     .mood-strip {
-      align-self: center;
-      justify-self: end;
-      width: min(100%, 430px);
+      width: 100%;
+      max-width: 700px;
+      height: min(500px, calc(100dvh - 250px));
       display: grid;
-      grid-template-columns: minmax(122px, 1.05fr) repeat(2, minmax(82px, .86fr));
-      grid-template-rows: repeat(3, clamp(86px, 9.2vw, 124px));
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
     .mood-photo {
       display: block;
       width: 100%;
-      height: 100%;
       min-width: 0;
       min-height: 0;
       padding: 0;
-      cursor: zoom-in;
       overflow: hidden;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      box-shadow: 0 18px 38px rgba(0,0,0,.28);
+      cursor: zoom-in;
+      border: 1px solid var(--mag-line);
+      border-radius: 14px;
+      background: #dce2d8;
+      box-shadow: none;
     }
     .mood-strip img {
       display: block;
@@ -113,99 +97,207 @@
       height: 100%;
       min-height: 0;
       object-fit: cover;
-      filter: saturate(1.05) contrast(1.04) brightness(.94);
+      filter: saturate(.92) contrast(1.02);
       transition: transform 180ms ease, filter 180ms ease;
     }
     .mood-photo:hover img,
     .mood-photo:focus-visible img {
-      transform: scale(1.035);
-      filter: saturate(1.12) contrast(1.06) brightness(1);
+      transform: scale(1.028);
+      filter: saturate(1) contrast(1.04);
     }
-    .mood-photo:focus-visible {
-      outline: 3px solid rgba(115,183,255,.72);
-      outline-offset: 3px;
+    .feature-mosaic {
+      width: min(900px, 100%);
+      margin-top: 0;
+      min-height: auto;
+      display: grid;
+      place-items: center;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(201, 100, 66, .18);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 255, 255, .88), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(135deg, #f6f4ea 0%, #eee8dc 58%, #e7e0d2 100%);
+      box-shadow: 0 18px 52px rgba(86, 70, 52, .12), inset 0 1px 0 rgba(255, 255, 255, .78);
     }
-    .mood-photo:first-child {
-      grid-row: 1 / span 3;
+    .feature-mosaic::before {
+      content: "CAFE MENU";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 0;
+      color: rgba(20, 20, 19, .04);
+      font-family: var(--mag-sans);
+      font-size: clamp(44px, 6vw, 82px);
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
-    .mood-photo:nth-child(2) img {
-      object-position: 50% 42%;
-    }
-    .mood-photo:nth-child(3) img {
-      object-position: 48% 55%;
-    }
-    .mood-photo:nth-child(4) img {
-      object-position: 50% 50%;
-    }
-    .mood-photo:nth-child(5) img {
-      object-position: 58% 58%;
-    }
-    .mood-photo:nth-child(6) img {
-      object-position: 50% 52%;
-    }
-    .mood-photo:nth-child(7) img {
-      object-position: 55% 46%;
+    .menu-stage {
+      position: relative;
+      z-index: 1;
+      width: min(900px, 100%);
     }
     .feature-grid {
-      width: min(1180px, calc(100% - 28px));
-      margin: 18px auto 0;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(8px, 1vw, 11px);
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(24px, 3vw, 36px) clamp(14px, 2.4vw, 28px);
+      position: relative;
+      z-index: 1;
+    }
+    .feature-grid::before {
+      content: "";
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      top: clamp(32px, 4vw, 46px);
+      bottom: clamp(22px, 3vw, 36px);
+      height: auto;
+      z-index: -1;
+      border-radius: 28px;
+      background:
+        linear-gradient(90deg, transparent, rgba(201, 100, 66, .20), transparent),
+        radial-gradient(ellipse, rgba(73, 48, 25, .12), rgba(73, 48, 25, .04) 58%, transparent 76%);
+      filter: blur(13px);
+      opacity: .82;
     }
     .feature-card {
+      min-height: clamp(64px, 6.4vw, 76px);
       display: grid;
-      gap: 10px;
-      padding: 18px;
-      min-height: 162px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.20);
+      grid-template-columns: 42px minmax(136px, .42fr) minmax(220px, 1fr) 72px;
+      align-items: center;
+      gap: clamp(10px, 1.5vw, 18px);
+      position: relative;
+      padding: clamp(11px, 1.25vw, 14px) clamp(16px, 2.2vw, 22px);
+      border: 1px solid rgba(143, 110, 76, .28);
+      border-radius: 12px;
       background:
-        linear-gradient(145deg, rgba(255,255,255,.16), rgba(0,0,0,.18)),
-        var(--panel);
-      text-decoration: none;
+        radial-gradient(circle at 12% 0%, rgba(255, 255, 255, .86), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(180deg, rgba(255, 255, 251, .95), rgba(246, 238, 222, .88)),
+        repeating-linear-gradient(0deg, rgba(20, 20, 19, .025) 0 1px, transparent 1px 7px);
       color: inherit;
-      box-shadow: 0 24px 58px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.14);
-      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      text-decoration: none;
+      text-align: left;
+      box-shadow: 0 10px 24px rgba(82, 56, 31, .10), 0 1px 0 rgba(255, 255, 255, .92) inset, 0 -1px 0 rgba(94, 62, 34, .06) inset;
+      transform: translateX(var(--menu-shift, 0px));
+      transition: transform 220ms ease, border-color 180ms ease, color 180ms ease, box-shadow 220ms ease;
     }
     .feature-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255,255,255,.34);
-      box-shadow: 0 30px 64px rgba(0,0,0,.34);
+      transform: translateX(calc(var(--menu-shift, 0px) + 6px));
+      border-color: rgba(201, 100, 66, .46);
+      box-shadow: 0 14px 30px rgba(82, 56, 31, .13), 0 1px 0 rgba(255, 255, 255, .92) inset, 0 -1px 0 rgba(94, 62, 34, .08) inset;
+    }
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 8px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .95), transparent);
+      pointer-events: none;
+    }
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      border-radius: 12px 0 0 12px;
+      background: linear-gradient(180deg, rgba(201, 100, 66, 0), rgba(201, 100, 66, .18), rgba(201, 100, 66, 0));
+      opacity: .68;
+      pointer-events: none;
+    }
+    .feature-card:nth-child(1) {
+      --menu-shift: 0px;
+    }
+    .feature-card:nth-child(2) {
+      --menu-shift: 0px;
+    }
+    .feature-card:nth-child(3) {
+      --menu-shift: 0px;
+    }
+    .feature-card:nth-child(4) {
+      --menu-shift: 0px;
+    }
+    .feature-card:nth-child(5) {
+      --menu-shift: 0px;
+    }
+    .feature-card:nth-child(6) {
+      --menu-shift: 0px;
     }
     .feature-index {
       display: inline-flex;
-      width: 34px;
-      height: 34px;
+      width: fit-content;
+      min-width: 32px;
+      height: 32px;
       align-items: center;
       justify-content: center;
+      border: 1px solid rgba(201, 100, 66, .42);
       border-radius: 999px;
-      background: rgba(255,255,255,.12);
-      color: var(--gold);
+      background: rgba(255, 255, 251, .78);
+      color: var(--mag-accent);
+      font-size: 11px;
       font-weight: 900;
-      font-size: 13px;
+      box-shadow: 0 5px 12px rgba(82, 56, 31, .06), inset 0 1px 0 rgba(255, 255, 255, .92);
     }
     .feature-card h2 {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.1;
+      color: var(--mag-ink);
+      font-family: var(--mag-sans);
+      font-size: clamp(20px, 1.75vw, 26px);
+      line-height: 1.08;
       font-weight: 900;
     }
     .feature-card p {
       margin: 0;
-      color: var(--muted);
+      color: var(--mag-muted);
+      font-size: clamp(12px, .95vw, 13px);
       line-height: 1.45;
-      font-size: 14px;
+      font-weight: 600;
+      max-height: 4.7em;
+      overflow: hidden;
     }
     .feature-arrow {
-      margin-top: auto;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 900;
+      width: auto;
+      min-width: 58px;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      justify-self: end;
+      padding: 0 10px;
+      border: 1px solid rgba(201, 100, 66, .28);
+      border-radius: 999px;
+      color: var(--claude-accent-hover);
+      background: rgba(255, 255, 251, .42);
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+      align-self: end;
+      transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
     }
-    .feature-card:focus-visible {
-      outline: 3px solid rgba(115,183,255,.72);
-      outline-offset: 3px;
+    .feature-card:hover .feature-arrow {
+      border-color: rgba(201, 100, 66, .58);
+      background: rgba(201, 100, 66, .08);
+      transform: translateX(2px);
+    }
+    .feature-arrow::after {
+      content: ">";
+      width: auto;
+      height: auto;
+      border: 0;
+      background: transparent;
     }
     .cafe-lightbox[hidden] {
       display: none;
@@ -217,9 +309,7 @@
       display: grid;
       place-items: center;
       padding: clamp(18px, 4vw, 42px);
-      background: rgba(5,4,3,.86);
-      -webkit-backdrop-filter: blur(20px);
-      backdrop-filter: blur(20px);
+      background: rgba(242, 244, 238, .94);
     }
     .cafe-lightbox img {
       display: block;
@@ -228,9 +318,9 @@
       width: auto;
       height: auto;
       object-fit: contain;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 34px 100px rgba(0,0,0,.58);
+      border-radius: 14px;
+      border: 1px solid var(--mag-line);
+      box-shadow: var(--mag-shadow);
     }
     .lightbox-close {
       position: fixed;
@@ -238,19 +328,13 @@
       right: clamp(12px, 3vw, 28px);
       width: 44px;
       height: 44px;
-      border: 1px solid rgba(255,255,255,.24);
+      border: 1px solid var(--mag-line);
       border-radius: 999px;
-      background: rgba(255,255,255,.12);
-      color: #fff;
+      background: #fffffb;
+      color: var(--mag-accent);
       cursor: pointer;
       font-size: 28px;
       line-height: 1;
-      -webkit-backdrop-filter: blur(18px);
-      backdrop-filter: blur(18px);
-    }
-    .lightbox-close:focus-visible {
-      outline: 3px solid rgba(115,183,255,.72);
-      outline-offset: 3px;
     }
     body.lightbox-open {
       overflow: hidden;
@@ -260,164 +344,191 @@
       will-change: transform, opacity;
     }
     body.slide-out-left [data-page-shell] {
-      transform: translateX(-24px);
+      transform: translateX(-22px);
       opacity: 0;
     }
     body.slide-out-right [data-page-shell] {
-      transform: translateX(24px);
+      transform: translateX(22px);
       opacity: 0;
     }
     body.slide-in [data-page-shell] {
-      transform: translateX(24px);
+      transform: translateX(22px);
       opacity: 0;
     }
-    @media (max-width: 900px) {
-      .feature-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
     @media (max-width: 960px) {
-      .hero {
+      .photo-landing {
         grid-template-columns: 1fr;
+        gap: 24px;
       }
-      .mood-strip {
-        justify-self: stretch;
-        width: 100%;
+      .magazine-home .home-issue {
+        min-height: auto;
+      }
+      .feature-grid {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 100%;
+        padding-top: clamp(24px, 4vw, 36px);
+      }
+      .magazine-home .hero {
+        order: initial;
       }
     }
     @media (max-width: 760px) {
-      .shell {
-        padding-bottom: 28px;
-      }
-      .hero {
-        width: calc(100% - 20px);
-        min-height: 260px;
-        padding: 18px;
-        border-radius: 24px;
-        grid-template-columns: 1fr;
-      }
-      .hero h1 {
-        font-size: clamp(34px, 10.8vw, 46px);
-        line-height: 1.04;
-        max-width: 100%;
-        white-space: normal;
-      }
       .mood-strip {
-        align-self: auto;
+      height: min(390px, calc(100dvh - 380px));
+        max-width: 100%;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: none;
-        grid-auto-rows: auto;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
         gap: 8px;
-        min-height: auto;
       }
       .mood-photo:nth-child(n) {
         grid-column: auto;
         grid-row: auto;
-        width: 100%;
-        aspect-ratio: 1 / 1;
+        aspect-ratio: auto;
         border-radius: 12px;
       }
       .mood-photo:first-child {
-        grid-column: 1 / -1;
-        aspect-ratio: 16 / 10;
+        grid-column: auto;
+        aspect-ratio: auto;
+      }
+      .mood-photo:nth-child(8) {
+        grid-column: auto;
+      }
+      .magazine-home .hero h1 {
+        max-width: 100%;
+        font-size: clamp(38px, 10.4vw, 46px);
+        line-height: 1.18;
       }
       .feature-grid {
-        width: calc(100% - 20px);
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: auto;
+        gap: 10px;
+        padding: 24px 8px 26px;
       }
-      .feature-card {
-        min-height: 136px;
+      .feature-card,
+      .feature-card:first-child,
+      .feature-card:nth-child(5) {
+        grid-column: auto;
+        min-height: 0;
+        grid-template-columns: 36px minmax(0, 1fr) 34px;
+        gap: 6px 12px;
+        padding: 12px 12px;
+        --menu-shift: 0px;
+      }
+      .feature-card:nth-child(n) {
+        --menu-shift: 0px;
+      }
+      .feature-card h2,
+      .feature-card p {
+        grid-column: 2;
+      }
+      .feature-index {
+        min-width: 32px;
+        height: 32px;
+        font-size: 11px;
       }
       .feature-card h2 {
-        font-size: 18px;
+        font-size: clamp(19px, 5.5vw, 23px);
+      }
+      .feature-card p {
+        font-size: 12px;
+        line-height: 1.42;
+      }
+      .feature-arrow {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        justify-self: end;
+        align-self: center;
+        width: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        padding: 0;
+        font-size: 0;
+      }
+      .feature-arrow::after {
+        font-size: 13px;
       }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
         scroll-behavior: auto !important;
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/cafe-magazine.css">
 </head>
-<body>
+<body class="magazine-home">
   <div class="shell" data-page-shell>
-    <section class="hero">
-      <div>
-        <p class="hero-brand">寻常小馆</p>
-        <h1>把晨光倒进一杯咖啡</h1>
-        <p class="hero-copy">寻常小馆里,氤氲的香气中弥漫着浪漫的气息,每一口咖啡都像是品尝着时光的深邃。点一下功能入口，就进到单独的页面。</p>
-      </div>
+    <header class="home-nav" aria-label="站点入口">
+      <strong>寻常小馆</strong>
+    </header>
+    <section class="photo-landing" aria-label="咖啡馆首页导航">
+      <section class="hero">
+        <div>
+          <p class="hero-brand">寻常小馆</p>
+          <h1><span>把晨光倒进</span><span>一杯咖啡</span></h1>
+          <p class="hero-copy">寻常小馆里，氤氲的香气中弥漫着浪漫的气息，每一口咖啡都像是在品尝着时光的深邃。点一个功能入口，就进入单独的页面。</p>
+        </div>
+      </section>
       <div class="mood-strip" aria-label="咖啡馆照片">
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/1.jpg" aria-label="查看咖啡馆大图 1">
-          <img src="assets/cafe/1.jpg" alt="" width="1080" height="1440">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/2.jpg" aria-label="查看咖啡馆大图 2">
-          <img src="assets/cafe/2.jpg" alt="" width="1920" height="1080">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/3.jpg" aria-label="查看咖啡馆大图 3">
-          <img src="assets/cafe/3.jpg" alt="" width="1080" height="1440">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/4.jpg" aria-label="查看咖啡馆大图 4">
-          <img src="assets/cafe/4.jpg" alt="" width="1080" height="1440">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/5.jpg" aria-label="查看咖啡馆大图 5">
-          <img src="assets/cafe/5.jpg" alt="" width="1080" height="1440">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/6.jpg" aria-label="查看咖啡馆大图 6">
-          <img src="assets/cafe/6.jpg" alt="" width="1080" height="1440">
-        </button>
-        <button class="mood-photo" type="button" data-full-src="assets/cafe/7.jpg" aria-label="查看咖啡馆大图 7">
-          <img src="assets/cafe/7.jpg" alt="" width="1080" height="1440">
-        </button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/1.jpg" aria-label="查看咖啡馆大图 1"><img src="assets/cafe/1.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/2.jpg" aria-label="查看咖啡馆大图 2"><img src="assets/cafe/2.jpg" alt="" width="1920" height="1080"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/3.jpg" aria-label="查看咖啡馆大图 3"><img src="assets/cafe/3.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/4.jpg" aria-label="查看咖啡馆大图 4"><img src="assets/cafe/4.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/5.jpg" aria-label="查看咖啡馆大图 5"><img src="assets/cafe/5.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/6.jpg" aria-label="查看咖啡馆大图 6"><img src="assets/cafe/6.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/7.jpg" aria-label="查看咖啡馆大图 7"><img src="assets/cafe/7.jpg" alt="" width="1080" height="1440"></button>
+        <button class="mood-photo" type="button" data-full-src="assets/cafe/8.jpg" aria-label="查看咖啡馆大图 8"><img src="assets/cafe/8.jpg" alt="" width="1080" height="1440"></button>
       </div>
+      <a class="scroll-cue" href="#entryCards" aria-label="向下滑动到功能入口"><span aria-hidden="true"></span></a>
     </section>
-
-    <main class="feature-grid" aria-label="功能入口">
-      <a class="feature-card slide-link" href="beans.html">
-        <span class="feature-index">01</span>
-        <h2>咖啡豆图鉴</h2>
-        <p>看真实豆图、风味标签和适合的冲煮路线。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-      <a class="feature-card slide-link" href="history.html">
-        <span class="feature-index">02</span>
-        <h2>咖啡历史</h2>
-        <p>从云南山谷开始，读懂中国咖啡的来路。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-      <a class="feature-card slide-link" href="china-beans.html">
-        <span class="feature-index">03</span>
-        <h2>热门豆种</h2>
-        <p>把常见产区和门店拼配豆种先看清楚。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-      <a class="feature-card slide-link" href="methods.html">
-        <span class="feature-index">04</span>
-        <h2>咖啡做法</h2>
-        <p>看变量怎么改变一杯咖啡的酸甜苦厚。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-      <a class="feature-card slide-link" href="workspace.html">
-        <span class="feature-index">05</span>
-        <h2>制作工作台</h2>
-        <p>进入手冲和机器制作的参数控制台。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-      <a class="feature-card slide-link" href="difference.html">
-        <span class="feature-index">06</span>
-        <h2>模式差异</h2>
-        <p>同一款豆子，手冲和机器会怎么说话。</p>
-        <span class="feature-arrow">→</span>
-      </a>
-    </main>
-
+    <section class="home-issue" id="entryCards">
+        <main class="feature-mosaic menu-stage" aria-label="功能入口">
+          <div class="feature-grid">
+            <a class="feature-card menu-card slide-link" href="beans.html">
+              <span class="feature-index">01</span>
+              <h2>咖啡豆图鉴</h2>
+              <p>看真实豆图、风味标签和适合的冲煮路线。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+            <a class="feature-card menu-card slide-link" href="history.html">
+              <span class="feature-index">02</span>
+              <h2>世界咖啡史</h2>
+              <p>从埃塞俄比亚传说，到也门港口、欧洲咖啡馆和今天的产区地图。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+            <a class="feature-card menu-card slide-link" href="china-beans.html">
+              <span class="feature-index">03</span>
+              <h2>热门豆种</h2>
+              <p>把常见产区和门店拼配豆种先看清楚。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+            <a class="feature-card menu-card slide-link" href="methods.html">
+              <span class="feature-index">04</span>
+              <h2>咖啡做法</h2>
+              <p>看变量怎么改变一杯咖啡的酸甜苦厚。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+            <a class="feature-card menu-card slide-link" href="workspace.html">
+              <span class="feature-index">05</span>
+              <h2>制作工作台</h2>
+              <p>进入手冲和机器制作的参数控制台。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+            <a class="feature-card menu-card slide-link" href="difference.html">
+              <span class="feature-index">06</span>
+              <h2>模式差异</h2>
+              <p>同一款豆子，手冲和机器会怎么说话。</p>
+              <span class="feature-arrow">进入</span>
+            </a>
+          </div>
+        </main>
+    </section>
   </div>
 
   <div class="cafe-lightbox" id="cafeLightbox" role="dialog" aria-modal="true" aria-label="咖啡馆大图预览" hidden>
-    <button class="lightbox-close" type="button" id="cafeLightboxClose" aria-label="关闭大图">×</button>
+    <button class="lightbox-close" type="button" id="cafeLightboxClose" aria-label="关闭大图">&times;</button>
     <img id="cafeLightboxImage" src="" alt="咖啡馆大图预览">
   </div>
 
@@ -430,7 +541,7 @@
       let lastTrigger = null;
 
       function openGalleryLightbox(src, trigger) {
-        if (!lightbox || !lightboxImage) return;
+        if (!lightbox || !lightboxImage || !src) return;
         lastTrigger = trigger;
         lightboxImage.src = src;
         lightbox.hidden = false;

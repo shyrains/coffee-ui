@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -31,7 +31,6 @@
       --radius-xl: 34px;
       --radius-lg: 24px;
       --radius-md: 16px;
-      color-scheme: dark;
     }
 
     body[data-mode="hand"] {
@@ -2447,15 +2446,16 @@
       font-weight: 560;
     }
   </style>
+  <link rel="stylesheet" href="assets/cafe-magazine.css">
 </head>
-<body data-mode="hand" data-page-shell>
+<body class="magazine-page workspace-page" data-mode="hand" data-page-shell>
   <div class="shell page-shell">
     <header class="nav">
       <div class="brand">寻常小馆</div>
       <nav class="nav-links" aria-label="页面链接">
       <a class="slide-link" href="coffee.html" data-slide="right">首页</a>
       <a class="slide-link" href="beans.html">咖啡豆图鉴</a>
-      <a class="slide-link" href="history.html">咖啡历史</a>
+      <a class="slide-link" href="history.html">世界咖啡史</a>
       <a class="slide-link" href="china-beans.html">热门豆种</a>
       <a class="slide-link" href="methods.html">咖啡做法</a>
       <span class="nav-current" aria-current="page">制作工作台</span>
@@ -2493,7 +2493,7 @@
           <div class="floating-card">
             <div>
               <h2 id="heroBeanName">埃塞俄比亚 耶加雪菲</h2>
-              <p id="heroBeanText">花香、柑橘与茶感，适合更清晰的手冲表达。</p>
+              <p class="hero-bean-copy"><span class="hero-bean-meta" id="heroBeanMeta">水洗处理 · Heirloom</span><span id="heroBeanText">花香、柑橘与茶感，适合更清晰的手冲表达。</span></p>
             </div>
             <span class="mode-pill" id="heroModeText">手冲咖啡</span>
           </div>
@@ -2583,6 +2583,7 @@
             <p class="kicker" id="recipeKicker">手冲配方</p>
               <h3 id="recipeName">玻璃手冲配方</h3>
               <p class="summary" id="recipeSummary">清亮花香，酸质更明亮，适合慢一点的分段注水。</p>
+              <p class="recipe-note">仅参考互联网数据，不同机器、不同工具会有一定差异。</p>
 
               <div class="machine-console" aria-label="咖啡机萃取控制台">
                 <div class="machine-recommendation" id="recommendedMachineConfig" aria-label="建议配置参数">
@@ -2617,7 +2618,7 @@
               <div class="bean-profile">
                 <img id="beanImageOut" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg" alt="当前选择咖啡豆">
                 <div>
-                  <h4 id="beanNameOut">埃塞俄比亚 耶加雪菲</h4>
+                  <h4 id="beanNameOut">埃塞俄比亚 耶加雪菲 水洗 Heirloom</h4>
                   <p id="beanDescriptionOut">高海拔水洗豆，花香清晰，柑橘酸质干净，尾段像红茶。</p>
                 </div>
               </div>
@@ -2647,7 +2648,7 @@ function getBeanMap() {
   return {
     yirgacheffe: {
       id: "yirgacheffe",
-      name: "埃塞俄比亚 耶加雪菲",
+      name: "埃塞俄比亚 耶加雪菲 水洗 Heirloom",
       origin: "埃塞俄比亚 · 耶加雪菲",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
@@ -2664,7 +2665,7 @@ function getBeanMap() {
     },
     sidamo: {
       id: "sidamo",
-      name: "埃塞俄比亚 西达摩",
+      name: "埃塞俄比亚 西达摩 日晒 Heirloom",
       origin: "埃塞俄比亚 · 西达摩",
       process: "日晒处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2681,7 +2682,7 @@ function getBeanMap() {
     },
     "kenya-aa": {
       id: "kenya-aa",
-      name: "肯尼亚 AA",
+      name: "肯尼亚 AA SL28 / SL34",
       origin: "肯尼亚 · 高海拔产区",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -2698,7 +2699,7 @@ function getBeanMap() {
     },
     "ethiopia-guji": {
       id: "ethiopia-guji",
-      name: "埃塞俄比亚 古吉",
+      name: "埃塞俄比亚 古吉 日晒 Heirloom",
       origin: "埃塞俄比亚 · 古吉",
       process: "日晒 / 水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2715,7 +2716,7 @@ function getBeanMap() {
     },
     "panama-geisha": {
       id: "panama-geisha",
-      name: "巴拿马 瑰夏",
+      name: "巴拿马 波奎特 瑰夏 Geisha",
       origin: "巴拿马 · Boquete / Volcan",
       process: "水洗 / 日晒处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
@@ -2732,7 +2733,7 @@ function getBeanMap() {
     },
     huila: {
       id: "huila",
-      name: "哥伦比亚 蕙兰",
+      name: "哥伦比亚 蕙兰 水洗 Caturra",
       origin: "哥伦比亚 · 蕙兰",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2749,7 +2750,7 @@ function getBeanMap() {
     },
     "guatemala-antigua": {
       id: "guatemala-antigua",
-      name: "危地马拉 安提瓜",
+      name: "危地马拉 安提瓜 Bourbon",
       origin: "危地马拉 · 安提瓜",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
@@ -2766,7 +2767,7 @@ function getBeanMap() {
     },
     "costa-rica-tarrazu": {
       id: "costa-rica-tarrazu",
-      name: "哥斯达黎加 塔拉珠",
+      name: "哥斯达黎加 塔拉珠 蜜处理 Catuai",
       origin: "哥斯达黎加 · 塔拉珠",
       process: "蜜处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2783,7 +2784,7 @@ function getBeanMap() {
     },
     "rwanda-bourbon": {
       id: "rwanda-bourbon",
-      name: "卢旺达 Bourbon",
+      name: "卢旺达 水洗 Bourbon",
       origin: "卢旺达 · 西部高地",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -2800,7 +2801,7 @@ function getBeanMap() {
     },
     "tanzania-peaberry": {
       id: "tanzania-peaberry",
-      name: "坦桑尼亚 Peaberry",
+      name: "坦桑尼亚 Kilimanjaro Peaberry",
       origin: "坦桑尼亚 · Kilimanjaro",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2817,7 +2818,7 @@ function getBeanMap() {
     },
     cerrado: {
       id: "cerrado",
-      name: "巴西 喜拉多",
+      name: "巴西 喜拉多 黄波旁 Yellow Bourbon",
       origin: "巴西 · 喜拉多",
       process: "日晒处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -2851,7 +2852,7 @@ function getBeanMap() {
     },
     mandheling: {
       id: "mandheling",
-      name: "印度尼西亚 曼特宁",
+      name: "印尼 苏门答腊 曼特宁 Typica",
       origin: "印度尼西亚 · 苏门答腊",
       process: "湿刨处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
@@ -2868,7 +2869,7 @@ function getBeanMap() {
     },
     "sumatra-gayo": {
       id: "sumatra-gayo",
-      name: "苏门答腊 Gayo",
+      name: "苏门答腊 Aceh Gayo Wet-Hulled",
       origin: "印度尼西亚 · 亚齐 Gayo",
       process: "湿刨处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
@@ -2885,7 +2886,7 @@ function getBeanMap() {
     },
     kona: {
       id: "kona",
-      name: "夏威夷 Kona",
+      name: "夏威夷 Kona Typica",
       origin: "美国夏威夷 · Kona",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
@@ -2902,7 +2903,7 @@ function getBeanMap() {
     },
     "jamaica-blue-mountain": {
       id: "jamaica-blue-mountain",
-      name: "牙买加 蓝山",
+      name: "牙买加 Blue Mountain Typica",
       origin: "牙买加 · Blue Mountain",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -2919,7 +2920,7 @@ function getBeanMap() {
     },
     "peru-organic": {
       id: "peru-organic",
-      name: "秘鲁 有机小农",
+      name: "秘鲁 Cajamarca 有机 Typica",
       origin: "秘鲁 · Cajamarca / Cusco",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -2936,7 +2937,7 @@ function getBeanMap() {
     },
     "mexico-chiapas": {
       id: "mexico-chiapas",
-      name: "墨西哥 Chiapas",
+      name: "墨西哥 Chiapas Bourbon / Typica",
       origin: "墨西哥 · Chiapas",
       process: "水洗处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg",
@@ -2953,7 +2954,7 @@ function getBeanMap() {
     },
     "nicaragua-jinotega": {
       id: "nicaragua-jinotega",
-      name: "尼加拉瓜 Jinotega",
+      name: "尼加拉瓜 Jinotega Caturra",
       origin: "尼加拉瓜 · Jinotega",
       process: "水洗 / 蜜处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -2970,7 +2971,7 @@ function getBeanMap() {
     },
     "monsooned-malabar": {
       id: "monsooned-malabar",
-      name: "印度 Monsooned Malabar",
+      name: "印度 Monsooned Malabar AA",
       origin: "印度 · Malabar Coast",
       process: "季风处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/1/19/Coffee_beans_unroasted.jpg",
@@ -2987,7 +2988,7 @@ function getBeanMap() {
     },
     "espresso-blend": {
       id: "espresso-blend",
-      name: "经典意式拼配",
+      name: "意式拼配 巴西 / 哥伦比亚 / 印尼",
       origin: "巴西 / 哥伦比亚 / 印度尼西亚",
       process: "拼配烘焙",
       image: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Medium_roasted_Arabica_coffee_beans.jpg",
@@ -3004,7 +3005,7 @@ function getBeanMap() {
     },
     "decaf-colombia": {
       id: "decaf-colombia",
-      name: "哥伦比亚 低因",
+      name: "哥伦比亚 低因 Caturra",
       origin: "哥伦比亚 · 低因处理",
       process: "低因处理",
       image: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Coffee_beans2.jpg",
@@ -3201,7 +3202,7 @@ function getMachineRecommendation(input) {
       note: "胶囊机优先短杯量，避免尾段把咖啡拉淡。"
     };
   }
-  var darkBean = bean.recommendedMode === "machine" || /曼特宁|综合|巴西/.test(bean.name);
+  var darkBean = bean.recommendedMode === "machine" || /曼特宁|综合|拼配|巴西/.test(bean.name);
   return {
     grind: darkBean ? 42 : 46,
     temperature: darkBean ? 92 : 93,
@@ -3415,7 +3416,7 @@ function calculateRecipe(input) {
       recipeName: $("recipeName"), recipeSummary: $("recipeSummary"), metrics: $("metrics"), steps: $("steps"),
       tasteMode: $("tasteMode"), tasteScores: $("tasteScores"), tasteRelations: $("tasteRelations"),
       beanImageOut: $("beanImageOut"), beanNameOut: $("beanNameOut"), beanDescriptionOut: $("beanDescriptionOut"),
-      heroImage: $("heroImage"), heroBeanName: $("heroBeanName"), heroBeanText: $("heroBeanText"), heroModeText: $("heroModeText"),
+      heroImage: $("heroImage"), heroBeanName: $("heroBeanName"), heroBeanMeta: $("heroBeanMeta"), heroBeanText: $("heroBeanText"), heroModeText: $("heroModeText"),
       beanCarousel: $("beanCarousel"), beanCarouselTrack: $("beanCarouselTrack"), carouselPrev: $("carouselPrev"),
       carouselNext: $("carouselNext"), carouselDots: $("carouselDots"),
       output: document.querySelector(".output"),
@@ -3439,6 +3440,35 @@ function calculateRecipe(input) {
     let carouselStartX = 0;
     let carouselDeltaX = 0;
     let carouselDragging = false;
+
+    const heroBeanDisplay = {
+      yirgacheffe: { title: "埃塞俄比亚 耶加雪菲", meta: "水洗处理 · Heirloom" },
+      sidamo: { title: "埃塞俄比亚 西达摩", meta: "日晒处理 · Heirloom" },
+      "kenya-aa": { title: "肯尼亚 AA", meta: "水洗处理 · SL28 / SL34" },
+      "ethiopia-guji": { title: "埃塞俄比亚 古吉", meta: "日晒 / 水洗处理 · Heirloom" },
+      "panama-geisha": { title: "巴拿马 波奎特 瑰夏", meta: "水洗 / 日晒处理 · Geisha" },
+      huila: { title: "哥伦比亚 蕙兰", meta: "水洗处理 · Caturra" },
+      "guatemala-antigua": { title: "危地马拉 安提瓜", meta: "水洗处理 · Bourbon" },
+      "costa-rica-tarrazu": { title: "哥斯达黎加 塔拉珠", meta: "蜜处理 · Catuai" },
+      "rwanda-bourbon": { title: "卢旺达 Bourbon", meta: "水洗处理 · Bourbon" },
+      "tanzania-peaberry": { title: "坦桑尼亚 Peaberry", meta: "水洗处理 · 圆豆" },
+      cerrado: { title: "巴西 喜拉多", meta: "日晒处理 · Yellow Bourbon" },
+      "bourbon-santos": { title: "巴西 Bourbon Santos", meta: "日晒处理 · Bourbon" },
+      mandheling: { title: "印尼 苏门答腊 曼特宁", meta: "湿刨处理 · Typica" },
+      "sumatra-gayo": { title: "苏门答腊 Aceh Gayo", meta: "湿刨处理 · Wet-Hulled" },
+      kona: { title: "夏威夷 Kona", meta: "水洗处理 · Typica" },
+      "jamaica-blue-mountain": { title: "牙买加 Blue Mountain", meta: "水洗处理 · Typica" },
+      "peru-organic": { title: "秘鲁 Cajamarca", meta: "水洗处理 · 有机小农 Typica" },
+      "mexico-chiapas": { title: "墨西哥 Chiapas", meta: "水洗处理 · Bourbon / Typica" },
+      "nicaragua-jinotega": { title: "尼加拉瓜 Jinotega", meta: "水洗 / 蜜处理 · Caturra" },
+      "monsooned-malabar": { title: "印度 Monsooned Malabar", meta: "季风处理 · AA" },
+      "espresso-blend": { title: "意式拼配", meta: "巴西 / 哥伦比亚 / 印尼 · 拼配烘焙" },
+      "decaf-colombia": { title: "哥伦比亚 低因", meta: "低因处理 · Caturra" }
+    };
+
+    function getHeroBeanDisplay(bean) {
+      return heroBeanDisplay[bean.id] || { title: bean.name, meta: bean.process };
+    }
 
     function getStateSnapshot() {
       return {
@@ -3686,7 +3716,9 @@ function calculateRecipe(input) {
       els.beanDescriptionOut.textContent = recipe.bean.origin + " · " + recipe.bean.process + " · " + recipe.bean.description;
       syncHeroCarousel(recipe.bean.id);
       if (els.heroImage) els.heroImage.src = recipe.bean.image;
-      els.heroBeanName.textContent = recipe.bean.name;
+      const heroDisplay = getHeroBeanDisplay(recipe.bean);
+      els.heroBeanName.textContent = heroDisplay.title;
+      els.heroBeanMeta.textContent = heroDisplay.meta;
       els.heroBeanText.textContent = recipe.bean.description;
       els.heroModeText.textContent = recipe.mode === "machine" ? "机器制作" : "手冲咖啡";
       renderTasteProfile(recipe.tasteProfile);
