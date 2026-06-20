@@ -1,0 +1,7 @@
+﻿Release bundle for the coffee site
+
+Included pages: index.html, coffee.html, beans.html, china-beans.html, history.html, methods.html, workspace.html, difference.html
+Shared files: assets/cafe-magazine.css, slide-navigation.js
+Local images: assets/cafe/1.jpg through assets/cafe/8.jpg
+
+Note: some pages still load a few external Wikimedia images by URL.
